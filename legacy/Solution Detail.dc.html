@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Open Sans', sans-serif; background: #FFFFFF; color: #3E4753; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: #D71A28; }
+  h1,h2,h3,h4,h5,h6 { font-family: 'Barlow', sans-serif; font-weight: 700; letter-spacing: -0.01em; color: #3E4753; }
+  ::selection { background: #D71A28; color: #fff; }
+</style>
+</helmet>
+<div style="min-height:100vh; background:#FFFFFF; overflow-x:hidden;">
+
+  <!-- NAV -->
+  <header style="position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(14px); border-bottom:1px solid #E9EDF1;">
+    <div style="max-width:1280px; margin:0 auto; padding:0 24px; height:84px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <a href="Verawall Home.dc.html" style="display:flex; align-items:center; flex-shrink:0;">
+        <span style="display:inline-flex; align-items:center; gap:9px;"><svg width="30" height="30" viewBox="0 0 28 28" style="flex-shrink:0;"><path d="M14 1 L26 5.5 V13 C26 20.5 21 25.5 14 27.5 C7 25.5 2 20.5 2 13 V5.5 Z" fill="#D71A28"></path><path d="M8.5 9.5 L14 19.5 L19.5 9.5" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="font-family:'Barlow'; font-weight:800; font-size:22px; letter-spacing:0.01em; color:#1E262E;">Verawall</span></span>
+      </a>
+      <nav style="display:flex; align-items:center; gap:2px; margin-left:auto;">
+        <a href="Verawall Home.dc.html#why" style="padding:10px 8px; font-family:'Barlow'; font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#3E4753; white-space:nowrap;">Why Verawall</a>
+        <a href="Verawall Home.dc.html" style="padding:10px 8px; font-family:'Barlow'; font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#3E4753; white-space:nowrap;">Solutions</a>
+        <a href="Verawall Home.dc.html" style="padding:10px 8px; font-family:'Barlow'; font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#3E4753; white-space:nowrap;">Verawall Platform</a>
+        <a href="Verawall Home.dc.html" style="padding:10px 8px; font-family:'Barlow'; font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#3E4753; white-space:nowrap;">Resources</a>
+        <a href="Verawall Home.dc.html" style="padding:10px 8px; font-family:'Barlow'; font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#3E4753; white-space:nowrap;">Company</a>
+        <a href="#contact" style="margin-left:12px; padding:14px 20px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#fff; background:#D71A28; border-radius:3px; white-space:nowrap;" style-hover="background:#B8121F; color:#fff;">Talk to a fraud fighter</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div style="max-width:1280px; margin:0 auto; padding:26px 32px 0; display:flex; align-items:center; gap:12px; font-size:15px; color:#5A6976;">
+    <a href="Verawall Home.dc.html" style-hover="color:#D71A28;">Home</a>
+    <span style="color:#C9CED4;">›</span>
+    <span style="color:#7A8593;">{{ page.category }}</span>
+    <sc-if value="{{ page.isSub }}" hint-placeholder-val="{{ false }}">
+      <span style="color:#C9CED4;">›</span>
+      <span style="color:#7A8593;">{{ page.title }}</span>
+    </sc-if>
+  </div>
+
+  <!-- HERO -->
+  <section style="position:relative; overflow:hidden;">
+    <div style="position:absolute; top:0; right:-120px; width:640px; height:640px; background:url('https://www.threatmark.com/wp-content/uploads/2023/09/background-3.webp') center/cover; opacity:0.18;"></div>
+    <div style="position:relative; max-width:1280px; margin:0 auto; padding:96px 32px 110px;">
+      <h1 style="font-size:64px; line-height:1.04; font-weight:800; text-transform:uppercase; color:#D71A28; max-width:860px;">{{ page.title }}</h1>
+      <h2 style="font-size:27px; line-height:1.35; font-weight:700; margin-top:26px; max-width:760px;">{{ page.sub }}</h2>
+      <p style="font-size:17px; color:#5A6976; margin-top:20px; max-width:760px; line-height:1.75;">{{ page.intro }}</p>
+      <a href="#contact" style="display:inline-flex; align-items:center; margin-top:34px; padding:16px 30px; background:#D71A28; color:#fff; font-family:'Barlow'; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; border-radius:3px;" style-hover="background:#B8121F; color:#fff;">Talk to a fraud fighter</a>
+    </div>
+  </section>
+
+  <!-- IMPACT STATS -->
+  <section style="max-width:1280px; margin:0 auto; padding:0 32px 90px;">
+    <h2 style="font-size:40px; font-weight:700; text-align:center; color:#5A6976;">{{ page.statsTitle }}</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px; max-width:1080px; margin:52px auto 0;">
+      <sc-for list="{{ stats }}" as="st" hint-placeholder-count="3">
+        <div style="background:#fff; border:1px solid #E3E7EB; border-radius:8px; padding:44px 36px; text-align:center;">
+          <div style="font-family:'Barlow'; font-size:56px; font-weight:800; color:#D71A28; line-height:1;">{{ st.value }}</div>
+          <div style="font-size:17px; color:#3E4753; font-weight:600; margin-top:18px; line-height:1.55;">{{ st.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- SPOT IN REAL-TIME -->
+  <section style="max-width:1280px; margin:0 auto; padding:0 32px 100px;">
+    <div style="display:grid; grid-template-columns:0.85fr 1.15fr; gap:64px; align-items:start;">
+      <h2 style="font-size:40px; line-height:1.18; font-weight:700; color:#5A6976; position:sticky; top:110px;">{{ page.spotTitle }}</h2>
+      <div style="display:flex; flex-direction:column; gap:22px; font-size:16.5px; color:#3E4753; line-height:1.75;">
+        <sc-for list="{{ paras }}" as="pa" hint-placeholder-count="3">
+          <p>{{ pa.text }}</p>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNDERSTANDING CARDS -->
+  <section style="position:relative; overflow:hidden; background:#FBFBFC; border-top:1px solid #EEF1F4; border-bottom:1px solid #EEF1F4;">
+    <div style="position:absolute; top:-60px; left:-140px; width:560px; height:560px; background:url('https://www.threatmark.com/wp-content/uploads/2023/09/background-3.webp') center/cover; opacity:0.15;"></div>
+    <div style="position:relative; max-width:1280px; margin:0 auto; padding:90px 32px 100px;">
+      <h2 style="font-size:40px; font-weight:700; text-align:center; color:#5A6976;">{{ page.cardsTitle }}</h2>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:56px;">
+        <sc-for list="{{ cards }}" as="cd" hint-placeholder-count="3">
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:8px; padding:48px 38px;">
+            <img src="{{ cd.icon }}" alt="" style="width:64px; height:64px; margin-bottom:30px;">
+            <h3 style="font-size:23px; font-weight:700;">{{ cd.title }}</h3>
+            <p style="font-size:15.5px; color:#5A6976; margin-top:16px; line-height:1.75;">{{ cd.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- RELATED PAGES -->
+  <section style="max-width:1280px; margin:0 auto; padding:70px 32px 0;">
+    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:center;">
+      <span style="font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#7A8593;">More solutions:</span>
+      <sc-for list="{{ related }}" as="rl" hint-placeholder-count="5">
+        <a href="{{ rl.href }}" style="padding:10px 16px; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#3E4753;" style-hover="border-color:#D71A28; color:#D71A28;">{{ rl.title }}</a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- RED CTA BAND -->
+  <section style="max-width:1280px; margin:0 auto; padding:70px 32px;">
+    <div style="position:relative; border-radius:6px; overflow:hidden; background:linear-gradient(180deg,#3A0509 0%,#C2131F 12%,#D71A28 55%,#E0303C 100%);">
+      <div style="position:absolute; inset:0; background:url('https://www.threatmark.com/wp-content/uploads/2023/09/background-4.jpg') center/cover; opacity:0.25; mix-blend-mode:multiply;"></div>
+      <div style="position:relative; max-width:860px; margin:0 auto; padding:92px 48px; text-align:center;">
+        <h2 style="font-size:42px; line-height:1.15; font-weight:700; color:#fff;">Want to learn more about Verawall?</h2>
+        <p style="font-size:18px; color:rgba(255,255,255,0.94); margin-top:24px; line-height:1.7;">Complete our form to discover more about Verawall's comprehensive approach to fraud disruption.</p>
+        <a href="#contact" style="display:inline-flex; align-items:center; margin-top:34px; padding:16px 30px; background:#fff; color:#D71A28; font-family:'Barlow'; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; border-radius:3px;" style-hover="background:#F6E3E4; color:#B8121F;">Talk to a fraud fighter</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DARK CTA + FOOTER -->
+  <div id="contact" style="background:#1D1D1B; color:#EAEAEA; margin-top:40px;">
+    <div style="max-width:1280px; margin:0 auto; padding:110px 32px 0;">
+      <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:72px; align-items:start; padding-bottom:90px; border-bottom:1px solid rgba(255,255,255,0.16);">
+        <div>
+          <h2 style="font-size:58px; line-height:1.05; font-weight:800; text-transform:uppercase; color:#D71A28;">Let's win the war against fraud</h2>
+          <p style="font-size:19px; color:#EAEAEA; margin-top:28px; max-width:560px; line-height:1.65;">Win your customers' loyalty by working with the best fraud fighters. With Verawall at your side, anything is possible.</p>
+          <a href="#contact" style="display:inline-flex; align-items:center; margin-top:36px; padding:17px 32px; background:#D71A28; color:#fff; font-family:'Barlow'; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; border-radius:3px;" style-hover="background:#B8121F; color:#fff;">Talk to a fraud fighter</a>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:24px; margin-bottom:30px;">
+            <img src="https://www.threatmark.com/wp-content/uploads/2023/09/aicpa.svg" alt="AICPA SOC" style="height:96px; filter:brightness(0) invert(1);">
+            <img src="https://www.threatmark.com/wp-content/uploads/2023/09/iso.svg" alt="ISO 27001" style="height:96px; filter:brightness(0) invert(1);">
+          </div>
+          <h4 style="font-size:22px; font-weight:700; color:#fff;">Verawall is ISO 27001 &amp; SOC2 certified</h4>
+          <p style="font-size:15.5px; color:#B9BDC1; margin-top:14px; line-height:1.7;">At Verawall we take security and data protection very seriously. Our core focus is to ensure the highest security, safety and trust in the digital world throughout our work, processes, products and services.</p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; padding:32px 0 40px;">
+        <div style="font-size:13px; color:#8A8F94;">© Verawall 2026 &nbsp;|&nbsp; All Rights Reserved</div>
+        <div style="display:flex; gap:24px; font-size:13px; color:#9DA2A7;">
+          <a href="#" style-hover="color:#D71A28;">Privacy Policy</a>
+          <a href="#" style-hover="color:#D71A28;">Cookies</a>
+          <a href="#" style-hover="color:#D71A28;">Code of Conduct</a>
+          <a href="#" style-hover="color:#D71A28;">Whistleblower Protection</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  icons = {
+    scam: "https://www.threatmark.com/wp-content/uploads/2024/03/R1_Scams-and-social-engineering-exploitation_50x50-01.svg",
+    phishing: "https://www.threatmark.com/wp-content/uploads/2024/03/Phishing-mitigation_50x50-01.svg",
+    ato: "https://www.threatmark.com/wp-content/uploads/2024/03/Account-Takeover_Account-Takeover_50x50-01-1.svg",
+    naf: "https://www.threatmark.com/wp-content/uploads/2024/03/R1_Fraudulent-Account-Creation_50x50-01.svg",
+    mule: "https://www.threatmark.com/wp-content/uploads/2024/03/Money-Mules_50X50.svg",
+    tra: "https://www.threatmark.com/wp-content/uploads/2024/03/Transaction-Risk-Analysis_50x50.svg",
+  };
+
+  pages = {
+    "app-scams": { category: "Scams & Social Engineering", isSub: true, title: "Authorized Push Payment Scams",
+      sub: "APP scams manipulate victims into authorizing payments to fraudsters themselves.",
+      intro: "Because the customer initiates the transfer, traditional controls that look for unauthorized access see nothing wrong. Fraudsters combine impersonation, urgency and emotional pressure to walk victims through every security step — making APP fraud one of the fastest-growing loss categories worldwide.",
+      statsTitle: "The impact of APP fraud.",
+      stats: [
+        { value: "£460M", label: "lost to APP scams in the UK alone in a single year." },
+        { value: "48%", label: "of financial institution executives see scams as the greatest modern threat." },
+        { value: "56%", label: "of APP scam cases start with contact on social media or a phone call." }],
+      spotTitle: "Detect coercion, not just credentials.",
+      paras: [
+        { text: "In an APP scam the right person logs in on the right device — so the fraud only becomes visible in how they behave. Behavioral intelligence detects the hallmarks of a coached session: hesitation on amount fields, unusual navigation, dictation-paced typing and an active phone call during the payment." },
+        { text: "By scoring the payment in the context of the whole session, the platform holds only the transfers that genuinely look coerced, while legitimate first-time payments proceed without friction." },
+        { text: "When a scam is confirmed, the payee account, device fingerprints and infrastructure are shared through FraudIntel, protecting every other institution in the network from the same campaign." }],
+      cardsTitle: "Understanding APP fraud.",
+      cards: [
+        { icon: "scam", title: "Coached Session Detection", desc: "Victims being guided by a fraudster behave measurably differently — pausing, correcting and navigating in patterns that deviate from their learned profile. These signals surface coercion in real time." },
+        { icon: "tra", title: "First-Time Payee Risk", desc: "Most APP losses go to accounts the victim has never paid before. Payee novelty, amount deviation and transfer urgency combine into a strong scam indicator." },
+        { icon: "mule", title: "Mule Account Correlation", desc: "The destination account is the fraudster's weak point. Cross-referencing payees against known mule networks stops scams even when the victim is fully convinced." }] },
+
+    "investment-scams": { category: "Scams & Social Engineering", isSub: true, title: "Investment Scams",
+      sub: "Investment scams lure victims with promises of extraordinary returns.",
+      intro: "From fake crypto platforms to 'mentors' with guaranteed profits, investment scams groom victims over weeks — small test withdrawals build trust before the life-changing losses. Victims willingly authorize every payment, defeating traditional fraud controls.",
+      statsTitle: "The impact of investment fraud.",
+      stats: [
+        { value: "$4.6B", label: "lost globally to investment scams in a single year — the costliest scam category." },
+        { value: "10x", label: "growth in crypto-related investment scam reports over five years." },
+        { value: "70%", label: "of victims are first contacted through social media or messaging apps." }],
+      spotTitle: "Break the grooming cycle in real-time.",
+      paras: [
+        { text: "Investment scams follow a recognizable payment trajectory: a small first transfer to a new payee, followed by escalating amounts to the same destination or linked accounts. Behavioral intelligence flags this progression as it forms." },
+        { text: "Destination analysis is decisive — payments to crypto exchanges and payment processors that are unusual for the customer's profile, combined with scam-typical session behavior, trigger a hold before funds leave the bank." },
+        { text: "ScamFlag adds a second line of defense: customers can submit the 'investment opportunity' messages they receive, and GenAI analysis identifies the scam before the first payment is ever made." }],
+      cardsTitle: "Understanding investment fraud.",
+      cards: [
+        { icon: "tra", title: "Escalating Payment Pattern", desc: "A small test payment followed by rapidly growing transfers to the same new payee is the signature of an investment scam in progress — detectable at the second payment, not the last." },
+        { icon: "scam", title: "Scam Message Analysis", desc: "Guaranteed returns, mentor personas and scarcity framing are linguistic fingerprints. ScamFlag lets customers verify suspicious messages inside the banking app." },
+        { icon: "mule", title: "Exchange & Wallet Intelligence", desc: "Wallet addresses and payout accounts tied to prior scam reports are shared across the FraudIntel network, so one bank's confirmed scam protects all." }] },
+
+    "p2p-fraud": { category: "Scams & Social Engineering", isSub: true, title: "Peer to Peer Fraud",
+      sub: "P2P payment fraud exploits the instant, irreversible nature of person-to-person transfers.",
+      intro: "P2P apps and instant transfer schemes are designed for speed between people who trust each other — which is exactly what fraudsters exploit. Fake buyers, fake sellers and impersonated friends extract payments that cannot be recalled.",
+      statsTitle: "The impact of P2P fraud.",
+      stats: [
+        { value: "3x", label: "higher fraud rate on P2P transfers than on traditional payment rails." },
+        { value: "18–34", label: "the age group most frequently targeted by P2P payment scams." },
+        { value: "<1 min", label: "typical time for stolen P2P funds to be forwarded out of reach." }],
+      spotTitle: "Protect transfers between people.",
+      paras: [
+        { text: "P2P fraud hides in small, frequent payments — so per-transaction rules fail. Behavioral intelligence evaluates each transfer against the customer's social payment graph: who they pay, how often, and in what amounts." },
+        { text: "Impersonation scams ('Mum, I lost my phone — pay this bill') break the pattern instantly: a new counterparty, an urgent amount and session behavior showing stress or coaching." },
+        { text: "Real-time scoring means the risky transfer is held for a confirmation prompt while normal repayments between friends flow untouched." }],
+      cardsTitle: "Understanding P2P fraud.",
+      cards: [
+        { icon: "scam", title: "Impersonation Detection", desc: "Messages impersonating family members drive urgent payments to unknown accounts. Counterparty novelty plus urgency signals expose the pattern." },
+        { icon: "tra", title: "Payment Graph Anomalies", desc: "Every customer has a stable network of people they pay. Transfers outside that graph, at unusual amounts or hours, carry measurably higher risk." },
+        { icon: "mule", title: "Rapid Cash-Out Tracking", desc: "P2P scam proceeds move fast. Velocity analysis on receiving accounts identifies mule behavior before funds are layered away." }] },
+
+    "romance-scams": { category: "Scams & Social Engineering", isSub: true, title: "Romance Scams",
+      sub: "Romance scams weaponize emotional relationships built over months.",
+      intro: "Fraudsters cultivate online relationships specifically to extract money — an emergency, a plane ticket, an investment 'for our future'. Victims defend the fraudster against the bank's own warnings, making detection and intervention uniquely difficult.",
+      statsTitle: "The impact of romance fraud.",
+      stats: [
+        { value: "$1.3B", label: "reported lost to romance scams in a single year — with most cases never reported." },
+        { value: "6–8 mo", label: "typical grooming period before the first money request." },
+        { value: "64%", label: "of romance scam payments go through instant or wire transfers." }],
+      spotTitle: "Intervene where words fail.",
+      paras: [
+        { text: "Romance scam victims genuinely want to send the money — so the intervention has to come from the payment pattern, not the customer. Recurring transfers to a never-met counterparty, often abroad, escalating over time, form a detectable signature." },
+        { text: "Session behavior adds evidence: payments made during or immediately after long messaging sessions, with hesitation and correction patterns that reveal emotional stress." },
+        { text: "A well-timed hold with a tailored warning — naming the pattern, not just 'possible fraud' — is proven to break the spell where generic alerts fail." }],
+      cardsTitle: "Understanding romance fraud.",
+      cards: [
+        { icon: "scam", title: "Grooming Pattern Recognition", desc: "Escalating transfers to a single overseas counterparty with no commercial context follow a known trajectory that behavioral models detect early." },
+        { icon: "tra", title: "Emotional Session Signals", desc: "Payments initiated under emotional pressure carry measurable behavioral markers — hesitation, re-typing, unusual session hours." },
+        { icon: "phishing", title: "Tailored Interventions", desc: "Breaking a romance scam requires a specific, empathetic warning at the moment of payment. Context-aware messaging outperforms generic fraud alerts." }] },
+
+    "purchase-scams": { category: "Scams & Social Engineering", isSub: true, title: "Purchase Scams",
+      sub: "Purchase scams sell goods that never existed — at prices too good to refuse.",
+      intro: "Fake marketplace listings, cloned shops and 'private sellers' pressure victims into instant payment for cars, electronics and apartments that never arrive. The payment is authorized, instant and unrecoverable.",
+      statsTitle: "The impact of purchase fraud.",
+      stats: [
+        { value: "#1", label: "purchase scams are the most common scam type by number of victims." },
+        { value: "74%", label: "of purchase scams originate on social media marketplaces." },
+        { value: "£86M", label: "lost to purchase scams in the UK in a single year." }],
+      spotTitle: "Stop payments for goods that don't exist.",
+      paras: [
+        { text: "Purchase scams share a payment fingerprint: an instant transfer to a new personal account, for an amount typical of goods, often demanded with time pressure ('I'll take the listing down today'). Behavioral intelligence scores this combination in real time." },
+        { text: "Receiving-account intelligence is decisive — scam sellers reuse accounts across dozens of victims, so a payee flagged once protects everyone who tries to pay it after." },
+        { text: "ScamFlag closes the loop before payment: customers can submit the seller conversation, and GenAI analysis flags pressure tactics and known-fraudulent payment instructions." }],
+      cardsTitle: "Understanding purchase fraud.",
+      cards: [
+        { icon: "tra", title: "Goods-Payment Anomalies", desc: "Instant transfers to personal accounts for merchandise-sized amounts, outside the customer's normal pattern, are the core purchase-scam signal." },
+        { icon: "mule", title: "Payee Reputation", desc: "Scam sellers collect from many victims into few accounts. Network-level payee intelligence stops the tenth victim at the first attempt." },
+        { icon: "scam", title: "Conversation Analysis", desc: "Urgency framing and off-platform payment requests are classic markers. ScamFlag verifies seller conversations before money moves." }] },
+
+    "credential-theft": { category: "Phishing Detection & Mitigation", isSub: true, title: "Credential Theft",
+      sub: "Stolen credentials turn a customer's own login into the fraudster's key.",
+      intro: "Phishing pages, infostealer malware and data breaches feed a constant supply of valid usernames and passwords. Once credentials are stolen, the attacker logs in as the customer — and only behavior tells the two apart.",
+      statsTitle: "The impact of credential theft.",
+      stats: [
+        { value: "90%", label: "of cyber attacks begin with phishing." },
+        { value: "24B+", label: "credential pairs circulating on criminal marketplaces." },
+        { value: "<2h", label: "median time from phishing submission to first fraudulent login attempt." }],
+      spotTitle: "Valid credentials, invalid behavior.",
+      paras: [
+        { text: "A stolen password passes every knowledge check — but the person typing it cannot fake the owner's behavioral profile. Typing cadence, navigation habits and device handling expose the imposter within seconds of login." },
+        { text: "Infrastructure intelligence compounds the signal: logins from IPs, devices and automation frameworks tied to known phishing campaigns are flagged before any behavioral evidence is even needed." },
+        { text: "The Cyber Fraud Fusion Center actively hunts the phishing kits targeting your brand, extracting compromised credential lists so accounts can be protected before the first misuse." }],
+      cardsTitle: "Understanding credential theft.",
+      cards: [
+        { icon: "phishing", title: "Phishing Infrastructure Tracking", desc: "Live monitoring of phishing kits, lookalike domains and harvesting pages targeting your customers — with credentials recovered before misuse." },
+        { icon: "ato", title: "Behavioral Login Verification", desc: "Every login is silently compared to the owner's learned profile. An imposter with a perfect password still types like a stranger." },
+        { icon: "tra", title: "Step-Up Only When Needed", desc: "Suspicious logins get a strong authentication challenge; genuine customers with matching behavior sail through invisibly." }] },
+
+    "account-takeover": { category: "Account Takeover", isSub: false, title: "Account Takeover",
+      sub: "ATO gives fraudsters full control of a legitimate customer's account.",
+      intro: "Through remote access tools, session hijacking, SIM swap or malware, attackers gain unauthorized control and drain accounts from inside. Detection has to happen in the session itself — before the money moves.",
+      statsTitle: "The impact of account takeover.",
+      stats: [
+        { value: "$13B", label: "in global losses attributed to account takeover in a single year." },
+        { value: "354%", label: "year-over-year growth in ATO attacks at their recent peak." },
+        { value: "22%", label: "of adults have had an online account taken over at least once." }],
+      spotTitle: "Expose the stranger inside the session.",
+      paras: [
+        { text: "Whatever the entry vector — RAT, hijacked session, swapped SIM — the attacker eventually has to act. And acting means behaving: typing, navigating, transferring. Behavioral biometrics compare every action to the owner's learned profile and expose the mismatch in real time." },
+        { text: "Technical signals sharpen the verdict: remote-access artifacts, automation signatures, impossible travel, device and network anomalies each add to the risk score." },
+        { text: "On detection the platform can terminate the session, force credential reset and hold pending payments automatically — containing the takeover in seconds rather than hours." }],
+      cardsTitle: "Understanding account takeover.",
+      cards: [
+        { icon: "ato", title: "Remote Access Detection", desc: "Screen-sharing artifacts, input latency and control patterns reveal AnyDesk-style tools even when the session comes from the customer's own device." },
+        { icon: "phishing", title: "Session Hijacking & SIM Swap", desc: "Stolen session tokens and swapped SIMs bypass authentication entirely — but not the behavioral profile of the person now operating the account." },
+        { icon: "tra", title: "Automatic Containment", desc: "Kill the session, reset credentials, hold payments — automated response contains a takeover before losses occur." }] },
+
+    "money-mules": { category: "Money Mules", isSub: false, title: "Money Mules",
+      sub: "Mule accounts are the exit ramp for every fraud scheme.",
+      intro: "Stolen and scammed funds have to land somewhere — in accounts recruited, rented or opened specifically to launder them. Identify the mule and you cut off the fraudster's payout, whatever the original scheme.",
+      statsTitle: "The impact of money mules.",
+      stats: [
+        { value: "90%", label: "of mule transactions are linked to cybercrime proceeds." },
+        { value: "3–5", label: "layers of mule accounts in a typical laundering chain." },
+        { value: "€17.5M", label: "intercepted in a single European anti-mule operation." }],
+      spotTitle: "Cut off the fraudster's payout.",
+      paras: [
+        { text: "Mule accounts betray themselves through velocity: dormant accounts that suddenly receive and immediately forward funds, splitting amounts across counterparties within minutes. Behavioral intelligence detects the in-out pattern as it happens." },
+        { text: "Account-link analysis maps the network — shared devices, matching behavioral fingerprints and common counterparties connect one detected mule to the whole ring." },
+        { text: "Findings feed compliance directly: restricted transfers, SAR-ready evidence trails and FraudIntel sharing that lets partner banks block the same network." }],
+      cardsTitle: "Understanding mule activity.",
+      cards: [
+        { icon: "mule", title: "Rapid In-Out Velocity", desc: "Funds that arrive and leave within minutes, split across multiple recipients, are the defining mule signature — detectable on the first cycle." },
+        { icon: "naf", title: "Recruited & Synthetic Accounts", desc: "Some mules are opened for the purpose. Onboarding biometrics and dormancy-reactivation patterns flag accounts created to launder." },
+        { icon: "ato", title: "Network Mapping", desc: "Shared devices and behavioral fingerprints link mule accounts into rings — one detection exposes the entire network." }] },
+
+    "new-account-fraud": { category: "New Account Fraud", isSub: false, title: "New Account Fraud",
+      sub: "Fraudsters open accounts with stolen and synthetic identities.",
+      intro: "Bonus abuse, loan fraud, mule account creation — it all starts with an account opened under a false identity. Documents can be stolen or forged; the behavior of the person filling in the application cannot.",
+      statsTitle: "The impact of new account fraud.",
+      stats: [
+        { value: "$5.3B", label: "in annual losses from synthetic identity fraud alone." },
+        { value: "85%", label: "of synthetic identities evade traditional KYC document checks." },
+        { value: "#1", label: "synthetic identity is the fastest-growing financial crime category." }],
+      spotTitle: "Catch the imposter at the door.",
+      paras: [
+        { text: "Behavioral biometrics evaluate the application session itself: how personal data is entered reveals whether the applicant owns it. Genuine users type their own birthdate fluently; imposters copy-paste, hesitate and correct." },
+        { text: "Declared identity is cross-checked against behavioral age and device history — a 61-year-old identity typed at a 20-year-old's cadence, on a device seen across other applications, scores immediately." },
+        { text: "Bot and emulator detection filters industrialized attacks, while flagged identities are shared through FraudIntel so the same synthetic identity cannot try the next bank." }],
+      cardsTitle: "Understanding new account fraud.",
+      cards: [
+        { icon: "naf", title: "Application Behavior Analysis", desc: "Copy-pasted personal data, dictation-paced typing and age-inconsistent cadence expose applicants who don't own the identity they claim." },
+        { icon: "ato", title: "Device & Identity Correlation", desc: "One device behind many applications, or one identity across many institutions, surfaces organized new-account fraud rings." },
+        { icon: "phishing", title: "Bot & Emulator Defense", desc: "Automation frameworks and emulators used for bulk account creation are fingerprinted and blocked at scale." }] },
+
+    "transaction-risk": { category: "Transaction Risk Analysis", isSub: false, title: "Transaction Risk Analysis",
+      sub: "Score every payment — apply friction only where risk demands it.",
+      intro: "Blanket step-up authentication frustrates customers and still misses coerced payments. Adaptive transaction risk analysis evaluates every payment in full session context, approving the safe ones invisibly and challenging only genuine risk.",
+      statsTitle: "The impact of adaptive risk analysis.",
+      stats: [
+        { value: "86%", label: "of payments approved with zero customer friction via behavioral profile match." },
+        { value: "0.8%", label: "false positive rate with Smart Insights tuning." },
+        { value: "PSD2", label: "compliant transaction risk analysis enabling SCA exemptions." }],
+      spotTitle: "Security and UX are not a trade-off.",
+      paras: [
+        { text: "Every payment is scored in real time against the full context: the user's behavioral profile, device trust, network, payee history and amount pattern. Low-risk payments — the vast majority — are approved silently." },
+        { text: "Elevated risk triggers proportionate response: a 3DS challenge or strong authentication step-up. Only genuinely high-risk payments are held for analyst review." },
+        { text: "Because behavioral profile match itself constitutes strong customer authentication, banks can claim SCA exemptions and remove friction from compliant flows — invisible authentication in action." }],
+      cardsTitle: "Understanding transaction risk analysis.",
+      cards: [
+        { icon: "tra", title: "Adaptive Risk Scoring", desc: "0–100 risk score per payment drives a graduated policy: approve silently, step up, or hold — stringent measures only where risk demands." },
+        { icon: "ato", title: "Strong & Invisible Authentication", desc: "A matching behavioral profile authenticates the customer without any interaction — stronger than SMS codes, invisible to the user." },
+        { icon: "phishing", title: "3D Secure Authorization", desc: "Card payments flow through the same risk engine, challenging 3DS only when session and transaction context warrant it." }] },
+  };
+
+  order = ["app-scams", "investment-scams", "p2p-fraud", "romance-scams", "purchase-scams", "credential-theft", "account-takeover", "money-mules", "new-account-fraud", "transaction-risk"];
+
+  state = { slug: (typeof location !== "undefined" ? location.hash : "").replace("#", "") };
+  componentDidMount() {
+    this._onHash = () => { this.setState({ slug: location.hash.replace("#", "") }); window.scrollTo(0, 0); };
+    window.addEventListener("hashchange", this._onHash);
+  }
+  componentWillUnmount() { window.removeEventListener("hashchange", this._onHash); }
+
+  renderVals() {
+    const slug = this.pages[this.state.slug] ? this.state.slug : "app-scams";
+    const p = this.pages[slug];
+    return {
+      page: p,
+      stats: p.stats,
+      paras: p.paras.map(t => ({ text: t.text })),
+      cards: p.cards.map(c => ({ ...c, icon: this.icons[c.icon] })),
+      related: this.order.filter(s => s !== slug).slice(0, 5).map(s => ({ title: this.pages[s].title, href: "#" + s }))
+        .concat([{ title: "Instant Payment Scams", href: "Instant Payment Scams.dc.html" }]),
+    };
+  }
+}
+</script>
+</body>
+</html>

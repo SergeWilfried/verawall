@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Open Sans', sans-serif; background: #F4F6F8; color: #3E4753; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: #D71A28; }
+  ::selection { background: #D71A28; color: #fff; }
+</style>
+</helmet>
+<div style="display:flex; min-height:100vh; background:#F4F6F8;">
+
+  <!-- SIDEBAR -->
+  <aside style="width:248px; flex-shrink:0; background:#1D1D1B; color:#EAEAEA; display:flex; flex-direction:column;">
+    <div style="padding:22px 20px; border-bottom:1px solid rgba(255,255,255,0.12); display:flex; align-items:center; gap:10px;">
+      <span style="display:inline-flex; align-items:center; gap:9px;"><svg width="30" height="30" viewBox="0 0 28 28" style="flex-shrink:0;"><path d="M14 1 L26 5.5 V13 C26 20.5 21 25.5 14 27.5 C7 25.5 2 20.5 2 13 V5.5 Z" fill="#D71A28"></path><path d="M8.5 9.5 L14 19.5 L19.5 9.5" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="font-family:'Barlow'; font-weight:800; font-size:22px; letter-spacing:0.01em; color:#FFFFFF;">Verawall</span></span>
+    </div>
+    <nav style="display:flex; flex-direction:column; padding:4px 12px 12px; gap:2px; overflow-y:auto;">
+      <sc-for list="{{ navGroups }}" as="ng" hint-placeholder-count="4">
+        <div style="padding:16px 8px 6px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#8A8F94;">{{ ng.title }}</div>
+        <sc-for list="{{ ng.items }}" as="nv" hint-placeholder-count="3">
+          <button onClick="{{ nv.go }}" style="{{ nv.style }}">{{ nv.label }}<span style="{{ nv.badgeStyle }}">{{ nv.badge }}</span></button>
+        </sc-for>
+      </sc-for>
+    </nav>
+    <div style="margin-top:auto; padding:18px 20px; border-top:1px solid rgba(255,255,255,0.12);">
+      <div style="font-size:12px; color:#8A8F94;">Cyber Fraud Fusion Center</div>
+      <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+        <span style="width:8px; height:8px; border-radius:50%; background:#2FBF71; display:inline-block;"></span>
+        <span style="font-size:13px; font-weight:600; color:#EAEAEA;">Live — 24/7 monitoring</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main style="flex:1; min-width:0; display:flex; flex-direction:column;">
+    <!-- topbar -->
+    <div style="height:64px; background:#fff; border-bottom:1px solid #E3E7EB; display:flex; align-items:center; gap:16px; padding:0 28px;">
+      <h1 style="font-family:'Barlow'; font-size:18px; font-weight:700;">{{ screenTitle }}</h1>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:14px;">
+        <div style="display:flex; align-items:center; gap:8px; background:#F4F6F8; border:1px solid #E3E7EB; border-radius:3px; padding:8px 14px; font-size:13px; color:#7A8593; width:260px;">⌕ Search user, account, device…</div>
+        <div style="font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:8px 14px; background:#FBF1F2; color:#D71A28; border-radius:3px;">Tenant: Demo Bank</div>
+        <div style="width:36px; height:36px; border-radius:50%; background:#D71A28; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Barlow'; font-weight:700; font-size:13px;">FF</div>
+      </div>
+    </div>
+
+    <!-- DETECTIONS PAGE -->
+    <sc-if value="{{ isDetections }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+        <div style="max-width:760px;">
+          <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#D71A28;">Detections</div>
+          <div style="font-size:14px; color:#5A6976; margin-top:6px; line-height:1.6;">All fraud types monitored by the Behavioral Intelligence Platform. Select a type to open its live alerts in the queue.</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px;">
+          <sc-for list="{{ detections }}" as="dt" hint-placeholder-count="6">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:24px; display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="font-family:'Barlow'; font-size:16px; font-weight:700; color:#3E4753;">{{ dt.name }}</div>
+                <div style="{{ dt.countStyle }}">{{ dt.count }}</div>
+              </div>
+              <div style="font-size:13px; color:#5A6976; line-height:1.6; flex:1;">{{ dt.desc }}</div>
+              <div style="height:8px; background:#EEF1F4; border-radius:4px; overflow:hidden;"><div style="{{ dt.barStyle }}"></div></div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-top:2px;">
+                <div style="font-size:12px; color:#7A8593;">{{ dt.trend }}</div>
+                <button onClick="{{ dt.open }}" style="padding:9px 16px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">View alerts</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- OVERVIEW PAGE -->
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+        <!-- KPI ROW -->
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px;">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:20px 22px;">
+              <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593;">{{ k.label }}</div>
+              <div style="display:flex; align-items:baseline; gap:10px; margin-top:8px;">
+                <div style="font-family:'Barlow'; font-size:30px; font-weight:800; color:#1D1D1B;">{{ k.value }}</div>
+                <div style="{{ k.deltaStyle }}">{{ k.delta }}</div>
+              </div>
+              <div style="font-size:12px; color:#7A8593; margin-top:4px;">{{ k.sub }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:24px; align-items:start;">
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <!-- FRAUD PREVENTED CHART -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Fraud losses prevented — 8 weeks</div>
+                <div style="font-family:'Barlow'; font-size:13px; font-weight:700; color:#D71A28;">Σ 9.6M Kč</div>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(8,1fr); gap:14px; align-items:end; height:180px; margin-top:22px;">
+                <sc-for list="{{ weeks }}" as="w" hint-placeholder-count="8">
+                  <div style="display:flex; flex-direction:column; justify-content:flex-end; height:100%; gap:6px;">
+                    <div style="text-align:center; font-family:'Barlow'; font-size:11px; font-weight:700; color:#5A6976;">{{ w.value }}</div>
+                    <div style="{{ w.barStyle }}"></div>
+                    <div style="text-align:center; font-size:10.5px; color:#7A8593;">{{ w.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- ACTIVITY FEED -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Latest activity</div>
+              <div style="display:flex; flex-direction:column; margin-top:14px;">
+                <sc-for list="{{ activity }}" as="ac" hint-placeholder-count="5">
+                  <div style="display:flex; align-items:center; gap:14px; padding:11px 0; border-bottom:1px solid #F0F2F5;">
+                    <span style="{{ ac.dotStyle }}"></span>
+                    <div style="flex:1; font-size:13px;"><span style="font-weight:700;">{{ ac.what }}</span> <span style="color:#5A6976;">{{ ac.detail }}</span></div>
+                    <div style="font-size:11.5px; color:#7A8593; white-space:nowrap;">{{ ac.when }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <!-- MODULE HEALTH -->
+            <div style="background:#1D1D1B; color:#EAEAEA; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700; color:#fff;">Platform modules</div>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+                <sc-for list="{{ modules }}" as="md" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="{{ md.dotStyle }}"></span>
+                    <div style="flex:1; font-size:13px; font-weight:600; color:#EAEAEA;">{{ md.name }}</div>
+                    <div style="font-size:11.5px; color:#8A8F94;">{{ md.stat }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- TOP THREATS -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Top threats this week</div>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+                <sc-for list="{{ topThreats }}" as="tt" hint-placeholder-count="3">
+                  <button onClick="{{ tt.open }}" style="{{ tt.rowStyle }}">
+                    <div style="text-align:left;"><div style="font-size:13px; font-weight:700;">{{ tt.name }}</div><div style="font-size:11.5px; color:#7A8593;">{{ tt.trend }}</div></div>
+                    <div style="font-family:'Barlow'; font-weight:800; font-size:18px; color:#D71A28;">{{ tt.count }}</div>
+                  </button>
+                </sc-for>
+              </div>
+              <button onClick="{{ goDetections }}" style="margin-top:16px; width:100%; padding:12px; background:#fff; color:#D71A28; border:1px solid #D71A28; border-radius:3px; font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#FBF1F2;">All detections</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- TRANSACTION RISK PAGE -->
+    <sc-if value="{{ isTxn }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px;">
+          <sc-for list="{{ txnKpis }}" as="tk" hint-placeholder-count="4">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:18px 20px;">
+              <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593;">{{ tk.label }}</div>
+              <div style="font-family:'Barlow'; font-size:26px; font-weight:800; color:#1D1D1B; margin-top:6px;">{{ tk.value }}</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">{{ tk.sub }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:24px; align-items:start;">
+          <!-- PAYMENT STREAM -->
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+            <div style="display:flex; align-items:center; padding:18px 22px; border-bottom:1px solid #E9EDF1;">
+              <div>
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Live payment stream</div>
+                <div style="font-size:12px; color:#7A8593; margin-top:2px;">Adaptive risk scoring — stringent measures applied only where risk demands</div>
+              </div>
+              <div style="margin-left:auto; display:flex; gap:8px;">
+                <sc-for list="{{ txnFilters }}" as="tf" hint-placeholder-count="3">
+                  <button onClick="{{ tf.go }}" style="{{ tf.style }}">{{ tf.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="overflow-x:auto;"><div style="min-width:680px;">
+            <div style="display:grid; grid-template-columns:64px minmax(0,1.2fr) minmax(0,1fr) 110px 120px 170px; padding:10px 22px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593; border-bottom:1px solid #E9EDF1;">
+              <div>Risk</div><div>Payer → Payee</div><div>Context</div><div>Amount</div><div>Decision</div><div style="text-align:right;">Action</div>
+            </div>
+            <sc-for list="{{ txns }}" as="tx" hint-placeholder-count="7">
+              <div style="display:grid; grid-template-columns:64px minmax(0,1.2fr) minmax(0,1fr) 110px 120px 170px; align-items:center; padding:13px 22px; border-bottom:1px solid #F0F2F5;">
+                <div style="{{ tx.scoreStyle }}">{{ tx.score }}</div>
+                <div><div style="font-weight:700; font-size:13px;">{{ tx.payer }}</div><div style="font-size:12px; color:#7A8593;">→ {{ tx.payee }}</div></div>
+                <div style="font-size:12px; color:#5A6976;">{{ tx.context }}</div>
+                <div style="font-family:'Barlow'; font-weight:700; font-size:13.5px;">{{ tx.amount }}</div>
+                <div><span style="{{ tx.decisionStyle }}">{{ tx.decision }}</span></div>
+                <div style="{{ tx.actionsStyle }}">
+                  <button onClick="{{ tx.release }}" style="padding:8px 12px; background:#fff; color:#2FBF71; border:1px solid #2FBF71; border-radius:3px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Release</button>
+                  <button onClick="{{ tx.block }}" style="padding:8px 12px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Block</button>
+                </div>
+                <div style="{{ tx.resolvedStyle }}">{{ tx.resolution }}</div>
+              </div>
+            </sc-for>
+            </div></div>
+          </div>
+
+          <!-- RIGHT: AUTH MIX + POLICY -->
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Authentication outcomes — today</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">Strong &amp; invisible authentication in action</div>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:18px;">
+                <sc-for list="{{ authMix }}" as="am" hint-placeholder-count="4">
+                  <div style="font-size:12.5px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span style="font-weight:600;">{{ am.name }}</span><span style="color:#7A8593;">{{ am.pct }}</span></div>
+                    <div style="height:8px; background:#EEF1F4; border-radius:4px; overflow:hidden;"><div style="{{ am.barStyle }}"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px; padding:12px 14px; background:#F7F8FA; border:1px solid #E9EDF1; border-radius:4px; font-size:12.5px; color:#5A6976; line-height:1.55;"><span style="font-weight:700; color:#2FBF71;">86%</span> of payments authorized with zero customer friction — behavioral profile match replaced step-up authentication.</div>
+            </div>
+
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Risk policy thresholds</div>
+              <div style="display:flex; flex-direction:column; gap:14px; margin-top:16px;">
+                <sc-for list="{{ policies }}" as="pl" hint-placeholder-count="3">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="{{ pl.dotStyle }}"></span>
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ pl.band }}</div><div style="font-size:11.5px; color:#7A8593;">{{ pl.rule }}</div></div>
+                    <div style="font-family:'Barlow'; font-weight:700; font-size:12.5px; color:#7A8593;">{{ pl.range }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- SCAMFLAG / FRAUDINTEL PAGE -->
+    <sc-if value="{{ isIntel }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:24px; align-items:start;">
+
+        <!-- SCAMFLAG TRIAGE -->
+        <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:12px; padding:18px 22px; border-bottom:1px solid #E9EDF1;">
+            <div>
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">ScamFlag — customer submissions</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">GenAI analysis of suspicious messages reported in the banking app</div>
+            </div>
+            <div style="margin-left:auto; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:6px 12px; background:#FBF1F2; color:#D71A28; border-radius:3px;">{{ pendingCount }} pending</div>
+          </div>
+          <sc-for list="{{ submissions }}" as="sb" hint-placeholder-count="5">
+            <div style="padding:18px 22px; border-bottom:1px solid #F0F2F5;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="font-weight:700; font-size:13.5px;">{{ sb.customer }}</div>
+                <div style="font-size:12px; color:#7A8593;">{{ sb.channel }} · {{ sb.when }}</div>
+                <span style="{{ sb.verdictStyle }}">{{ sb.verdict }} · {{ sb.confidence }}</span>
+              </div>
+              <div style="margin-top:10px; padding:12px 14px; background:#F7F8FA; border:1px solid #E9EDF1; border-radius:4px; font-size:13px; line-height:1.55; color:#5A6976; font-style:italic;">"{{ sb.message }}"</div>
+              <div style="margin-top:10px; font-size:12.5px; color:#5A6976;"><span style="font-weight:700; color:#D71A28;">GenAI:</span> {{ sb.analysis }}</div>
+              <div style="{{ sb.actionsStyle }}">
+                <button onClick="{{ sb.confirm }}" style="padding:9px 16px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">Confirm scam</button>
+                <button onClick="{{ sb.dismiss }}" style="padding:9px 16px; background:#fff; color:#3E4753; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="border-color:#D71A28; color:#D71A28;">Mark safe</button>
+                <button onClick="{{ sb.share }}" style="padding:9px 16px; background:#fff; color:#3E4753; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="border-color:#D71A28; color:#D71A28;">Share to FraudIntel</button>
+              </div>
+              <div style="{{ sb.resolvedStyle }}">{{ sb.resolution }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- FRAUDINTEL FEED -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div style="background:#1D1D1B; color:#EAEAEA; border-radius:6px; padding:22px;">
+            <div style="font-family:'Barlow'; font-size:15px; font-weight:700; color:#fff;">FraudIntel — network feed</div>
+            <div style="font-size:12px; color:#8A8F94; margin-top:2px;">Cross-border schemes shared across the Verawall network in real time</div>
+            <div style="display:flex; gap:24px; margin-top:16px;">
+              <div><div style="font-family:'Barlow'; font-size:24px; font-weight:800; color:#fff;">{{ intelCount }}</div><div style="font-size:11px; color:#8A8F94;">active campaigns</div></div>
+              <div><div style="font-family:'Barlow'; font-size:24px; font-weight:800; color:#fff;">14</div><div style="font-size:11px; color:#8A8F94;">institutions sharing</div></div>
+              <div><div style="font-family:'Barlow'; font-size:24px; font-weight:800; color:#D71A28;">3</div><div style="font-size:11px; color:#8A8F94;">match your traffic</div></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <sc-for list="{{ intel }}" as="it" hint-placeholder-count="4">
+              <div style="background:#fff; border:1px solid #E3E7EB; border-left:3px solid #D71A28; border-radius:6px; padding:16px 18px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <div style="font-family:'Barlow'; font-weight:700; font-size:13.5px;">{{ it.name }}</div>
+                  <span style="{{ it.sevStyle }}">{{ it.severity }}</span>
+                </div>
+                <div style="font-size:12.5px; color:#5A6976; margin-top:6px; line-height:1.55;">{{ it.desc }}</div>
+                <div style="display:flex; align-items:center; gap:10px; margin-top:10px; font-size:11.5px; color:#7A8593;">
+                  <span>{{ it.region }}</span><span>·</span><span>shared by {{ it.source }}</span><span>·</span><span>{{ it.when }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- CASE MANAGEMENT PAGE -->
+    <sc-if value="{{ isCases }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px;">
+          <sc-for list="{{ caseKpis }}" as="ck" hint-placeholder-count="4">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:18px 20px;">
+              <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593;">{{ ck.label }}</div>
+              <div style="font-family:'Barlow'; font-size:26px; font-weight:800; color:#1D1D1B; margin-top:6px;">{{ ck.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:24px; align-items:start;">
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+            <div style="display:flex; align-items:center; padding:18px 22px; border-bottom:1px solid #E9EDF1;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Open cases</div>
+              <div style="margin-left:auto; display:flex; gap:8px;">
+                <sc-for list="{{ caseFilters }}" as="cf" hint-placeholder-count="4">
+                  <button onClick="{{ cf.go }}" style="{{ cf.style }}">{{ cf.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="overflow-x:auto;"><div style="min-width:640px;">
+            <div style="display:grid; grid-template-columns:88px minmax(0,1.2fr) minmax(0,1fr) 110px 110px 90px; padding:10px 22px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593; border-bottom:1px solid #E9EDF1;">
+              <div>Case</div><div>Subject</div><div>Threat type</div><div>Status</div><div>Assignee</div><div style="text-align:right;">Age</div>
+            </div>
+            <sc-for list="{{ cases }}" as="cs" hint-placeholder-count="6">
+              <button onClick="{{ cs.select }}" style="{{ cs.rowStyle }}">
+                <div style="font-family:'Barlow'; font-weight:700; font-size:13px; color:#D71A28; text-align:left;">{{ cs.id }}</div>
+                <div style="text-align:left;"><div style="font-weight:700; font-size:13.5px;">{{ cs.user }}</div><div style="font-size:12px; color:#7A8593;">{{ cs.account }}</div></div>
+                <div style="text-align:left;"><span style="{{ cs.typeStyle }}">{{ cs.type }}</span></div>
+                <div style="text-align:left;"><span style="{{ cs.statusStyle }}">{{ cs.status }}</span></div>
+                <div style="text-align:left; font-size:12.5px; color:#5A6976;">{{ cs.assignee }}</div>
+                <div style="text-align:right; font-size:12.5px; color:#7A8593;">{{ cs.age }}</div>
+              </button>
+            </sc-for>
+            </div></div>
+          </div>
+
+          <!-- CASE DETAIL -->
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">{{ caseDetail.id }} — {{ caseDetail.user }}</div>
+              <span style="{{ caseDetail.statusStyle }}">{{ caseDetail.status }}</span>
+            </div>
+            <div style="font-size:12.5px; color:#7A8593; margin-top:4px;">{{ caseDetail.account }} · {{ caseDetail.type }} · opened {{ caseDetail.age }} ago</div>
+            <div style="margin-top:16px; padding:14px 16px; background:#FBF1F2; border:1px solid #F2D9DB; border-radius:4px; font-size:13px; line-height:1.6; color:#5A6976;">{{ caseDetail.summary }}</div>
+            <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593; margin-top:18px;">Timeline</div>
+            <div style="display:flex; flex-direction:column; gap:0; margin-top:10px;">
+              <sc-for list="{{ caseTimeline }}" as="tl" hint-placeholder-count="4">
+                <div style="display:grid; grid-template-columns:14px 1fr; gap:12px;">
+                  <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="{{ tl.dotStyle }}"></span>
+                    <span style="{{ tl.lineStyle }}"></span>
+                  </div>
+                  <div style="padding-bottom:14px;">
+                    <div style="font-size:12.5px; font-weight:700;">{{ tl.event }}</div>
+                    <div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ tl.when }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button onClick="{{ escalate }}" style="flex:1; padding:12px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">Escalate</button>
+              <button onClick="{{ closeCase }}" style="flex:1; padding:12px; background:#fff; color:#3E4753; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="border-color:#D71A28; color:#D71A28;">Close case</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- TRANSACTION GRAPH -->
+    <sc-if value="{{ isGraph }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:20px;">
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div>
+            <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#D71A28;">Link analysis</div>
+            <div style="font-size:13px; color:#5A6976; margin-top:4px;">Money flow around a subject account. Click a node to inspect; nodes with a badge expand one hop further.</div>
+          </div>
+          <div style="margin-left:auto; display:flex; gap:8px;">
+            <sc-for list="{{ tgSubjects }}" as="ts" hint-placeholder-count="3">
+              <button onClick="{{ ts.go }}" style="{{ ts.style }}">{{ ts.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:20px; align-items:start;">
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:10px;">{{ tgSvgEl }}</div>
+
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">{{ tgSelName }}</div>
+                <span style="{{ tgSelKindStyle }}">{{ tgSelKind }}</span>
+              </div>
+              <div style="font-size:12.5px; color:#7A8593; margin-top:4px;">{{ tgSelSub }}</div>
+              <div style="display:flex; flex-direction:column; margin-top:12px;">
+                <sc-for list="{{ tgSelStats }}" as="sv" hint-placeholder-count="3">
+                  <div style="display:flex; justify-content:space-between; gap:16px; padding:8px 0; border-bottom:1px solid #F0F2F5; font-size:12.5px;">
+                    <span style="color:#7A8593; white-space:nowrap;">{{ sv.k }}</span>
+                    <span style="font-weight:700; text-align:right;">{{ sv.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
+                <sc-for list="{{ tgSelFlags }}" as="fg" hint-placeholder-count="2">
+                  <div style="display:flex; gap:9px; font-size:12px; line-height:1.5; padding:9px 11px; background:#FBF1F2; border:1px solid #F2D9DB; border-radius:4px; color:#5A6976;">
+                    <span style="color:#D71A28; font-weight:800;">!</span><span>{{ fg.text }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex; gap:10px; margin-top:16px;">
+                <button onClick="{{ tgFlag }}" style="flex:1; padding:11px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">{{ tgFlagLabel }}</button>
+                <button onClick="{{ tgProfile }}" style="{{ tgProfileStyle }}">Open profile</button>
+              </div>
+              <div style="{{ tgFlaggedStyle }}">{{ tgFlaggedMsg }}</div>
+            </div>
+
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Legend</div>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:14px;">
+                <sc-for list="{{ tgLegend }}" as="lg" hint-placeholder-count="6">
+                  <div style="display:flex; align-items:center; gap:10px; font-size:12.5px;">
+                    <span style="{{ lg.dotStyle }}"></span>
+                    <span style="font-weight:600;">{{ lg.name }}</span>
+                    <span style="color:#7A8593; margin-left:auto; font-size:11.5px;">{{ lg.desc }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:14px; padding:11px 13px; background:#F7F8FA; border:1px solid #E9EDF1; border-radius:4px; font-size:11.5px; color:#7A8593; line-height:1.5;">Edge thickness = transferred amount. Dashed edges = inbound to the node. Graphs are seeded from a subject and expand on demand — never the full ledger.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- PLATFORM SETTINGS -->
+    <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:start;">
+          <!-- LEFT -->
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Tenant &amp; environment</div>
+              <div style="display:flex; flex-direction:column; margin-top:12px;">
+                <sc-for list="{{ stTenant }}" as="tv" hint-placeholder-count="5">
+                  <div style="display:flex; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid #F0F2F5; font-size:12.5px;">
+                    <span style="color:#7A8593; white-space:nowrap;">{{ tv.k }}</span>
+                    <span style="font-weight:700; text-align:right;">{{ tv.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Notifications</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">Where the fraud-ops team is alerted</div>
+              <div style="display:flex; flex-direction:column; margin-top:10px;">
+                <sc-for list="{{ stNotifs }}" as="nf" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #F0F2F5;">
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ nf.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ nf.desc }}</div></div>
+                    <button onClick="{{ nf.toggle }}" style="{{ nf.switchStyle }}"><span style="{{ nf.knobStyle }}"></span></button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="display:flex; align-items:center;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">API keys</div>
+                <button onClick="{{ stNewKey }}" style="margin-left:auto; padding:8px 14px; background:#fff; color:#D71A28; border:1px solid #D71A28; border-radius:3px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;" style-hover="background:#FBF1F2;">Generate key</button>
+              </div>
+              <div style="display:flex; flex-direction:column; margin-top:10px;">
+                <sc-for list="{{ stKeys }}" as="ky" hint-placeholder-count="3">
+                  <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #F0F2F5;">
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ ky.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px; font-family:monospace;">{{ ky.masked }}</div></div>
+                    <span style="{{ ky.scopeStyle }}">{{ ky.scope }}</span>
+                    <div style="font-size:11.5px; color:#7A8593; white-space:nowrap;">{{ ky.used }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT -->
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Platform modules</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">Disabling a module stops its detections within minutes</div>
+              <div style="display:flex; flex-direction:column; margin-top:10px;">
+                <sc-for list="{{ stModules }}" as="md" hint-placeholder-count="5">
+                  <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #F0F2F5;">
+                    <span style="{{ md.dotStyle }}"></span>
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ md.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ md.desc }}</div></div>
+                    <button onClick="{{ md.toggle }}" style="{{ md.switchStyle }}"><span style="{{ md.knobStyle }}"></span></button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Integrations</div>
+              <div style="display:flex; flex-direction:column; margin-top:10px;">
+                <sc-for list="{{ stIntegrations }}" as="ig" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #F0F2F5;">
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ ig.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ ig.detail }}</div></div>
+                    <span style="{{ ig.statusStyle }}">{{ ig.status }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Team &amp; roles</div>
+              <div style="display:flex; flex-direction:column; margin-top:10px;">
+                <sc-for list="{{ stTeam }}" as="tm" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #F0F2F5;">
+                    <div style="{{ tm.avatarStyle }}">{{ tm.initials }}</div>
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ tm.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ tm.email }}</div></div>
+                    <span style="{{ tm.roleStyle }}">{{ tm.role }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:14px;">
+          <button onClick="{{ stSave }}" style="padding:13px 24px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">Save changes</button>
+          <div style="{{ stSavedStyle }}">{{ stSavedMsg }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- REPORTING -->
+    <sc-if value="{{ isReporting }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div>
+            <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#D71A28;">Weekly fraud-ops summary</div>
+            <div style="font-size:13px; color:#5A6976; margin-top:4px;">{{ repHeader }}</div>
+          </div>
+          <div style="margin-left:auto; display:flex; gap:8px;">
+            <sc-for list="{{ repWeeksSel }}" as="rw" hint-placeholder-count="2">
+              <button onClick="{{ rw.go }}" style="{{ rw.style }}">{{ rw.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px;">
+          <sc-for list="{{ repKpis }}" as="rk" hint-placeholder-count="4">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:20px 22px;">
+              <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593;">{{ rk.label }}</div>
+              <div style="display:flex; align-items:baseline; gap:10px; margin-top:8px;">
+                <div style="font-family:'Barlow'; font-size:28px; font-weight:800; color:#1D1D1B;">{{ rk.value }}</div>
+                <div style="{{ rk.deltaStyle }}">{{ rk.delta }}</div>
+              </div>
+              <div style="font-size:12px; color:#7A8593; margin-top:4px;">{{ rk.sub }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:24px; align-items:start;">
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <!-- LOSSES PREVENTED -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Losses prevented by day</div>
+                <div style="font-family:'Barlow'; font-size:13px; font-weight:700; color:#D71A28;">Σ {{ repWeekTotal }}</div>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px; align-items:end; height:170px; margin-top:22px;">
+                <sc-for list="{{ repDays }}" as="rd" hint-placeholder-count="5">
+                  <div style="display:flex; flex-direction:column; justify-content:flex-end; height:100%; gap:6px;">
+                    <div style="text-align:center; font-family:'Barlow'; font-size:11px; font-weight:700; color:#5A6976;">{{ rd.value }}</div>
+                    <div style="{{ rd.barStyle }}"></div>
+                    <div style="text-align:center; font-size:10.5px; color:#7A8593;">{{ rd.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px; padding:12px 14px; background:#F7F8FA; border:1px solid #E9EDF1; border-radius:4px; font-size:12.5px; color:#5A6976; line-height:1.55;">{{ repLossNote }}</div>
+            </div>
+
+            <!-- ANALYST THROUGHPUT -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+              <div style="padding:18px 22px; border-bottom:1px solid #E9EDF1; font-family:'Barlow'; font-size:15px; font-weight:700;">Analyst throughput</div>
+              <div style="overflow-x:auto;"><div style="min-width:560px;">
+              <div style="display:grid; grid-template-columns:minmax(0,1.2fr) 90px 110px 90px 110px; padding:10px 22px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593; border-bottom:1px solid #E9EDF1;">
+                <div>Analyst</div><div>Resolved</div><div>Avg. handle</div><div>Escalated</div><div style="text-align:right;">FP rate</div>
+              </div>
+              <sc-for list="{{ repAnalysts }}" as="ra" hint-placeholder-count="4">
+                <div style="display:grid; grid-template-columns:minmax(0,1.2fr) 90px 110px 90px 110px; align-items:center; padding:13px 22px; border-bottom:1px solid #F0F2F5;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="{{ ra.avatarStyle }}">{{ ra.initials }}</div>
+                    <div><div style="font-weight:700; font-size:13px;">{{ ra.name }}</div><div style="font-size:11.5px; color:#7A8593;">{{ ra.role }}</div></div>
+                  </div>
+                  <div style="font-family:'Barlow'; font-weight:800; font-size:15px;">{{ ra.resolved }}</div>
+                  <div style="font-size:12.5px; color:#5A6976;">{{ ra.handle }}</div>
+                  <div style="font-size:12.5px; color:#5A6976;">{{ ra.escalated }}</div>
+                  <div style="{{ ra.fpStyle }}">{{ ra.fp }}</div>
+                </div>
+              </sc-for>
+              </div></div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <!-- FP RATE TREND -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">False positive rate — 8 weeks</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">Smart Insights tuning target: below 1.0%</div>
+              <div style="display:grid; grid-template-columns:repeat(8,1fr); gap:8px; align-items:end; height:120px; margin-top:18px;">
+                <sc-for list="{{ repFp }}" as="rf" hint-placeholder-count="8">
+                  <div style="display:flex; flex-direction:column; justify-content:flex-end; height:100%; gap:5px;">
+                    <div style="text-align:center; font-family:'Barlow'; font-size:10px; font-weight:700; color:#5A6976;">{{ rf.value }}</div>
+                    <div style="{{ rf.barStyle }}"></div>
+                    <div style="text-align:center; font-size:9.5px; color:#7A8593;">{{ rf.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- SLA COMPLIANCE -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">SLA compliance</div>
+              <div style="display:flex; flex-direction:column; gap:14px; margin-top:16px;">
+                <sc-for list="{{ repSla }}" as="rs" hint-placeholder-count="4">
+                  <div style="font-size:12.5px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span style="font-weight:600;">{{ rs.name }}</span><span style="{{ rs.pctStyle }}">{{ rs.pct }}</span></div>
+                    <div style="height:8px; background:#EEF1F4; border-radius:4px; overflow:hidden; position:relative;">
+                      <div style="{{ rs.barStyle }}"></div>
+                      <div style="{{ rs.targetStyle }}"></div>
+                    </div>
+                    <div style="font-size:11px; color:#7A8593; margin-top:4px;">target {{ rs.target }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- WEEK HIGHLIGHTS -->
+            <div style="background:#1D1D1B; color:#EAEAEA; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700; color:#fff;">Week highlights</div>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">
+                <sc-for list="{{ repHighlights }}" as="rh" hint-placeholder-count="3">
+                  <div style="display:flex; gap:10px; font-size:12.5px; line-height:1.55;">
+                    <span style="{{ rh.dotStyle }}"></span>
+                    <span style="color:#B9BDC1;">{{ rh.text }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- RISK POLICIES -->
+    <sc-if value="{{ isPolicies }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:28px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:24px; align-items:start;">
+        <!-- LEFT: EDITOR -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+            <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Decision thresholds</div>
+            <div style="font-size:12px; color:#7A8593; margin-top:2px;">Risk score bands applied to every scored event</div>
+            <div style="display:flex; height:14px; border-radius:4px; overflow:hidden; margin-top:18px;">
+              <div style="{{ bandSilent }}"></div>
+              <div style="{{ bandStep }}"></div>
+              <div style="{{ bandHold }}"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10.5px; color:#7A8593; margin-top:5px; font-family:'Barlow'; font-weight:700;"><span>0</span><span>50</span><span>100</span></div>
+            <div style="display:flex; flex-direction:column; gap:18px; margin-top:20px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;"><span style="font-weight:700;">Alert threshold</span><span style="font-family:'Barlow'; font-weight:800; color:#2C7BB6;">{{ polAlert }}</span></div>
+                <input type="range" min="0" max="100" value="{{ polAlert }}" onChange="{{ setPolAlert }}" style="width:100%; accent-color:#2C7BB6;">
+                <div style="font-size:11.5px; color:#7A8593; margin-top:3px;">Events at or above enter the analyst alert queue</div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;"><span style="font-weight:700;">Step-up threshold</span><span style="font-family:'Barlow'; font-weight:800; color:#E67E22;">{{ polStep }}</span></div>
+                <input type="range" min="0" max="100" value="{{ polStep }}" onChange="{{ setPolStep }}" style="width:100%; accent-color:#E67E22;">
+                <div style="font-size:11.5px; color:#7A8593; margin-top:3px;">3DS challenge or strong authentication forced</div>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;"><span style="font-weight:700;">Hold threshold</span><span style="font-family:'Barlow'; font-weight:800; color:#D71A28;">{{ polHold }}</span></div>
+                <input type="range" min="0" max="100" value="{{ polHold }}" onChange="{{ setPolHold }}" style="width:100%; accent-color:#D71A28;">
+                <div style="font-size:11.5px; color:#7A8593; margin-top:3px;">Payment held — routed to analyst queue</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+            <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Detection rules</div>
+            <div style="font-size:12px; color:#7A8593; margin-top:2px;">Disabling a rule removes its weight from matching events</div>
+            <div style="display:flex; flex-direction:column; margin-top:12px;">
+              <sc-for list="{{ polRules }}" as="rl" hint-placeholder-count="6">
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #F0F2F5;">
+                  <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ rl.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ rl.desc }}</div></div>
+                  <span style="font-family:'Barlow'; font-size:10.5px; font-weight:700; color:#7A8593; white-space:nowrap;">+{{ rl.weight }} pts</span>
+                  <button onClick="{{ rl.toggle }}" style="{{ rl.switchStyle }}"><span style="{{ rl.knobStyle }}"></span></button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <button onClick="{{ polApply }}" style="flex:1; padding:13px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">Apply policy</button>
+            <button onClick="{{ polReset }}" style="flex:1; padding:13px; background:#fff; color:#3E4753; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="border-color:#D71A28; color:#D71A28;">Reset to live policy</button>
+          </div>
+          <div style="{{ polAppliedStyle }}">{{ polAppliedMsg }}</div>
+        </div>
+
+        <!-- RIGHT: SIMULATION -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px;">
+            <sc-for list="{{ polKpis }}" as="pk" hint-placeholder-count="3">
+              <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:18px 20px;">
+                <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593;">{{ pk.label }}</div>
+                <div style="display:flex; align-items:baseline; gap:8px; margin-top:8px;">
+                  <div style="font-family:'Barlow'; font-size:15px; font-weight:700; color:#95A0AC; text-decoration:line-through;">{{ pk.before }}</div>
+                  <div style="font-family:'Barlow'; font-size:26px; font-weight:800; color:#1D1D1B;">{{ pk.after }}</div>
+                  <div style="{{ pk.deltaStyle }}">{{ pk.delta }}</div>
+                </div>
+                <div style="font-size:11.5px; color:#7A8593; margin-top:4px;">{{ pk.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+            <div style="padding:18px 22px; border-bottom:1px solid #E9EDF1;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Simulated impact — last 24h alerts</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">Replayed against the draft policy. Live policy shown struck through.</div>
+            </div>
+            <div style="overflow-x:auto;"><div style="min-width:560px;">
+            <div style="display:grid; grid-template-columns:56px minmax(0,1.2fr) 92px 130px 140px; padding:10px 22px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593; border-bottom:1px solid #E9EDF1;">
+              <div>Score</div><div>Alert</div><div>Draft score</div><div>Draft outcome</div><div style="text-align:right;">Change</div>
+            </div>
+            <sc-for list="{{ polSim }}" as="ps" hint-placeholder-count="6">
+              <div style="display:grid; grid-template-columns:56px minmax(0,1.2fr) 92px 130px 140px; align-items:center; padding:13px 22px; border-bottom:1px solid #F0F2F5;">
+                <div style="{{ ps.scoreStyle }}">{{ ps.score }}</div>
+                <div><div style="font-weight:700; font-size:13px;">{{ ps.user }} · {{ ps.type }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ ps.signal }}</div></div>
+                <div style="{{ ps.effStyle }}">{{ ps.eff }}</div>
+                <div><span style="{{ ps.outcomeStyle }}">{{ ps.outcome }}</span></div>
+                <div style="{{ ps.changeStyle }}">{{ ps.change }}</div>
+              </div>
+            </sc-for>
+            </div></div>
+          </div>
+
+          <div style="background:#F7F8FA; border:1px solid #E9EDF1; border-radius:6px; padding:16px 18px; font-size:12.5px; color:#5A6976; line-height:1.6;">{{ polSummary }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- CUSTOMER RISK PROFILE -->
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 28px 32px; display:flex; flex-direction:column; gap:20px;">
+        <button onClick="{{ pfBack }}" style="align-self:flex-start; display:flex; align-items:center; gap:8px; padding:8px 12px; background:transparent; border:none; color:#5A6976; font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="color:#D71A28;">← Back</button>
+
+        <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+          <div style="width:64px; height:64px; border-radius:50%; background:#1D1D1B; color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Barlow'; font-weight:800; font-size:20px; flex-shrink:0;">{{ pf.initials }}</div>
+          <div style="flex:1; min-width:240px;">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <div style="font-family:'Barlow'; font-size:20px; font-weight:800; color:#1D1D1B;">{{ pf.name }}</div>
+              <span style="{{ pf.riskStyle }}">Risk: {{ pf.riskNow }}</span>
+            </div>
+            <div style="font-size:13px; color:#5A6976; margin-top:6px;">{{ pf.account }} · {{ pf.segment }} · customer since {{ pf.since }} · {{ pf.sessions }} sessions</div>
+          </div>
+          <div style="display:flex; gap:28px;">
+            <div style="text-align:center;"><div style="font-family:'Barlow'; font-size:24px; font-weight:800; color:#1D1D1B;">{{ pfAlertCount }}</div><div style="font-size:11px; color:#7A8593;">alerts · 90 days</div></div>
+            <div style="text-align:center;"><div style="font-family:'Barlow'; font-size:24px; font-weight:800; color:#1D1D1B;">{{ pfCaseCount }}</div><div style="font-size:11px; color:#7A8593;">cases</div></div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start;">
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+              <div style="padding:18px 22px; border-bottom:1px solid #E9EDF1; font-family:'Barlow'; font-size:15px; font-weight:700;">Alert history</div>
+              <sc-for list="{{ pfAlerts }}" as="pa" hint-placeholder-count="2">
+                <div style="display:flex; align-items:center; gap:14px; padding:14px 22px; border-bottom:1px solid #F0F2F5;">
+                  <div style="{{ pa.scoreStyle }}">{{ pa.score }}</div>
+                  <div style="flex:1;"><div style="display:flex; align-items:center; gap:8px;"><span style="{{ pa.typeStyle }}">{{ pa.type }}</span></div><div style="font-size:12.5px; color:#5A6976; margin-top:5px;">{{ pa.signal }}</div></div>
+                  <button onClick="{{ pa.open }}" style="padding:8px 14px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">Review</button>
+                </div>
+              </sc-for>
+              <div style="{{ pfNoAlertsStyle }}">No alerts on record for this subject.</div>
+            </div>
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+              <div style="padding:18px 22px; border-bottom:1px solid #E9EDF1; font-family:'Barlow'; font-size:15px; font-weight:700;">Case history</div>
+              <sc-for list="{{ pfCases }}" as="pc" hint-placeholder-count="1">
+                <button onClick="{{ pc.open }}" style="display:flex; align-items:center; gap:14px; width:100%; padding:14px 22px; background:#fff; border:none; border-bottom:1px solid #F0F2F5; cursor:pointer; font-family:inherit; text-align:left;">
+                  <div style="font-family:'Barlow'; font-weight:700; font-size:13px; color:#D71A28; width:64px;">{{ pc.id }}</div>
+                  <div style="flex:1; font-size:12.5px; color:#5A6976;">{{ pc.summary }}</div>
+                  <span style="{{ pc.statusStyle }}">{{ pc.status }}</span>
+                </button>
+              </sc-for>
+              <div style="{{ pfNoCasesStyle }}">No cases on record for this subject.</div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Learned behavioral baseline</div>
+              <div style="display:flex; flex-direction:column; margin-top:12px;">
+                <sc-for list="{{ pfBaseline }}" as="bl" hint-placeholder-count="4">
+                  <div style="display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid #F0F2F5; font-size:12.5px;">
+                    <span style="color:#7A8593; white-space:nowrap;">{{ bl.k }}</span>
+                    <span style="font-weight:700; text-align:right;">{{ bl.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Trusted devices</div>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">
+                <sc-for list="{{ pfDevices }}" as="dv" hint-placeholder-count="2">
+                  <div style="display:flex; align-items:center; gap:12px; padding:12px 14px; background:#F7F8FA; border:1px solid #E9EDF1; border-radius:4px;">
+                    <span style="{{ dv.dotStyle }}"></span>
+                    <div style="flex:1;"><div style="font-size:13px; font-weight:700;">{{ dv.name }}</div><div style="font-size:11.5px; color:#7A8593; margin-top:2px;">{{ dv.detail }}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ALERT REVIEW / INVESTIGATION DETAIL -->
+    <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 28px 32px; display:flex; flex-direction:column; gap:20px;">
+        <button onClick="{{ backToQueue }}" style="align-self:flex-start; display:flex; align-items:center; gap:8px; padding:8px 12px; background:transparent; border:none; color:#5A6976; font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="color:#D71A28;">← Back to alert queue</button>
+
+        <!-- HEADER -->
+        <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+          <div style="{{ rv.scoreStyle }}">
+            <div style="font-family:'Barlow'; font-weight:800; font-size:26px; line-height:1;">{{ rv.score }}</div>
+            <div style="font-size:9.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; opacity:0.85;">Risk</div>
+          </div>
+          <div style="flex:1; min-width:240px;">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <button onClick="{{ rv.openProfile }}" style="font-family:'Barlow'; font-size:20px; font-weight:800; color:#1D1D1B; background:none; border:none; cursor:pointer; padding:0; border-bottom:2px dotted #C9CED4;" style-hover="color:#D71A28; border-bottom-color:#D71A28;">{{ rv.user }}</button>
+              <span style="{{ rv.typeStyle }}">{{ rv.type }}</span>
+              <span style="{{ rv.stateStyle }}">{{ rv.stateLabel }}</span>
+            </div>
+            <div style="font-size:13px; color:#5A6976; margin-top:6px;">{{ rv.account }} · Alert {{ rv.id }} · detected {{ rv.detected }} · channel: {{ rv.channel }}</div>
+            <div style="font-size:13px; color:#5A6976; margin-top:4px;"><span style="font-weight:700; color:#D71A28;">Triggering signal:</span> {{ rv.signal }}</div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button onClick="{{ rv.escalate }}" style="padding:11px 18px; background:#fff; color:#3E4753; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="border-color:#D71A28; color:#D71A28;">Escalate to CFFC</button>
+            <button onClick="{{ rv.terminate }}" style="padding:11px 18px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">{{ rv.terminateLabel }}</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:20px; align-items:start;">
+          <!-- LEFT -->
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <!-- SESSION TIMELINE -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Session timeline</div>
+                <div style="font-size:12px; color:#7A8593;">session {{ rv.sessionId }} · {{ rv.sessionDuration }}</div>
+              </div>
+              <div style="display:flex; flex-direction:column; margin-top:16px;">
+                <sc-for list="{{ rvTimeline }}" as="ev" hint-placeholder-count="6">
+                  <div style="display:grid; grid-template-columns:56px 14px 1fr; gap:12px;">
+                    <div style="font-family:'Barlow'; font-size:11.5px; font-weight:700; color:#7A8593; padding-top:2px; text-align:right;">{{ ev.t }}</div>
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                      <span style="{{ ev.dotStyle }}"></span>
+                      <span style="{{ ev.lineStyle }}"></span>
+                    </div>
+                    <div style="{{ ev.boxStyle }}">
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <div style="font-size:13px; font-weight:700;">{{ ev.event }}</div>
+                        <span style="{{ ev.flagStyle }}">{{ ev.flagLabel }}</span>
+                      </div>
+                      <div style="font-size:12.5px; color:#5A6976; margin-top:3px; line-height:1.55;">{{ ev.detail }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- SESSION REPLAY -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Session replay</div>
+                <div style="font-size:12px; color:#7A8593;">step {{ replayPos }} of {{ replayTotal }}</div>
+                <button onClick="{{ replayToggle }}" style="margin-left:auto; padding:8px 16px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">{{ replayBtnLabel }}</button>
+              </div>
+              <div style="margin-top:16px; background:#1D1D1B; border-radius:4px; padding:26px 28px; min-height:130px; display:flex; flex-direction:column; justify-content:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#8A8F94;">{{ replayCur.t }}</span>
+                  <span style="{{ replayCur.flagStyle }}">{{ replayCur.flagLabel }}</span>
+                </div>
+                <div style="font-family:'Barlow'; font-size:19px; font-weight:700; color:#fff; margin-top:8px;">{{ replayCur.event }}</div>
+                <div style="font-size:13px; color:#B9BDC1; margin-top:6px; line-height:1.6;">{{ replayCur.detail }}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:0; margin-top:16px; padding:0 6px;">
+                <sc-for list="{{ replaySteps }}" as="rs" hint-placeholder-count="6">
+                  <button onClick="{{ rs.go }}" title="{{ rs.event }}" style="{{ rs.segStyle }}">
+                    <span style="{{ rs.dotStyle }}"></span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- TRANSACTION UNDER REVIEW -->
+            <sc-if value="{{ rvHasTxn }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Transaction under review</div>
+                <div style="margin-top:14px; display:flex; align-items:center; gap:18px; padding:16px 18px; background:#FBF1F2; border:1px solid #F2D9DB; border-radius:4px; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:200px;">
+                    <div style="font-weight:700; font-size:14px;">{{ rv.user }} → {{ rvTxn.payee }}</div>
+                    <div style="font-size:12.5px; color:#5A6976; margin-top:3px;">{{ rvTxn.context }}</div>
+                  </div>
+                  <div style="font-family:'Barlow'; font-weight:800; font-size:22px; color:#1D1D1B;">{{ rvTxn.amount }}</div>
+                  <span style="{{ rvTxn.decisionStyle }}">{{ rvTxn.decision }}</span>
+                </div>
+                <div style="{{ rvTxn.actionsStyle }}">
+                  <button onClick="{{ rvTxn.release }}" style="padding:10px 16px; background:#fff; color:#2FBF71; border:1px solid #2FBF71; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">Release payment</button>
+                  <button onClick="{{ rvTxn.block }}" style="padding:10px 16px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">Block payment</button>
+                </div>
+                <div style="{{ rvTxn.resolvedStyle }}">{{ rvTxn.resolution }}</div>
+              </div>
+            </sc-if>
+
+            <!-- ANALYST DISPOSITION -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Analyst disposition</div>
+              <textarea placeholder="Investigation notes — visible on the case record…" style="width:100%; margin-top:14px; padding:12px 14px; border:1px solid #E0E5EA; border-radius:4px; font-family:'Open Sans'; font-size:13px; color:#3E4753; min-height:76px; resize:vertical; background:#F7F8FA;"></textarea>
+              <div style="{{ rvDispActionsStyle }}">
+                <button onClick="{{ rvConfirmFraud }}" style="padding:12px 18px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#B8121F;">Confirm fraud — open case</button>
+                <button onClick="{{ rvFalsePositive }}" style="padding:12px 18px; background:#fff; color:#2FBF71; border:1px solid #2FBF71; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">False positive — close</button>
+                <button onClick="{{ rvNeedsInfo }}" style="padding:12px 18px; background:#fff; color:#3E4753; border:1px solid #E0E5EA; border-radius:3px; font-family:'Barlow'; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="border-color:#D71A28; color:#D71A28;">Contact customer</button>
+              </div>
+              <div style="{{ rvDispResultStyle }}">{{ rvDispResult }}</div>
+              <button onClick="{{ rvOpenCase }}" style="{{ rvOpenCaseStyle }}">View case →</button>
+            </div>
+          </div>
+
+          <!-- RIGHT -->
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <!-- BEHAVIORAL SIGNALS -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Behavioral signals vs. profile</div>
+              <div style="font-size:12px; color:#7A8593; margin-top:2px;">Live session compared to learned user profile</div>
+              <div style="display:flex; flex-direction:column; gap:14px; margin-top:18px;">
+                <sc-for list="{{ signals }}" as="sg" hint-placeholder-count="5">
+                  <div>
+                    <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:5px;">
+                      <span style="font-weight:600;">{{ sg.name }}</span>
+                      <span style="{{ sg.valStyle }}">{{ sg.status }}</span>
+                    </div>
+                    <div style="height:6px; background:#EEF1F4; border-radius:3px; overflow:hidden;"><div style="{{ sg.barStyle }}"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- DEVICE & NETWORK -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Device &amp; network</div>
+              <div style="display:flex; flex-direction:column; margin-top:12px;">
+                <sc-for list="{{ rvFacts }}" as="fc" hint-placeholder-count="6">
+                  <div style="display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid #F0F2F5; font-size:12.5px;">
+                    <span style="color:#7A8593; white-space:nowrap;">{{ fc.k }}</span>
+                    <span style="{{ fc.vStyle }}">{{ fc.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- INTEL CORRELATION -->
+            <sc-if value="{{ rvHasIntel }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#1D1D1B; color:#EAEAEA; border-radius:6px; padding:22px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="font-family:'Barlow'; font-size:15px; font-weight:700; color:#fff;">FraudIntel correlation</div>
+                  <span style="font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:3px 9px; background:#D71A28; color:#fff; border-radius:3px;">{{ rvIntel.match }}</span>
+                </div>
+                <div style="font-family:'Barlow'; font-weight:700; font-size:14px; color:#fff; margin-top:12px;">{{ rvIntel.name }}</div>
+                <div style="font-size:12.5px; color:#8A8F94; margin-top:6px; line-height:1.6;">{{ rvIntel.desc }}</div>
+              </div>
+            </sc-if>
+
+            <!-- COUNTERPARTY NETWORK -->
+            <sc-if value="{{ rvHasGraph }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+                <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Counterparty network</div>
+                <div style="font-size:12px; color:#7A8593; margin-top:2px;">Money flow around the subject — 1 hop</div>
+                <div style="margin-top:8px;">{{ rvgSvgEl }}</div>
+                <button onClick="{{ rvgOpenFull }}" style="margin-top:10px; width:100%; padding:11px; background:#fff; color:#D71A28; border:1px solid #D71A28; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#FBF1F2;">Open in Transaction Graph</button>
+              </div>
+            </sc-if>
+
+            <!-- USER HISTORY -->
+            <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+              <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Subject history — 90 days</div>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:14px;">
+                <sc-for list="{{ rvHistory }}" as="hs" hint-placeholder-count="3">
+                  <div style="display:flex; align-items:center; gap:10px; font-size:12.5px;">
+                    <span style="{{ hs.dotStyle }}"></span>
+                    <span style="flex:1; color:#5A6976;">{{ hs.what }}</span>
+                    <span style="color:#7A8593; white-space:nowrap;">{{ hs.when }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+
+      <!-- KPI ROW -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:20px 22px;">
+            <div style="font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593;">{{ k.label }}</div>
+            <div style="display:flex; align-items:baseline; gap:10px; margin-top:8px;">
+              <div style="font-family:'Barlow'; font-size:30px; font-weight:800; color:#1D1D1B;">{{ k.value }}</div>
+              <div style="{{ k.deltaStyle }}">{{ k.delta }}</div>
+            </div>
+            <div style="font-size:12px; color:#7A8593; margin-top:4px;">{{ k.sub }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:24px; align-items:start;">
+
+        <!-- ALERT QUEUE -->
+        <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; overflow:hidden;">
+          <div style="display:flex; align-items:center; padding:18px 22px; border-bottom:1px solid #E9EDF1;">
+            <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Alert queue</div>
+            <div style="margin-left:auto; display:flex; gap:8px;">
+              <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+                <button onClick="{{ f.go }}" style="{{ f.style }}">{{ f.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="overflow-x:auto;"><div style="min-width:640px;"><div style="display:grid; grid-template-columns:64px minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) 92px; padding:10px 22px; font-family:'Barlow'; font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A8593; border-bottom:1px solid #E9EDF1;">
+            <div>Risk</div><div>User / Account</div><div>Threat type</div><div>Signal</div><div style="text-align:right;">Action</div>
+          </div>
+          <sc-for list="{{ alerts }}" as="al" hint-placeholder-count="6">
+            <div style="display:grid; grid-template-columns:64px minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) 92px; align-items:center; padding:14px 22px; border-bottom:1px solid #F0F2F5;">
+              <div style="{{ al.scoreStyle }}">{{ al.score }}</div>
+              <div><button onClick="{{ al.openProfile }}" style="font-weight:700; font-size:13.5px; font-family:inherit; background:none; border:none; cursor:pointer; padding:0; color:#3E4753; border-bottom:1px dotted #C9CED4; text-align:left;" style-hover="color:#D71A28; border-bottom-color:#D71A28;">{{ al.user }}</button><div style="font-size:12px; color:#7A8593;">{{ al.account }}</div></div>
+              <div><span style="{{ al.typeStyle }}">{{ al.type }}</span></div>
+              <div style="font-size:12.5px; color:#5A6976;">{{ al.signal }}</div>
+              <div style="text-align:right;"><button onClick="{{ al.review }}" style="padding:8px 14px; background:#D71A28; color:#fff; border:none; border-radius:3px; font-family:'Barlow'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">Review</button></div>
+            </div>
+          </sc-for>
+        </div></div></div>
+
+        <!-- RIGHT COLUMN -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <!-- BEHAVIOR PROFILE -->
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+            <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Behavioral signals — {{ selectedUser }}</div>
+            <div style="font-size:12px; color:#7A8593; margin-top:2px;">Live session vs. learned user profile</div>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-top:18px;">
+              <sc-for list="{{ signals }}" as="sg" hint-placeholder-count="5">
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:5px;">
+                    <span style="font-weight:600;">{{ sg.name }}</span>
+                    <span style="{{ sg.valStyle }}">{{ sg.status }}</span>
+                  </div>
+                  <div style="height:6px; background:#EEF1F4; border-radius:3px; overflow:hidden;">
+                    <div style="{{ sg.barStyle }}"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ recalc }}" style="margin-top:18px; width:100%; padding:12px; background:#fff; color:#D71A28; border:1px solid #D71A28; border-radius:3px; font-family:'Barlow'; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;" style-hover="background:#FBF1F2;">Recalculate risk score</button>
+          </div>
+
+          <!-- THREAT MIX -->
+          <div style="background:#fff; border:1px solid #E3E7EB; border-radius:6px; padding:22px;">
+            <div style="font-family:'Barlow'; font-size:15px; font-weight:700;">Detections by threat — 7 days</div>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:18px;">
+              <sc-for list="{{ threatMix }}" as="tm" hint-placeholder-count="6">
+                <div style="font-size:12.5px;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span style="font-weight:600;">{{ tm.name }}</span><span style="color:#7A8593;">{{ tm.count }}</span></div>
+                  <div style="height:8px; background:#EEF1F4; border-radius:4px; overflow:hidden;"><div style="{{ tm.barStyle }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  state = { screen: "Overview", filter: "All", selected: 0, recalcTick: 0, typeFilter: null, caseFilter: "All", caseSel: 0, txnFilter: "All", review: null, profile: null, replayStep: 0, replayPlaying: false,
+    polAlert: 50, polStep: 55, polHold: 85, polDisabled: {}, polAppliedMsg: "" };
+
+  livePolicy = { alert: 50, step: 55, hold: 85, disabled: {} };
+
+  ruleDefs = [
+    { key: "coach", name: "Coached session pattern", desc: "Active call + hesitation + dictated typing", weight: 20, types: ["APP Scam"] },
+    { key: "rat", name: "Remote access signature", desc: "Screen-sharing artifacts, input latency", weight: 25, types: ["Account Takeover"] },
+    { key: "mule", name: "Mule velocity pattern", desc: "Rapid in-out transfers, dormancy reactivation", weight: 20, types: ["Money Mule"] },
+    { key: "phish", name: "Phishing infrastructure match", desc: "Login from known harvesting infrastructure", weight: 18, types: ["Phishing"] },
+    { key: "bio", name: "Onboarding biometrics", desc: "Typing cadence vs. declared identity", weight: 15, types: ["New Account Fraud"] },
+    { key: "payee", name: "Payee & amount anomaly", desc: "First-time payee, amount above learned profile", weight: 12, types: ["APP Scam"] },
+  ];
+
+  profileDefs = {
+    "M. Novak": { segment: "Retail", since: "2019", sessions: "3 / week", riskNow: "Elevated",
+      devices: [{ name: "iPhone 15", detail: "Primary · known 14 months · biometric unlock", ok: true }],
+      baseline: [{ k: "Typing cadence", v: "58 wpm · stable" }, { k: "Usual login window", v: "07–09 h, 19–22 h" }, { k: "Usual locations", v: "Brno, CZ" }, { k: "Typical payment range", v: "500 – 12,000 Kč" }, { k: "Profile confidence", v: "High · 3 yrs of data" }] },
+    "K. Svoboda": { segment: "Retail", since: "2021", sessions: "5 / week", riskNow: "Critical",
+      devices: [{ name: "MacBook Air", detail: "Primary · known 2 years", ok: true }, { name: "Windows 11 / Chrome", detail: "NEW · first seen today · RAT detected", ok: false }],
+      baseline: [{ k: "Typing cadence", v: "72 wpm · stable" }, { k: "Usual login window", v: "12–14 h, 20–23 h" }, { k: "Usual locations", v: "Praha, CZ" }, { k: "Typical payment range", v: "800 – 25,000 Kč" }, { k: "Profile confidence", v: "High · 4 yrs of data" }] },
+    "J. Dvorak": { segment: "Retail", since: "2021", sessions: "dormant 7 mo", riskNow: "High",
+      devices: [{ name: "Android 14", detail: "Known · reactivated after dormancy", ok: true }],
+      baseline: [{ k: "Typing cadence", v: "44 wpm · limited data" }, { k: "Usual login window", v: "irregular" }, { k: "Usual locations", v: "Ostrava, CZ" }, { k: "Typical payment range", v: "200 – 3,000 Kč" }, { k: "Profile confidence", v: "Low · dormant account" }] },
+    "A. Prochazka": { segment: "Retail", since: "2018", sessions: "2 / week", riskNow: "Contained",
+      devices: [{ name: "iPhone 13", detail: "Primary · known 3 years", ok: true }],
+      baseline: [{ k: "Typing cadence", v: "51 wpm · stable" }, { k: "Usual login window", v: "18–21 h" }, { k: "Usual locations", v: "Praha, CZ" }, { k: "Typical payment range", v: "300 – 9,000 Kč" }, { k: "Profile confidence", v: "High · 8 yrs of data" }] },
+    "L. Cerny": { segment: "Onboarding", since: "this week", sessions: "1 application", riskNow: "High",
+      devices: [{ name: "Android 13", detail: "NEW · seen on 2 other applications", ok: false }],
+      baseline: [{ k: "Typing cadence", v: "94 wpm · inconsistent with declared age" }, { k: "Usual login window", v: "no history" }, { k: "Usual locations", v: "Praha, CZ" }, { k: "Typical payment range", v: "no history" }, { k: "Profile confidence", v: "None · new applicant" }] },
+    "E. Vesela": { segment: "Retail", since: "2023", sessions: "4 / week", riskNow: "Low",
+      devices: [{ name: "Samsung S24", detail: "Primary · known 18 months", ok: true }],
+      baseline: [{ k: "Typing cadence", v: "63 wpm · stable" }, { k: "Usual login window", v: "07–08 h, 21–23 h" }, { k: "Usual locations", v: "Plzeň, CZ" }, { k: "Typical payment range", v: "400 – 8,000 Kč" }, { k: "Profile confidence", v: "High · 3 yrs of data" }] },
+  };
+
+  reviewDefs = [
+    { id: "ALT-2381", detected: "Today 09:14", channel: "Mobile app", sessionId: "S-88412", sessionDuration: "18 min, ongoing", state: "Open",
+      timeline: [
+        { t: "09:02", event: "Session start", detail: "Login via mobile app, known device, biometric unlock." },
+        { t: "09:04", event: "Incoming phone call detected", detail: "Device on active call for the remainder of the session — a strong coaching indicator.", flag: "Anomaly" },
+        { t: "09:07", event: "Navigation anomaly", detail: "User taken directly to new-payee flow, skipping usual balance check pattern.", flag: "Anomaly" },
+        { t: "09:10", event: "Hesitation pattern", detail: "Typing pauses 4–9s on amount field; three corrections. Consistent with dictated instructions.", flag: "Anomaly" },
+        { t: "09:13", event: "New payee added", detail: "CZ55 •• 0930 — no prior relationship; IBAN matches FraudIntel mule list." , flag: "Critical" },
+        { t: "09:14", event: "Payment attempt 240,000 Kč", detail: "Risk score 94 — payment held automatically, alert raised to queue.", flag: "Critical" },
+      ],
+      txn: { payee: "CZ55 •• 0930 (new payee)", amount: "240,000 Kč", context: "First-time payee · instant transfer · initiated during active phone call", decision: "Held" },
+      intel: { name: "Operation SafeAccount", match: "IBAN match", desc: "Payee IBAN appears on the mule list of an active vishing campaign impersonating bank security teams across CZ / SK / AT." },
+      facts: [
+        { k: "Device", v: "iPhone 15 · known (14 mo)", ok: true }, { k: "Device trust", v: "High — profile match", ok: true },
+        { k: "IP address", v: "89.176.22.14", ok: true }, { k: "Network", v: "O2 CZ — mobile", ok: true },
+        { k: "Location", v: "Brno, CZ — usual", ok: true }, { k: "Active call", v: "Yes — 16 min", ok: false },
+        { k: "Remote access", v: "Not detected", ok: true },
+      ],
+      history: [
+        { kind: "ok", what: "No prior alerts on this subject", when: "90 days" },
+        { kind: "ok", what: "Avg. 3 sessions / week, stable profile", when: "" },
+        { kind: "alert", what: "First new payee added since Nov 2025", when: "today" },
+      ] },
+    { id: "ALT-2380", detected: "Today 06:02", channel: "Web banking", sessionId: "S-88371", sessionDuration: "7 min, terminated", state: "Contained",
+      timeline: [
+        { t: "05:55", event: "Login from new device", detail: "Windows 11 / Chrome — never seen for this user.", flag: "Anomaly" },
+        { t: "05:56", event: "Remote access tool signature", detail: "Screen-sharing artifacts and input latency match AnyDesk remote control.", flag: "Critical" },
+        { t: "05:58", event: "Behavioral mismatch", detail: "Typing cadence and mouse dynamics deviate 4.2σ from learned profile.", flag: "Critical" },
+        { t: "06:01", event: "Payee list enumeration", detail: "Rapid sequential opening of saved payees — reconnaissance pattern." , flag: "Anomaly" },
+        { t: "06:02", event: "Session terminated", detail: "Automatic kill-switch triggered; credentials reset, customer notified." },
+      ],
+      txn: null,
+      intel: null,
+      facts: [
+        { k: "Device", v: "Windows 11 · NEW", ok: false }, { k: "Device trust", v: "None — first seen", ok: false },
+        { k: "IP address", v: "185.220.101.7", ok: false }, { k: "Network", v: "Hosting provider (VPS)", ok: false },
+        { k: "Location", v: "Frankfurt, DE — unusual", ok: false }, { k: "Remote access", v: "AnyDesk detected", ok: false },
+      ],
+      history: [
+        { kind: "alert", what: "Phishing email reported by customer", when: "3d ago" },
+        { kind: "alert", what: "Failed login attempts ×4", when: "yesterday" },
+        { kind: "ok", what: "No prior confirmed fraud", when: "90 days" },
+      ] },
+    { id: "ALT-2377", detected: "Yesterday 14:30", channel: "Web banking", sessionId: "S-88102", sessionDuration: "11 min", state: "Open",
+      timeline: [
+        { t: "14:19", event: "Dormant account login", detail: "First session in 7 months.", flag: "Anomaly" },
+        { t: "14:22", event: "Inbound transfer 95,000 Kč", detail: "From account flagged in two other mule investigations.", flag: "Critical" },
+        { t: "14:26", event: "Immediate outbound split", detail: "Three transfers of ~31,000 Kč to distinct counterparties within 4 minutes.", flag: "Critical" },
+        { t: "14:30", event: "Mule pattern score exceeded", detail: "Rapid in-out velocity — outbound transfers restricted, alert raised." },
+      ],
+      txn: { payee: "3 counterparties (split)", amount: "93,400 Kč", context: "Rapid in-out pattern · dormant account · linked to 2 flagged accounts", decision: "Held" },
+      intel: { name: "Crypto mentor ring", match: "Account link", desc: "Source account linked to layered mule network funneling investment-scam proceeds to crypto exchanges." },
+      facts: [
+        { k: "Device", v: "Android 14 · known", ok: true }, { k: "Device trust", v: "Medium", ok: true },
+        { k: "IP address", v: "78.102.9.201", ok: true }, { k: "Network", v: "Vodafone CZ", ok: true },
+        { k: "Location", v: "Ostrava, CZ", ok: true }, { k: "Account age", v: "Dormant 7 months", ok: false },
+      ],
+      history: [
+        { kind: "alert", what: "Linked to accounts CZ31 ••, CZ90 ••", when: "flagged" },
+        { kind: "ok", what: "KYC verified at onboarding", when: "2021" },
+        { kind: "alert", what: "SAR draft in preparation", when: "today" },
+      ] },
+    { id: "ALT-2371", detected: "Yesterday 11:48", channel: "Web banking", sessionId: "S-87940", sessionDuration: "3 min, step-up forced", state: "Contained",
+      timeline: [
+        { t: "11:47", event: "Login attempt", detail: "Valid credentials from IP tied to active phishing campaign infrastructure.", flag: "Critical" },
+        { t: "11:48", event: "Step-up authentication forced", detail: "Push challenge sent to registered device — not approved." },
+        { t: "11:49", event: "Access denied", detail: "Session blocked; credentials rotated, customer notified." },
+      ],
+      txn: null,
+      intel: { name: "post-cz delivery smishing", match: "Infra match", desc: "Login IP belongs to hosting used by the fake customs-fee harvesting pages flagged this week." },
+      facts: [
+        { k: "Device", v: "Unknown — headless UA", ok: false }, { k: "Device trust", v: "None", ok: false },
+        { k: "IP address", v: "45.155.204.11", ok: false }, { k: "Network", v: "Bulletproof hosting", ok: false },
+        { k: "Location", v: "Amsterdam, NL", ok: false }, { k: "Credential source", v: "Phishing kit", ok: false },
+      ],
+      history: [
+        { kind: "alert", what: "Clicked reported smishing link", when: "4d ago" },
+        { kind: "ok", what: "Credentials rotated", when: "yesterday" },
+        { kind: "ok", what: "No financial loss", when: "" },
+      ] },
+    { id: "ALT-2368", detected: "Mon 10:20", channel: "Onboarding", sessionId: "S-87611", sessionDuration: "14 min", state: "Open",
+      timeline: [
+        { t: "10:06", event: "Account application started", detail: "Declared identity: male, 61 — ID document uploaded." },
+        { t: "10:12", event: "Typing cadence mismatch", detail: "Keystroke dynamics consistent with a user in their 20s; form-filling far above declared-age norms.", flag: "Anomaly" },
+        { t: "10:15", event: "Copy-paste identity data", detail: "Personal fields pasted, not typed — synthetic identity indicator.", flag: "Anomaly" },
+        { t: "10:20", event: "Application flagged", detail: "Routed to manual KYC review; alert raised." },
+      ],
+      txn: null,
+      intel: null,
+      facts: [
+        { k: "Device", v: "Android 13 · new", ok: false }, { k: "Device trust", v: "None — onboarding", ok: true },
+        { k: "IP address", v: "31.30.177.90", ok: true }, { k: "Network", v: "T-Mobile CZ", ok: true },
+        { k: "Location", v: "Prague, CZ", ok: true }, { k: "Emulator check", v: "Passed", ok: true },
+      ],
+      history: [
+        { kind: "alert", what: "Device seen on 2 other applications", when: "30 days" },
+        { kind: "ok", what: "Document check passed OCR", when: "Mon" },
+        { kind: "alert", what: "Selfie liveness borderline", when: "Mon" },
+      ] },
+    { id: "ALT-2364", detected: "Sun 15:22", channel: "Mobile app", sessionId: "S-87244", sessionDuration: "9 min", state: "Open",
+      timeline: [
+        { t: "15:14", event: "Session start", detail: "Known device, usual location, biometric unlock." },
+        { t: "15:18", event: "New payee added", detail: "First-time payee — small business account.", flag: "Anomaly" },
+        { t: "15:21", event: "Amount above profile", detail: "68,000 Kč vs. typical 2–8,000 Kč range.", flag: "Anomaly" },
+        { t: "15:22", event: "Payment held", detail: "Combined payee + amount anomaly crossed threshold; behavioral signals otherwise clean." },
+      ],
+      txn: { payee: "CZ18 •• 6604 (new payee)", amount: "68,000 Kč", context: "First-time payee · amount above learned profile · no coaching indicators", decision: "Held" },
+      intel: null,
+      facts: [
+        { k: "Device", v: "Samsung S24 · known", ok: true }, { k: "Device trust", v: "High", ok: true },
+        { k: "IP address", v: "90.181.44.6", ok: true }, { k: "Network", v: "Home Wi-Fi — usual", ok: true },
+        { k: "Location", v: "Plzeň, CZ — usual", ok: true }, { k: "Active call", v: "No", ok: true },
+      ],
+      history: [
+        { kind: "ok", what: "1 prior alert — false positive", when: "Feb 2026" },
+        { kind: "ok", what: "Stable behavioral profile", when: "3 yrs" },
+        { kind: "ok", what: "No FraudIntel matches", when: "" },
+      ] },
+  ];
+
+  navGroupDefs = [
+    { title: "Monitoring", items: [{ label: "Overview" }, { label: "Alert Queue", badge: "23" }, { label: "Detections", badge: "6" }, { label: "Transaction Risk" }] },
+    { title: "Investigation", items: [{ label: "Case Management" }, { label: "Transaction Graph" }] },
+    { title: "Intelligence", items: [{ label: "ScamFlag & FraudIntel", badge: "5" }] },
+    { title: "Administration", items: [{ label: "Risk Policies" }, { label: "Reporting" }, { label: "Platform Settings" }] },
+  ];
+
+  graphDefs = {
+    "M. Novak": {
+      sub: "CZ89 •• 4412 · retail customer · victim",
+      stats: [{ k: "Held right now", v: "240,000 Kč" }, { k: "Outbound 30 days", v: "312,000 Kč" }, { k: "Risk score", v: "94 — APP Scam" }],
+      flags: ["Coached session active — payment held pending callback"],
+      nodes: [
+        { id: "mule1", label: "CZ55 •• 0930", sub: "new payee · 3 wks old", kind: "intel", dir: "out", amount: "240k Kč held", weight: 3,
+          stats: [{ k: "Inbound 7 days", v: "612,000 Kč · 3 victims" }, { k: "Outbound 7 days", v: "590,000 Kč in minutes" }, { k: "Account age", v: "3 weeks" }],
+          flags: ["FraudIntel match — Operation SafeAccount mule list", "Fan-in from 2 victims at partner banks"] },
+        { id: "v2", parent: "mule1", label: "Victim B", sub: "partner bank", kind: "warn", dir: "in", amount: "180k Kč", weight: 2, flags: ["Reported via FraudIntel by partner institution"] },
+        { id: "v3", parent: "mule1", label: "Victim C", sub: "partner bank", kind: "warn", dir: "in", amount: "192k Kč", weight: 2, flags: ["Reported via FraudIntel by partner institution"] },
+        { id: "x1", parent: "mule1", label: "PL07 •• 2214", sub: "cross-border", kind: "mule", dir: "out", amount: "310k Kč", weight: 2, flags: ["Second-layer mule — cash-out region Katowice"] },
+        { id: "x2", parent: "mule1", label: "Crypto exch.", sub: "Kraken deposit", kind: "mule", dir: "out", amount: "280k Kč", weight: 2, flags: ["Deposit address tied to 12 prior reports"] },
+        { id: "sal", label: "Employer s.r.o.", sub: "salary · monthly", kind: "safe", dir: "in", amount: "62k Kč /mo", weight: 1 },
+        { id: "cez", label: "ČEZ", sub: "utility · regular", kind: "safe", dir: "out", amount: "1.2k Kč /mo", weight: 1 },
+        { id: "tmo", label: "T-Mobile", sub: "standing order", kind: "safe", dir: "out", amount: "799 Kč /mo", weight: 1 },
+      ],
+    },
+    "J. Dvorak": {
+      sub: "CZ44 •• 1097 · dormant 7 mo · suspected mule",
+      stats: [{ k: "Inbound today", v: "95,000 Kč" }, { k: "Outbound today", v: "93,400 Kč · 4 min" }, { k: "Risk score", v: "87 — Money Mule" }],
+      flags: ["Rapid in-out velocity — outbound restricted", "Device fingerprint shared with 2 flagged accounts"],
+      nodes: [
+        { id: "src", label: "CZ31 •• 8802", sub: "source account", kind: "intel", dir: "in", amount: "95k Kč", weight: 3,
+          stats: [{ k: "Linked investigations", v: "2 open" }, { k: "Fan-in 30 days", v: "7 victims" }],
+          flags: ["Flagged in two other mule investigations", "Collects investment-scam proceeds"] },
+        { id: "sv1", parent: "src", label: "Victim D", sub: "investment scam", kind: "warn", dir: "in", amount: "48k Kč", weight: 2 },
+        { id: "sv2", parent: "src", label: "Victim E", sub: "romance scam", kind: "warn", dir: "in", amount: "47k Kč", weight: 2 },
+        { id: "c1", label: "CZ90 •• 1174", sub: "counterparty 1", kind: "mule", dir: "out", amount: "31.1k Kč", weight: 2,
+          flags: ["Shares device fingerprint with subject"] },
+        { id: "atm", parent: "c1", label: "ATM cash-out", sub: "Katowice, PL", kind: "mule", dir: "out", amount: "30k Kč", weight: 2, flags: ["NFC relay pattern — ghost-tap withdrawals"] },
+        { id: "c2", label: "SK44 •• 7730", sub: "counterparty 2", kind: "mule", dir: "out", amount: "31.2k Kč", weight: 2 },
+        { id: "c3", label: "Crypto exch.", sub: "counterparty 3", kind: "mule", dir: "out", amount: "31.1k Kč", weight: 2 },
+      ],
+    },
+    "E. Vesela": {
+      sub: "CZ58 •• 2318 · retail customer · stable profile",
+      stats: [{ k: "Held right now", v: "68,000 Kč" }, { k: "Typical range", v: "400 – 8,000 Kč" }, { k: "Risk score", v: "52 — payee anomaly" }],
+      flags: ["First-time payee above learned amount range — no coaching indicators"],
+      nodes: [
+        { id: "biz", label: "CZ18 •• 6604", sub: "new payee · held", kind: "warn", dir: "out", amount: "68k Kč held", weight: 2,
+          stats: [{ k: "Account type", v: "Small business" }, { k: "FraudIntel", v: "no matches" }],
+          flags: ["No network flags — likely legitimate invoice"] },
+        { id: "reg", parent: "biz", label: "Registry", sub: "verified business", kind: "safe", dir: "out", amount: "", weight: 1 },
+        { id: "sal2", label: "Employer a.s.", sub: "salary · monthly", kind: "safe", dir: "in", amount: "54k Kč /mo", weight: 1 },
+        { id: "cez2", label: "ČEZ", sub: "utility · regular", kind: "safe", dir: "out", amount: "1.4k Kč /mo", weight: 1 },
+        { id: "roh", label: "Rohlik.cz", sub: "recurring merchant", kind: "safe", dir: "out", amount: "2.2k Kč /wk", weight: 1 },
+      ],
+    },
+  };
+
+  graphKinds = {
+    subject: { color: "#1D1D1B", name: "Subject account", desc: "seed of the graph" },
+    safe: { color: "#2FBF71", name: "Established counterparty", desc: "profile match, no flags" },
+    warn: { color: "#E67E22", name: "Anomalous / victim", desc: "unusual for profile" },
+    mule: { color: "#8E44AD", name: "Suspected mule layer", desc: "velocity / linkage" },
+    intel: { color: "#D71A28", name: "FraudIntel match", desc: "confirmed network flag" },
+  };
+
+  buildGraph(subjectKey, cfg) {
+    const def = this.graphDefs[subjectKey];
+    if (!def) return { nodes: [], edges: [] };
+    const { cx, cy, r1, r2, nr, showHop2, exp, sel, onClick } = cfg;
+    const kinds = this.graphKinds;
+    const nodes = [], edges = [], pos = { subject: { x: cx, y: cy } };
+    const mk = (n, x, y, r) => {
+      const isSel = sel === n.id;
+      const kids = def.nodes.filter(k => k.parent === n.id);
+      const expanded = exp && exp[n.id];
+      nodes.push({
+        id: n.id, x, y, r, ty: y + 4, ly: y + r + 15, ly2: y + r + 28,
+        fill: kinds[n.kind].color, stroke: isSel ? "#1D1D1B" : "#fff", strokeW: isSel ? 3 : 2,
+        initials: (n.initials ?? n.label.replace(/[^A-Za-z0-9 ]/g, "").split(" ").filter(Boolean).map(w => w[0]).join("").slice(0, 2).toUpperCase()),
+        label: n.label, sub: n.sub,
+        badge: expanded ? "−" : "+" + kids.length, badgeOp: (showHop2 && kids.length && !n.parent) ? 1 : 0,
+        bx: x + r * 0.75, by: y - r * 0.75, by2: y - r * 0.75 + 3.5,
+        click: onClick ? () => onClick(n, kids.length > 0) : undefined,
+      });
+      pos[n.id] = { x, y };
+    };
+    // subject
+    const subjSel = sel === "subject";
+    nodes.push({
+      id: "subject", x: cx, y: cy, r: nr + 8, ty: cy + 4, ly: cy + nr + 23, ly2: cy + nr + 36,
+      fill: kinds.subject.color, stroke: subjSel ? "#D71A28" : "#fff", strokeW: subjSel ? 3 : 2,
+      initials: subjectKey.split(" ").map(w => w[0]).join("").replace(".", ""),
+      label: subjectKey, sub: "subject", badge: "", badgeOp: 0,
+      click: onClick ? () => onClick({ id: "subject" }, false) : undefined,
+    });
+    const hop1 = def.nodes.filter(n => !n.parent);
+    hop1.forEach((n, i) => {
+      const ang = (-90 + i * (360 / hop1.length)) * Math.PI / 180;
+      mk(n, cx + r1 * Math.cos(ang), cy + r1 * Math.sin(ang), nr);
+    });
+    if (showHop2) hop1.forEach((p, i) => {
+      if (!(exp && exp[p.id])) return;
+      const kids = def.nodes.filter(k => k.parent === p.id);
+      const baseAng = (-90 + i * (360 / hop1.length)) * Math.PI / 180;
+      kids.forEach((k, j) => {
+        const ang = baseAng + (j - (kids.length - 1) / 2) * 0.42;
+        mk(k, cx + r2 * Math.cos(ang), cy + r2 * Math.sin(ang), nr - 5);
+      });
+    });
+    def.nodes.forEach(n => {
+      const from = pos[n.parent ?? "subject"], to = pos[n.id];
+      if (!from || !to) return;
+      const flagged = n.kind === "intel" || n.kind === "mule";
+      edges.push({
+        x1: from.x, y1: from.y, x2: to.x, y2: to.y,
+        stroke: flagged ? "#E8B8BC" : "#D9DEE3", w: 1 + n.weight,
+        dash: n.dir === "in" ? "6 4" : "",
+        lx: from.x + (to.x - from.x) * 0.55, ly: from.y + (to.y - from.y) * 0.55 - 6,
+        amount: n.amount, labelFill: flagged ? "#D71A28" : "#7A8593",
+      });
+    });
+    return { nodes, edges };
+  }
+
+  svgEl(g, w, h) {
+    const R = React.createElement;
+    const kids = [];
+    g.edges.forEach((e, i) => {
+      kids.push(R("line", { key: "e" + i, x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, stroke: e.stroke, strokeWidth: e.w, strokeDasharray: e.dash || undefined }));
+      if (e.amount) kids.push(R("text", { key: "et" + i, x: e.lx, y: e.ly, textAnchor: "middle", fontSize: 10.5, fontWeight: 700, fill: e.labelFill, fontFamily: "Barlow, sans-serif" }, e.amount));
+    });
+    g.nodes.forEach((n, i) => {
+      const inner = [
+        R("circle", { key: "c", cx: n.x, cy: n.y, r: n.r, fill: n.fill, stroke: n.stroke, strokeWidth: n.strokeW }),
+        R("text", { key: "i", x: n.x, y: n.ty, textAnchor: "middle", fontSize: 12, fontWeight: 800, fill: "#fff", fontFamily: "Barlow, sans-serif" }, n.initials),
+        R("text", { key: "l", x: n.x, y: n.ly, textAnchor: "middle", fontSize: 11.5, fontWeight: 700, fill: "#3E4753", fontFamily: "Barlow, sans-serif" }, n.label),
+        R("text", { key: "s", x: n.x, y: n.ly2, textAnchor: "middle", fontSize: 9.5, fill: "#7A8593", fontFamily: "Open Sans, sans-serif" }, n.sub),
+      ];
+      if (n.badgeOp) inner.push(R("g", { key: "b" },
+        R("circle", { cx: n.bx, cy: n.by, r: 10, fill: "#1D1D1B" }),
+        R("text", { x: n.bx, y: n.by2, textAnchor: "middle", fontSize: 10, fontWeight: 800, fill: "#fff", fontFamily: "Barlow, sans-serif" }, n.badge)));
+      kids.push(R("g", { key: "n" + n.id, onClick: n.click, style: { cursor: n.click ? "pointer" : "default" } }, ...inner));
+    });
+    return R("svg", { viewBox: "0 0 " + w + " " + h, style: { width: "100%", height: "auto", display: "block" } }, ...kids);
+  }
+
+  graphVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 10.5, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const s = this.state;
+    const subjKey = this.graphDefs[s.tgSubject] ? s.tgSubject : "M. Novak";
+    const def = this.graphDefs[subjKey];
+    const selId = s.tgSel ?? "subject";
+    const selNode = selId === "subject" ? null : def.nodes.find(n => n.id === selId);
+    const kinds = this.graphKinds;
+    const g = this.buildGraph(subjKey, {
+      cx: 430, cy: 310, r1: 170, r2: 250, nr: 26, showHop2: true,
+      exp: s.tgExp ?? {}, sel: selId,
+      onClick: (n, hasKids) => {
+        const exp = { ...(s.tgExp ?? {}) };
+        if (hasKids && !n.parent) exp[n.id] = !exp[n.id];
+        this.setState({ tgSel: n.id, tgExp: exp, tgFlaggedMsg: "" });
+      },
+    });
+    const selKind = selNode ? selNode.kind : "subject";
+    return {
+      isGraph: s.review === null && s.profile === null && s.screen === "Transaction Graph",
+      tgSubjects: Object.keys(this.graphDefs).map(label => ({
+        label,
+        go: () => this.setState({ tgSubject: label, tgSel: "subject", tgExp: {}, tgFlaggedMsg: "" }),
+        style: {
+          padding: "7px 14px", borderRadius: "3px", border: "1px solid " + (subjKey === label ? "#D71A28" : "#E0E5EA"),
+          background: subjKey === label ? "#D71A28" : "#fff", color: subjKey === label ? "#fff" : "#5A6976",
+          fontFamily: "'Barlow', sans-serif", fontSize: "11.5px", fontWeight: 700,
+          letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+        },
+      })),
+      tgSvgEl: this.svgEl(g, 860, 620),
+      tgSelName: selNode ? selNode.label : subjKey,
+      tgSelSub: selNode ? selNode.sub : def.sub,
+      tgSelKind: kinds[selKind].name,
+      tgSelKindStyle: chip(kinds[selKind].color),
+      tgSelStats: (selNode ? selNode.stats : def.stats) ?? [],
+      tgSelFlags: ((selNode ? selNode.flags : def.flags) ?? []).map(text => ({ text })),
+      tgFlagLabel: selId === "subject" ? "Create case" : "Flag account",
+      tgFlag: () => this.setState({ tgFlaggedMsg: selId === "subject" ? "✓ Case created from graph evidence — assigned to you." : "✓ Account flagged — shared to FraudIntel and added to watchlist." }),
+      tgFlaggedStyle: s.tgFlaggedMsg ? { marginTop: 12, fontSize: 12, fontWeight: 700, color: "#2FBF71" } : { display: "none" },
+      tgFlaggedMsg: s.tgFlaggedMsg ?? "",
+      tgProfileStyle: selId === "subject" ? { flex: 1, padding: "11px", background: "#fff", color: "#3E4753", border: "1px solid #E0E5EA", borderRadius: 3, fontFamily: "'Barlow', sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", cursor: "pointer" } : { display: "none" },
+      tgProfile: () => this.setState({ profile: subjKey }),
+      tgLegend: Object.values(kinds).map(k => ({
+        ...k, dotStyle: { width: 12, height: 12, borderRadius: "50%", background: k.color, flexShrink: 0 },
+      })),
+    };
+  }
+
+  rvGraphVals(user) {
+    const has = !!this.graphDefs[user];
+    if (!has) return { rvHasGraph: false, rvgSvgEl: null, rvgOpenFull: () => {} };
+    const g = this.buildGraph(user, { cx: 330, cy: 165, r1: 108, r2: 200, nr: 21, showHop2: false, exp: {}, sel: null });
+    g.nodes = g.nodes.map(n => ({ ...n, ly: n.y + n.r + 13, ly2: n.y + n.r + 25 }));
+    return {
+      rvHasGraph: true,
+      rvgSvgEl: this.svgEl(g, 660, 340),
+      rvgOpenFull: () => { this.stopReplay(); this.setState({ screen: "Transaction Graph", review: null, replayPlaying: false, tgSubject: user, tgSel: "subject", tgExp: {} }); },
+    };
+  }
+
+  moduleDefs = [
+    { key: "bip", name: "Behavioral Intelligence", desc: "Session profiling & anomaly detection — 48k sessions/day" },
+    { key: "scamflag", name: "ScamFlag", desc: "GenAI scam analysis of customer submissions" },
+    { key: "insights", name: "Smart Insights", desc: "False-positive tuning & model feedback" },
+    { key: "fraudintel", name: "FraudIntel sharing", desc: "Contribute & consume network intelligence" },
+    { key: "cffc", name: "CFFC monitoring", desc: "24/7 Fusion Center escalation channel" },
+  ];
+
+  notifDefs = [
+    { key: "digest", name: "Daily e-mail digest", desc: "Queue summary at 07:00 to fraud-ops list" },
+    { key: "webhook", name: "Teams webhook", desc: "New critical alerts posted to #fraud-ops" },
+    { key: "sms", name: "SMS on critical", desc: "Score ≥ 90 pages the on-call analyst" },
+    { key: "weekly", name: "Weekly report", desc: "Reporting summary mailed every Friday 17:00" },
+  ];
+
+  integrationDefs = [
+    { name: "Core banking API", detail: "Payment holds & releases · v2.4", status: "Connected", ok: true },
+    { name: "3DS Access Control Server", detail: "Step-up challenge routing", status: "Connected", ok: true },
+    { name: "SIEM export", detail: "Splunk HEC · alerts & audit trail", status: "Connected", ok: true },
+    { name: "KYC / onboarding provider", detail: "Document & liveness checks", status: "Action needed", ok: false },
+  ];
+
+  teamDefs = [
+    { name: "F. Fillion", email: "f.fillion@demobank.cz", role: "Admin" },
+    { name: "P. Hruba", email: "p.hruba@demobank.cz", role: "Senior analyst" },
+    { name: "T. Marek", email: "t.marek@demobank.cz", role: "Analyst" },
+    { name: "J. Sikora", email: "j.sikora@demobank.cz", role: "Analyst" },
+    { name: "CFFC service", email: "cffc@verawall.com", role: "Read-only" },
+  ];
+
+  keyDefs = [
+    { name: "Production — core banking", masked: "tm_live_ •••• 8f2c", scope: "read/write", used: "used 2 min ago" },
+    { name: "SIEM export", masked: "tm_live_ •••• a911", scope: "read", used: "used 1 h ago" },
+    { name: "Staging sandbox", masked: "tm_test_ •••• 04d7", scope: "read/write", used: "used 3 d ago" },
+  ];
+
+  reportWeeks = {
+    "Week 29": {
+      dates: "Jul 13 – 17, 2026",
+      total: "2.1M Kč",
+      days: [{ label: "Mon", v: 0.32 }, { label: "Tue", v: 0.48 }, { label: "Wed", v: 0.29 }, { label: "Thu", v: 0.61 }, { label: "Fri", v: 0.40 }],
+      lossNote: "Thursday's peak driven by two held APP-scam transfers (Operation SafeAccount) totalling 540,000 Kč — both confirmed fraud after customer callback.",
+      kpis: [
+        { label: "Losses prevented", value: "2.1M Kč", delta: "+31%", up: true, sub: "held + blocked, confirmed fraud" },
+        { label: "False positive rate", value: "0.8%", delta: "−0.2", up: false, sub: "Smart Insights tuning" },
+        { label: "Alerts resolved", value: "142", delta: "+18", up: true, sub: "across 4 analysts" },
+        { label: "SLA compliance", value: "93%", delta: "+2", up: true, sub: "all SLA classes, weighted" },
+      ],
+      analysts: [
+        { name: "P. Hruba", role: "Senior analyst", resolved: 47, handle: "14 min", escalated: 4, fp: "9%" },
+        { name: "T. Marek", role: "Analyst", resolved: 41, handle: "18 min", escalated: 6, fp: "12%" },
+        { name: "J. Sikora", role: "Analyst", resolved: 33, handle: "21 min", escalated: 3, fp: "15%" },
+        { name: "CFFC", role: "Fusion Center queue", resolved: 21, handle: "38 min", escalated: 0, fp: "5%" },
+      ],
+      highlights: [
+        { kind: "alert", text: "Operation SafeAccount campaign matched in traffic — 3 mule IBANs blocked before first loss." },
+        { kind: "ok", text: "FP rate below 1% for the fourth consecutive week — step-up friction down 14%." },
+        { kind: "case", text: "C-1041 (RAT takeover) attributed by CFFC; infrastructure shared to FraudIntel network." },
+      ],
+    },
+    "Week 28": {
+      dates: "Jul 6 – 10, 2026",
+      total: "1.6M Kč",
+      days: [{ label: "Mon", v: 0.21 }, { label: "Tue", v: 0.35 }, { label: "Wed", v: 0.44 }, { label: "Thu", v: 0.28 }, { label: "Fri", v: 0.32 }],
+      lossNote: "Steady week — largest single prevention was a 190,000 Kč investment-scam transfer to a flagged exchange account.",
+      kpis: [
+        { label: "Losses prevented", value: "1.6M Kč", delta: "−8%", up: false, sub: "held + blocked, confirmed fraud" },
+        { label: "False positive rate", value: "1.0%", delta: "−0.1", up: false, sub: "Smart Insights tuning" },
+        { label: "Alerts resolved", value: "124", delta: "+6", up: true, sub: "across 4 analysts" },
+        { label: "SLA compliance", value: "91%", delta: "−1", up: false, sub: "all SLA classes, weighted" },
+      ],
+      analysts: [
+        { name: "P. Hruba", role: "Senior analyst", resolved: 42, handle: "15 min", escalated: 5, fp: "10%" },
+        { name: "T. Marek", role: "Analyst", resolved: 38, handle: "19 min", escalated: 4, fp: "13%" },
+        { name: "J. Sikora", role: "Analyst", resolved: 28, handle: "24 min", escalated: 2, fp: "18%" },
+        { name: "CFFC", role: "Fusion Center queue", resolved: 16, handle: "41 min", escalated: 0, fp: "6%" },
+      ],
+      highlights: [
+        { kind: "alert", text: "post-cz smishing wave — 17 lookalike domains flagged, credential misuse blocked at login." },
+        { kind: "case", text: "Mule ring investigation expanded to 3 linked accounts; SAR filed." },
+        { kind: "ok", text: "Zero confirmed losses on instant payments for the second week running." },
+      ],
+    },
+  };
+
+  fpTrend = [
+    { label: "W-7", v: 1.9 }, { label: "W-6", v: 1.7 }, { label: "W-5", v: 1.4 }, { label: "W-4", v: 1.2 },
+    { label: "W-3", v: 1.1 }, { label: "W-2", v: 1.0 }, { label: "W-1", v: 1.0 }, { label: "Now", v: 0.8 },
+  ];
+
+  slaDefs = [
+    { name: "Alert triage", target: "15 min · 95%", pct: 96, goal: 95 },
+    { name: "Held payment decision", target: "30 min · 90%", pct: 88, goal: 90 },
+    { name: "Case first action", target: "1 h · 90%", pct: 91, goal: 90 },
+    { name: "Customer callback", target: "4 h · 85%", pct: 82, goal: 85 },
+  ];
+
+  txnDefs = [
+    { score: 92, payer: "M. Novak", payee: "CZ55 •• 0930 (new payee)", context: "First-time payee, coached session active", amount: "240,000 Kč", decision: "Held", status: "pending" },
+    { score: 88, payer: "E. Vesela", payee: "Crypto exchange — Kraken", context: "Unusual amount, investment-scam pattern", amount: "€4,800", decision: "Held", status: "pending" },
+    { score: 71, payer: "D. Kolar", payee: "PL07 •• 2214 (cross-border)", context: "New device, amount above profile", amount: "89,500 Kč", decision: "Step-up", status: "auto" },
+    { score: 64, payer: "R. Blaha", payee: "Card payment — 3DS", context: "3D Secure challenge triggered", amount: "12,300 Kč", decision: "Step-up", status: "auto" },
+    { score: 22, payer: "S. Urbanova", payee: "ČEZ — utility invoice", context: "Regular payee, profile match", amount: "1,240 Kč", decision: "Approved", status: "auto" },
+    { score: 14, payer: "V. Fiala", payee: "Rohlik.cz — groceries", context: "Recurring merchant, invisible auth", amount: "2,180 Kč", decision: "Approved", status: "auto" },
+    { score: 9, payer: "H. Prokopova", payee: "T-Mobile — monthly bill", context: "Standing order, profile match", amount: "799 Kč", decision: "Approved", status: "auto" },
+  ];
+
+  submissionDefs = [
+    { customer: "H. Prokopova", channel: "Mobile app", when: "4 min ago", verdict: "Scam", confidence: "97%", status: "pending",
+      message: "Hello, this is your bank's security dept. Your account was compromised, please move your funds to this safe account: CZ55 0300...",
+      analysis: "Impersonation of bank security team, urgency framing, request to transfer to an external 'safe account' — classic safe-account scam pattern. IBAN matches a known mule account." },
+    { customer: "R. Blaha", channel: "Mobile app", when: "22 min ago", verdict: "Scam", confidence: "94%", status: "pending",
+      message: "Your parcel is on hold. Pay the 35 CZK customs fee here: https://post-cz.delivery-fee.info",
+      analysis: "Smishing with lookalike postal domain registered 3 days ago. URL matches an active phishing campaign already flagged in FraudIntel." },
+    { customer: "D. Kolar", channel: "Web banking", when: "1h ago", verdict: "Suspicious", confidence: "71%", status: "pending",
+      message: "Hi, I'm interested in the apartment. I'll pay the deposit now via instant transfer if you take the listing down today.",
+      analysis: "Pressure to act immediately plus instant-payment request are consistent with purchase-scam grooming, but conversation context is incomplete. Recommend human review." },
+    { customer: "S. Urbanova", channel: "Mobile app", when: "2h ago", verdict: "Scam", confidence: "99%", status: "pending",
+      message: "I made 4,800 EUR last month trading crypto with my mentor. He has 3 spots left in his group, guaranteed returns.",
+      analysis: "Investment scam solicitation: guaranteed returns, mentor persona, scarcity framing. Wallet address in follow-up message tied to 12 prior reports across the network." },
+    { customer: "V. Fiala", channel: "Mobile app", when: "3h ago", verdict: "Safe", confidence: "89%", status: "pending",
+      message: "Reminder: your electricity invoice #2026-0714 of 1,240 CZK is due on July 20. Pay via your usual portal.",
+      analysis: "Matches customer's regular utility provider, no payment redirection, legitimate domain. Likely a genuine invoice reminder." },
+  ];
+
+  intelDefs = [
+    { name: "Operation SafeAccount", severity: "Critical", region: "CZ / SK / AT", source: "CFFC", when: "35 min ago",
+      desc: "Coordinated vishing campaign impersonating bank security teams; 40+ mule IBANs identified, 3 seen in your traffic." },
+    { name: "post-cz delivery smishing", severity: "High", region: "CZ", source: "partner bank", when: "2h ago",
+      desc: "SMS wave with fake customs-fee pages harvesting card data. 17 lookalike domains registered this week." },
+    { name: "Crypto mentor ring", severity: "High", region: "EU-wide", source: "FraudIntel network", when: "6h ago",
+      desc: "Investment scam ring recruiting via social media; funds funneled through layered mule accounts to exchanges." },
+    { name: "NFC relay cash-outs", severity: "Medium", region: "PL / CZ", source: "partner bank", when: "1d ago",
+      desc: "Ghost-tap cash-out pattern using relayed NFC transactions at ATMs; device fingerprints shared for blocking." },
+  ];
+
+  detectionDefs = [
+    { name: "Scams & Social Engineering", type: "APP Scam", count: 128, trend: "+18% vs. last week", desc: "APP, instant payment, investment, romance and purchase scams — coached-session and manipulation patterns detected in real time." },
+    { name: "Phishing & Malware", type: "Phishing", count: 96, trend: "+6% vs. last week", desc: "Credentials harvested via phishing infrastructure and financial malware signatures, blocked before misuse." },
+    { name: "Account Takeover", type: "Account Takeover", count: 74, trend: "−4% vs. last week", desc: "Remote access attacks, session hijacking and SIM swap — unauthorized access flagged by behavioral mismatch." },
+    { name: "Money Mules", type: "Money Mule", count: 41, trend: "+9 new accounts", desc: "Dormant accounts activated for rapid in-out transfers, identified before fraudsters cover their tracks." },
+    { name: "New Account Fraud", type: "New Account Fraud", count: 29, trend: "stable", desc: "Stolen or synthetic identities at onboarding — bonus abuse, bot attacks and loan fraud caught by biometrics." },
+    { name: "Transaction Risk", type: null, count: 212, trend: "0.8% false positives", desc: "Adaptive risk scoring of every payment — stringent measures applied only where risk demands it." },
+  ];
+
+  kpiDefs = [
+    { label: "Active high-risk sessions", value: "23", delta: "+5", up: true, sub: "vs. previous hour" },
+    { label: "Fraud stopped — 30 days", value: "$1.24M", delta: "+12%", up: true, sub: "value of blocked transactions" },
+    { label: "False positive rate", value: "0.8%", delta: "−0.3", up: false, sub: "Smart Insights tuning" },
+    { label: "Mule accounts flagged", value: "41", delta: "+9", up: true, sub: "pending investigation" },
+  ];
+
+  alertDefs = [
+    { score: 94, user: "M. Novak", account: "CZ89 •• 4412", type: "APP Scam", signal: "Coached session — hesitation + phone call detected" },
+    { score: 91, user: "K. Svoboda", account: "CZ12 •• 8830", type: "Account Takeover", signal: "New device + remote access tool signature" },
+    { score: 87, user: "J. Dvorak", account: "CZ44 •• 1097", type: "Money Mule", signal: "Rapid in-out transfers, dormant account activated" },
+    { score: 76, user: "A. Prochazka", account: "CZ71 •• 5521", type: "Phishing", signal: "Credentials used from known phishing infrastructure" },
+    { score: 64, user: "L. Cerny", account: "CZ03 •• 7742", type: "New Account Fraud", signal: "Typing cadence mismatch vs. declared identity age" },
+    { score: 52, user: "E. Vesela", account: "CZ58 •• 2318", type: "APP Scam", signal: "First-time payee + unusual amount pattern" },
+  ];
+
+  signalDefs = [
+    { name: "Typing dynamics", pct: 22, bad: true, status: "Deviates" },
+    { name: "Mouse / touch behavior", pct: 35, bad: true, status: "Deviates" },
+    { name: "Device fingerprint", pct: 90, bad: false, status: "Match" },
+    { name: "Session navigation flow", pct: 41, bad: true, status: "Unusual" },
+    { name: "Geolocation & network", pct: 85, bad: false, status: "Match" },
+  ];
+
+  threatDefs = [
+    { name: "APP / Instant scams", count: 128 }, { name: "Phishing", count: 96 },
+    { name: "Account takeover", count: 74 }, { name: "Money mules", count: 41 },
+    { name: "New account fraud", count: 29 }, { name: "Financial malware", count: 17 },
+  ];
+
+  caseDefs = [
+    { id: "C-1042", user: "M. Novak", account: "CZ89 •• 4412", type: "APP Scam", status: "Investigating", assignee: "P. Hruba", age: "2h",
+      summary: "Customer likely being coached over the phone during a payment session. Two transfers held; awaiting customer callback verification.",
+      timeline: [{ event: "Alert raised — coached session pattern", when: "Today 09:14" }, { event: "Payments CZK 240,000 held", when: "Today 09:15" }, { event: "Case assigned to P. Hruba", when: "Today 09:22" }, { event: "Customer callback scheduled", when: "Today 10:05" }] },
+    { id: "C-1041", user: "K. Svoboda", account: "CZ12 •• 8830", type: "Account Takeover", status: "Escalated", assignee: "CFFC", age: "5h",
+      summary: "Remote access tool detected on a new device. Session terminated, credentials reset. Escalated to CFFC for infrastructure attribution.",
+      timeline: [{ event: "Remote access signature match", when: "Today 06:02" }, { event: "Session terminated automatically", when: "Today 06:02" }, { event: "Credentials reset, customer notified", when: "Today 06:40" }, { event: "Escalated to Fusion Center", when: "Today 07:15" }] },
+    { id: "C-1038", user: "J. Dvorak", account: "CZ44 •• 1097", type: "Money Mule", status: "Investigating", assignee: "T. Marek", age: "1d",
+      summary: "Dormant account reactivated with rapid in-out transfer pattern across three counterparties. Linked to two other flagged accounts.",
+      timeline: [{ event: "Mule pattern detected", when: "Yesterday 14:30" }, { event: "Account link analysis run", when: "Yesterday 15:10" }, { event: "Outbound transfers restricted", when: "Yesterday 15:12" }, { event: "SAR draft prepared", when: "Today 08:00" }] },
+    { id: "C-1035", user: "A. Prochazka", account: "CZ71 •• 5521", type: "Phishing", status: "Pending", assignee: "Unassigned", age: "1d",
+      summary: "Login from infrastructure tied to an active phishing campaign. Credentials rotated; monitoring for repeat access attempts.",
+      timeline: [{ event: "Phishing infrastructure match", when: "Yesterday 11:48" }, { event: "Step-up authentication forced", when: "Yesterday 11:49" }, { event: "Credentials rotated", when: "Yesterday 12:30" }] },
+    { id: "C-1031", user: "L. Cerny", account: "CZ03 •• 7742", type: "New Account Fraud", status: "Closed", assignee: "P. Hruba", age: "3d",
+      summary: "Onboarding biometrics inconsistent with declared identity. Account rejected at KYC review; identity flagged in FraudIntel.",
+      timeline: [{ event: "Biometric mismatch at onboarding", when: "Mon 10:20" }, { event: "KYC manual review", when: "Mon 13:00" }, { event: "Application rejected", when: "Mon 16:45" }, { event: "Case closed — confirmed fraud", when: "Tue 09:00" }] },
+    { id: "C-1029", user: "E. Vesela", account: "CZ58 •• 2318", type: "APP Scam", status: "Closed", assignee: "T. Marek", age: "4d",
+      summary: "First-time payee with unusual amount. Customer confirmed legitimate invoice payment after callback; released with no loss.",
+      timeline: [{ event: "Alert raised — payee anomaly", when: "Sun 15:22" }, { event: "Payment held", when: "Sun 15:22" }, { event: "Customer confirmed legitimate", when: "Sun 16:40" }, { event: "Case closed — false positive", when: "Sun 16:45" }] },
+  ];
+
+  statusColors = { Investigating: "#E67E22", Escalated: "#D71A28", Pending: "#2C7BB6", Closed: "#2FBF71" };
+
+  typeColors = {
+    "APP Scam": "#D71A28", "Account Takeover": "#B8121F", "Money Mule": "#8E44AD",
+    "Phishing": "#E67E22", "New Account Fraud": "#2C7BB6",
+  };
+
+  overviewVals() {
+    const weekData = [
+      { label: "W-7", v: 0.6 }, { label: "W-6", v: 0.9 }, { label: "W-5", v: 0.7 }, { label: "W-4", v: 1.3 },
+      { label: "W-3", v: 1.1 }, { label: "W-2", v: 1.6 }, { label: "W-1", v: 1.5 }, { label: "Now", v: 1.9 },
+    ];
+    const maxV = Math.max(...weekData.map(w => w.v));
+    const actColors = { alert: "#D71A28", case: "#E67E22", intel: "#2C7BB6", ok: "#2FBF71" };
+    return {
+      weeks: weekData.map((w, i) => ({
+        label: w.label, value: w.v.toFixed(1) + "M",
+        barStyle: {
+          height: Math.round((w.v / maxV) * 100) + "%", minHeight: "8px",
+          background: i === weekData.length - 1 ? "#D71A28" : "#F0B9BD",
+          borderRadius: "3px 3px 0 0", transition: "height .4s",
+        },
+      })),
+      activity: [
+        { kind: "alert", what: "Payment held", detail: "— 240,000 Kč, coached session (M. Novak)", when: "9 min ago" },
+        { kind: "intel", what: "FraudIntel match", detail: "— Operation SafeAccount IBAN seen in traffic", when: "35 min ago" },
+        { kind: "case", what: "Case C-1041 escalated", detail: "to Cyber Fraud Fusion Center", when: "1h ago" },
+        { kind: "ok", what: "False positive closed", detail: "— C-1029 released, no loss", when: "2h ago" },
+        { kind: "alert", what: "ScamFlag verdict", detail: "— investment scam confirmed (99%)", when: "2h ago" },
+      ].map(a => ({ ...a, dotStyle: { width: 10, height: 10, borderRadius: "50%", background: actColors[a.kind], flexShrink: 0 } })),
+      modules: [
+        { name: "Behavioral Intelligence", stat: "48k sessions/day", ok: true },
+        { name: "ScamFlag", stat: "5 pending", ok: true },
+        { name: "FraudIntel", stat: "4 active campaigns", ok: true },
+        { name: "Cyber Fraud Fusion Center", stat: "24/7 live", ok: true },
+      ].map(m => ({ ...m, dotStyle: { width: 8, height: 8, borderRadius: "50%", background: m.ok ? "#2FBF71" : "#D71A28", flexShrink: 0 } })),
+      topThreats: this.detectionDefs.slice(0, 3).map(d => ({
+        name: d.name, count: d.count, trend: d.trend,
+        open: () => this.setState({ screen: d.name, filter: "All", typeFilter: d.type }),
+        rowStyle: {
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, width: "100%",
+          padding: "10px 12px", background: "#F7F8FA", border: "1px solid #E9EDF1", borderRadius: "4px",
+          cursor: "pointer", fontFamily: "inherit",
+        },
+      })),
+      goDetections: () => this.setState({ screen: "Detections", filter: "All", typeFilter: null }),
+    };
+  }
+
+  txnVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 11, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const decisionColors = { Held: "#D71A28", "Step-up": "#E67E22", Approved: "#2FBF71", Blocked: "#B8121F", Released: "#2FBF71" };
+    const resolve = (t, decision, resolution) => { t.decision = decision; t.status = "resolved"; t.resolution = resolution; this.forceUpdate(); };
+    const visible = this.state.txnFilter === "All" ? this.txnDefs
+      : this.state.txnFilter === "Held" ? this.txnDefs.filter(t => t.decision === "Held")
+      : this.txnDefs.filter(t => t.decision !== "Held");
+    return {
+      txnKpis: [
+        { label: "Payments scored today", value: "48,211", sub: "real-time TRA on all channels" },
+        { label: "Frictionless approvals", value: "86%", sub: "invisible authentication" },
+        { label: "Held for review", value: String(this.txnDefs.filter(t => t.decision === "Held").length), sub: "awaiting analyst decision" },
+        { label: "Value protected today", value: "1.9M Kč", sub: "held + blocked transactions" },
+      ],
+      txnFilters: ["All", "Held", "Auto"].map(label => ({
+        label,
+        go: () => this.setState({ txnFilter: label }),
+        style: {
+          padding: "7px 14px", borderRadius: "3px", border: "1px solid " + (this.state.txnFilter === label ? "#D71A28" : "#E0E5EA"),
+          background: this.state.txnFilter === label ? "#D71A28" : "#fff",
+          color: this.state.txnFilter === label ? "#fff" : "#5A6976",
+          fontFamily: "'Barlow', sans-serif", fontSize: "11.5px", fontWeight: 700,
+          letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+        },
+      })),
+      txns: visible.map(t => ({
+        ...t,
+        scoreStyle: {
+          width: 40, height: 40, borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: "'Barlow', sans-serif", fontWeight: 800, fontSize: 14, color: "#fff",
+          background: t.score >= 85 ? "#D71A28" : t.score >= 55 ? "#E67E22" : "#2FBF71",
+        },
+        decisionStyle: chip(decisionColors[t.decision] || "#7A8593"),
+        actionsStyle: t.status === "pending" ? { display: "flex", gap: 8, justifyContent: "flex-end" } : { display: "none" },
+        resolvedStyle: t.status === "resolved" ? { textAlign: "right", fontSize: 11.5, fontWeight: 700, color: decisionColors[t.decision] } : { display: "none" },
+        release: () => resolve(t, "Released", "✓ Released to payee"),
+        block: () => resolve(t, "Blocked", "✕ Blocked — case created"),
+      })),
+      authMix: [
+        { name: "Invisible (profile match)", pct: "86%", w: 86, color: "#2FBF71" },
+        { name: "3DS / step-up challenge", pct: "9%", w: 9, color: "#E67E22" },
+        { name: "Held for analyst review", pct: "3%", w: 3, color: "#D71A28" },
+        { name: "Blocked outright", pct: "2%", w: 2, color: "#B8121F" },
+      ].map(a => ({ ...a, barStyle: { width: a.w + "%", height: "100%", background: a.color, borderRadius: 4 } })),
+      policies: [
+        { band: "Low risk", range: "0–54", rule: "Approve silently — no customer friction", color: "#2FBF71" },
+        { band: "Elevated risk", range: "55–84", rule: "Step-up: 3DS challenge or strong authentication", color: "#E67E22" },
+        { band: "High risk", range: "85–100", rule: "Hold payment — route to analyst queue", color: "#D71A28" },
+      ].map(p => ({ ...p, dotStyle: { width: 12, height: 12, borderRadius: "50%", background: p.color, flexShrink: 0 } })),
+    };
+  }
+
+  intelVals() {
+    const chip = (color, bg) => ({
+      display: "inline-block", padding: "3px 9px", borderRadius: "3px", fontSize: 10.5, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.05em", textTransform: "uppercase",
+      color, background: bg || "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const verdictColors = { Scam: "#D71A28", Suspicious: "#E67E22", Safe: "#2FBF71" };
+    const sevColors = { Critical: "#D71A28", High: "#E67E22", Medium: "#2C7BB6" };
+    const resolve = (s, resolution) => { s.status = "resolved"; s.resolution = resolution; this.forceUpdate(); };
+    return {
+      pendingCount: this.submissionDefs.filter(s => s.status === "pending").length,
+      intelCount: this.intelDefs.length,
+      submissions: this.submissionDefs.map(s => ({
+        ...s,
+        verdictStyle: { ...chip(verdictColors[s.verdict]), marginLeft: "auto" },
+        actionsStyle: s.status === "pending" ? { display: "flex", gap: 8, marginTop: 12 } : { display: "none" },
+        resolvedStyle: s.status === "resolved" ? { marginTop: 12, fontSize: 12, fontWeight: 700, color: "#2FBF71" } : { display: "none" },
+        confirm: () => resolve(s, "✓ Confirmed scam — customer warned, IOCs extracted"),
+        dismiss: () => resolve(s, "✓ Marked safe — customer notified"),
+        share: () => resolve(s, "✓ Shared to FraudIntel network"),
+      })),
+      intel: this.intelDefs.map(it => ({ ...it, sevStyle: chip(sevColors[it.severity]) })),
+    };
+  }
+
+  caseVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 11, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const visible = this.state.caseFilter === "All" ? this.caseDefs : this.caseDefs.filter(c => c.status === this.state.caseFilter);
+    const sel = this.caseDefs[this.state.caseSel];
+    return {
+      caseKpis: [
+        { label: "Open cases", value: String(this.caseDefs.filter(c => c.status !== "Closed").length) },
+        { label: "Escalated to CFFC", value: String(this.caseDefs.filter(c => c.status === "Escalated").length) },
+        { label: "Avg. resolution time", value: "20 min" },
+        { label: "Closed this week", value: String(this.caseDefs.filter(c => c.status === "Closed").length) },
+      ],
+      caseFilters: ["All", "Investigating", "Escalated", "Closed"].map(label => ({
+        label,
+        go: () => this.setState({ caseFilter: label }),
+        style: {
+          padding: "7px 14px", borderRadius: "3px", border: "1px solid " + (this.state.caseFilter === label ? "#D71A28" : "#E0E5EA"),
+          background: this.state.caseFilter === label ? "#D71A28" : "#fff",
+          color: this.state.caseFilter === label ? "#fff" : "#5A6976",
+          fontFamily: "'Barlow', sans-serif", fontSize: "11.5px", fontWeight: 700,
+          letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+        },
+      })),
+      cases: visible.map(c => ({
+        ...c,
+        select: () => this.setState({ caseSel: this.caseDefs.indexOf(c) }),
+        rowStyle: {
+          display: "grid", gridTemplateColumns: "88px minmax(0,1.2fr) minmax(0,1fr) 110px 110px 90px",
+          alignItems: "center", width: "100%", padding: "14px 22px", border: "none",
+          borderBottom: "1px solid #F0F2F5", cursor: "pointer", fontFamily: "inherit",
+          background: this.caseDefs.indexOf(c) === this.state.caseSel ? "#FBF1F2" : "#fff",
+        },
+        typeStyle: chip(this.typeColors[c.type]),
+        statusStyle: chip(this.statusColors[c.status]),
+      })),
+      caseDetail: { ...sel, statusStyle: chip(this.statusColors[sel.status]) },
+      caseTimeline: sel.timeline.map((t, i) => ({
+        ...t,
+        dotStyle: { width: 10, height: 10, borderRadius: "50%", background: i === 0 ? "#D71A28" : "#C9CED4", marginTop: 3, flexShrink: 0 },
+        lineStyle: i === sel.timeline.length - 1 ? { display: "none" } : { width: 2, flex: 1, background: "#E9EDF1" },
+      })),
+      escalate: () => { this.caseDefs[this.state.caseSel].status = "Escalated"; this.forceUpdate(); },
+      closeCase: () => { this.caseDefs[this.state.caseSel].status = "Closed"; this.forceUpdate(); },
+    };
+  }
+
+  stopReplay() { clearInterval(this._rp); this._rp = null; }
+  componentWillUnmount() { this.stopReplay(); }
+
+  replayVals(d) {
+    const flagColors = { Anomaly: "#E67E22", Critical: "#D71A28" };
+    const n = d.timeline.length;
+    const step = Math.min(this.state.replayStep, n - 1);
+    const cur = d.timeline[step];
+    return {
+      replayPos: step + 1, replayTotal: n,
+      replayBtnLabel: this.state.replayPlaying ? "❚❚ Pause" : "▶ Play",
+      replayToggle: () => {
+        if (this.state.replayPlaying) { this.stopReplay(); this.setState({ replayPlaying: false }); return; }
+        const start = step >= n - 1 ? 0 : step;
+        this.setState({ replayStep: start, replayPlaying: true });
+        this._rp = setInterval(() => {
+          this.setState(s => {
+            if (s.replayStep >= n - 1) { this.stopReplay(); return { replayPlaying: false }; }
+            return { replayStep: s.replayStep + 1 };
+          });
+        }, 1400);
+      },
+      replayCur: {
+        ...cur, flagLabel: cur.flag ?? "",
+        flagStyle: cur.flag ? { fontSize: 10, fontWeight: 700, fontFamily: "'Barlow', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase", padding: "2px 7px", borderRadius: 3, color: "#fff", background: flagColors[cur.flag] } : { display: "none" },
+      },
+      replaySteps: d.timeline.map((ev, j) => ({
+        ...ev,
+        go: () => { this.stopReplay(); this.setState({ replayStep: j, replayPlaying: false }); },
+        segStyle: { flex: 1, height: 28, display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer", position: "relative", borderTop: "2px solid " + (j <= step ? "#D71A28" : "#E9EDF1") },
+        dotStyle: { width: j === step ? 14 : 10, height: j === step ? 14 : 10, borderRadius: "50%", marginTop: -16, border: "2px solid #fff", boxShadow: "0 0 0 1px #E3E7EB", background: ev.flag ? flagColors[ev.flag] : (j <= step ? "#D71A28" : "#C9CED4"), transition: "all .2s" },
+      })),
+    };
+  }
+
+  settingsVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 10.5, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB", whiteSpace: "nowrap",
+    });
+    const s = this.state;
+    const off = s.stOff ?? {};
+    const sw = (on, toggle) => ({
+      toggle,
+      switchStyle: { width: 40, height: 22, borderRadius: 11, border: "none", cursor: "pointer", position: "relative", flexShrink: 0, background: on ? "#D71A28" : "#C9CED4", transition: "background .2s" },
+      knobStyle: { position: "absolute", top: 3, left: on ? 21 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left .2s" },
+    });
+    const roleColors = { Admin: "#D71A28", "Senior analyst": "#E67E22", Analyst: "#2C7BB6", "Read-only": "#7A8593" };
+    return {
+      isSettings: s.review === null && s.profile === null && s.screen === "Platform Settings",
+      stTenant: [
+        { k: "Tenant", v: "Demo Bank" },
+        { k: "Environment", v: "Production" },
+        { k: "Data region", v: "EU (Frankfurt)" },
+        { k: "Data retention", v: "13 months" },
+        { k: "Platform version", v: "BIP 8.4.2" },
+        { k: "Session ingestion", v: "48,211 / day" },
+      ],
+      stModules: this.moduleDefs.map(m => ({
+        ...m,
+        dotStyle: { width: 8, height: 8, borderRadius: "50%", flexShrink: 0, background: off[m.key] ? "#C9CED4" : "#2FBF71" },
+        ...sw(!off[m.key], () => this.setState({ stOff: { ...off, [m.key]: !off[m.key] }, stSavedMsg: "" })),
+      })),
+      stNotifs: this.notifDefs.map(n => {
+        const key = "nf_" + n.key;
+        return { ...n, ...sw(!off[key], () => this.setState({ stOff: { ...off, [key]: !off[key] }, stSavedMsg: "" })) };
+      }),
+      stIntegrations: this.integrationDefs.map(i => ({ ...i, statusStyle: chip(i.ok ? "#2FBF71" : "#E67E22") })),
+      stTeam: this.teamDefs.map(t => ({
+        ...t,
+        initials: t.name.split(" ").map(x => x[0]).join("").replace(".", ""),
+        avatarStyle: { width: 32, height: 32, borderRadius: "50%", background: t.role === "Admin" ? "#D71A28" : "#1D1D1B", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Barlow', sans-serif", fontWeight: 700, fontSize: 11, flexShrink: 0 },
+        roleStyle: chip(roleColors[t.role]),
+      })),
+      stKeys: (s.stKeys ?? this.keyDefs).map(k => ({ ...k, scopeStyle: chip(k.scope === "read" ? "#2C7BB6" : "#D71A28") })),
+      stNewKey: () => this.setState({
+        stKeys: [...(s.stKeys ?? this.keyDefs), { name: "New key — unnamed", masked: "tm_live_ •••• " + Math.random().toString(16).slice(2, 6), scope: "read", used: "never used" }],
+        stSavedMsg: "",
+      }),
+      stSave: () => this.setState({ stSavedMsg: "✓ Settings saved — changes propagate to all detection nodes within 5 minutes." }),
+      stSavedStyle: s.stSavedMsg ? { fontSize: 12.5, fontWeight: 700, color: "#2FBF71" } : { display: "none" },
+      stSavedMsg: s.stSavedMsg ?? "",
+    };
+  }
+
+  reportVals() {
+    const wk = this.state.repWeek ?? "Week 29";
+    const w = this.reportWeeks[wk];
+    const maxD = Math.max(...w.days.map(d => d.v));
+    const maxFp = Math.max(...this.fpTrend.map(f => f.v));
+    const hlColors = { alert: "#D71A28", case: "#E67E22", ok: "#2FBF71" };
+    return {
+      isReporting: this.state.review === null && this.state.profile === null && this.state.screen === "Reporting",
+      repHeader: wk + " · " + w.dates + " · Tenant: Demo Bank",
+      repWeeksSel: ["Week 29", "Week 28"].map(label => ({
+        label,
+        go: () => this.setState({ repWeek: label }),
+        style: {
+          padding: "7px 14px", borderRadius: "3px", border: "1px solid " + (wk === label ? "#D71A28" : "#E0E5EA"),
+          background: wk === label ? "#D71A28" : "#fff", color: wk === label ? "#fff" : "#5A6976",
+          fontFamily: "'Barlow', sans-serif", fontSize: "11.5px", fontWeight: 700,
+          letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+        },
+      })),
+      repKpis: w.kpis.map(k => ({
+        ...k,
+        deltaStyle: { fontFamily: "'Barlow', sans-serif", fontWeight: 700, fontSize: 13, color: k.up ? "#2FBF71" : "#D71A28" },
+      })),
+      repWeekTotal: w.total,
+      repLossNote: w.lossNote,
+      repDays: w.days.map(d => ({
+        label: d.label, value: (d.v * 1000).toFixed(0) + "k",
+        barStyle: { height: Math.round((d.v / maxD) * 100) + "%", minHeight: "8px", background: d.v === maxD ? "#D71A28" : "#F0B9BD", borderRadius: "3px 3px 0 0", transition: "height .4s" },
+      })),
+      repAnalysts: w.analysts.map(a => ({
+        ...a,
+        initials: a.name.split(" ").map(x => x[0]).join("").replace(".", ""),
+        avatarStyle: { width: 32, height: 32, borderRadius: "50%", background: a.name === "CFFC" ? "#1D1D1B" : "#D71A28", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Barlow', sans-serif", fontWeight: 700, fontSize: 11, flexShrink: 0 },
+        fpStyle: { textAlign: "right", fontFamily: "'Barlow', sans-serif", fontWeight: 700, fontSize: 13, color: parseInt(a.fp) > 12 ? "#E67E22" : "#2FBF71" },
+      })),
+      repFp: this.fpTrend.map((f, i) => ({
+        label: f.label, value: f.v.toFixed(1),
+        barStyle: { height: Math.round((f.v / maxFp) * 100) + "%", minHeight: "6px", background: f.v <= 1.0 ? "#2FBF71" : "#E67E22", opacity: i === this.fpTrend.length - 1 ? 1 : 0.65, borderRadius: "3px 3px 0 0" },
+      })),
+      repSla: this.slaDefs.map(s => {
+        const met = s.pct >= s.goal;
+        return {
+          ...s, pct: s.pct + "%",
+          pctStyle: { fontWeight: 700, color: met ? "#2FBF71" : "#E67E22" },
+          barStyle: { width: s.pct + "%", height: "100%", background: met ? "#2FBF71" : "#E67E22", borderRadius: 4 },
+          targetStyle: { position: "absolute", top: -2, bottom: -2, left: s.goal + "%", width: 2, background: "#1D1D1B" },
+        };
+      }),
+      repHighlights: w.highlights.map(h => ({
+        text: h.text,
+        dotStyle: { width: 8, height: 8, borderRadius: "50%", background: hlColors[h.kind], flexShrink: 0, marginTop: 5 },
+      })),
+    };
+  }
+
+  polEff(a, disabled) {
+    let eff = a.score;
+    this.ruleDefs.forEach(r => { if (disabled[r.key] && r.types.includes(a.type)) eff -= r.weight; });
+    return Math.max(0, eff);
+  }
+  polOutcome(eff, pol) {
+    if (eff >= pol.hold) return "Held";
+    if (eff >= pol.step) return "Step-up";
+    if (eff >= pol.alert) return "Alert only";
+    return "Silent";
+  }
+
+  policyVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 10.5, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const outColors = { Held: "#D71A28", "Step-up": "#E67E22", "Alert only": "#2C7BB6", Silent: "#95A0AC" };
+    const s = this.state;
+    const draft = { alert: s.polAlert, step: s.polStep, hold: s.polHold, disabled: s.polDisabled };
+    const live = this.livePolicy;
+    const sim = this.alertDefs.map(a => {
+      const liveEff = this.polEff(a, live.disabled);
+      const eff = this.polEff(a, draft.disabled);
+      const before = this.polOutcome(liveEff, live);
+      const after = this.polOutcome(eff, draft);
+      return { a, eff, before, after };
+    });
+    const count = (list, pol, key) => list.filter(x => x === key).length;
+    const beforeOut = sim.map(x => x.before), afterOut = sim.map(x => x.after);
+    const fires = (arr) => arr.filter(o => o !== "Silent").length;
+    const held = (arr) => arr.filter(o => o === "Held").length;
+    const step = (arr) => arr.filter(o => o === "Step-up").length;
+    const kpi = (label, b, a, sub, moreIsBad) => ({
+      label, before: String(b), after: String(a), sub,
+      delta: a === b ? "±0" : (a > b ? "+" : "") + (a - b),
+      deltaStyle: { fontFamily: "'Barlow', sans-serif", fontWeight: 700, fontSize: 13, color: a === b ? "#7A8593" : ((a > b) === moreIsBad ? "#D71A28" : "#2FBF71") },
+    });
+    const changed = sim.filter(x => x.before !== x.after).length;
+    return {
+      isPolicies: this.state.review === null && this.state.profile === null && this.state.screen === "Risk Policies",
+      polAlert: s.polAlert, polStep: s.polStep, polHold: s.polHold,
+      setPolAlert: (e) => this.setState({ polAlert: Math.min(+e.target.value, s.polStep), polAppliedMsg: "" }),
+      setPolStep: (e) => this.setState({ polStep: Math.min(Math.max(+e.target.value, s.polAlert), s.polHold), polAppliedMsg: "" }),
+      setPolHold: (e) => this.setState({ polHold: Math.max(+e.target.value, s.polStep), polAppliedMsg: "" }),
+      bandSilent: { width: s.polStep + "%", background: "#2FBF71", transition: "width .2s" },
+      bandStep: { width: (s.polHold - s.polStep) + "%", background: "#E67E22", transition: "width .2s" },
+      bandHold: { width: (100 - s.polHold) + "%", background: "#D71A28", transition: "width .2s" },
+      polRules: this.ruleDefs.map(r => {
+        const on = !s.polDisabled[r.key];
+        return {
+          ...r,
+          toggle: () => this.setState({ polDisabled: { ...s.polDisabled, [r.key]: on }, polAppliedMsg: "" }),
+          switchStyle: { width: 40, height: 22, borderRadius: 11, border: "none", cursor: "pointer", position: "relative", flexShrink: 0, background: on ? "#D71A28" : "#C9CED4", transition: "background .2s" },
+          knobStyle: { position: "absolute", top: 3, left: on ? 21 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left .2s" },
+        };
+      }),
+      polApply: () => {
+        this.livePolicy = { alert: s.polAlert, step: s.polStep, hold: s.polHold, disabled: { ...s.polDisabled } };
+        this.setState({ polAppliedMsg: "✓ Policy applied — now live for all scored events. " + changed + " alert outcome" + (changed === 1 ? "" : "s") + " changed." });
+      },
+      polReset: () => this.setState({ polAlert: live.alert, polStep: live.step, polHold: live.hold, polDisabled: { ...live.disabled }, polAppliedMsg: "" }),
+      polAppliedStyle: s.polAppliedMsg ? { padding: "12px 14px", background: "#F7F8FA", border: "1px solid #E9EDF1", borderRadius: 4, fontSize: 12.5, fontWeight: 700, color: "#2FBF71" } : { display: "none" },
+      polAppliedMsg: s.polAppliedMsg,
+      polKpis: [
+        kpi("Alerts in queue", fires(beforeOut), fires(afterOut), "of " + sim.length + " scored events", false),
+        kpi("Payments held", held(beforeOut), held(afterOut), "analyst review required", false),
+        kpi("Step-up challenges", step(beforeOut), step(afterOut), "customer friction", true),
+      ],
+      polSim: sim.map(({ a, eff, before, after }) => ({
+        ...a,
+        scoreStyle: { width: 36, height: 36, borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Barlow', sans-serif", fontWeight: 800, fontSize: 13, color: "#fff", background: a.score >= 85 ? "#D71A28" : a.score >= 70 ? "#E67E22" : "#95A0AC" },
+        eff,
+        effStyle: { fontFamily: "'Barlow', sans-serif", fontWeight: 800, fontSize: 15, color: eff === a.score ? "#3E4753" : "#D71A28" },
+        outcome: after,
+        outcomeStyle: chip(outColors[after]),
+        change: before === after ? "unchanged" : before + " → " + after,
+        changeStyle: { textAlign: "right", fontSize: 11.5, fontWeight: 700, color: before === after ? "#95A0AC" : "#D71A28" },
+      })),
+      polSummary: changed === 0
+        ? "Draft policy matches the live policy — no alert outcomes change."
+        : "Draft policy changes the outcome of " + changed + " of " + sim.length + " recent alerts. Review the list above before applying — outcomes moving to Silent will no longer be seen by analysts.",
+    };
+  }
+
+  profileVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 11, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const name = this.state.profile ?? this.alertDefs[0].user;
+    const p = this.profileDefs[name] ?? { segment: "Retail", since: "—", sessions: "—", riskNow: "Low", devices: [], baseline: [] };
+    const account = (this.alertDefs.find(x => x.user === name) || {}).account ?? "";
+    const alerts = this.alertDefs.filter(x => x.user === name);
+    const cases = this.caseDefs.filter(c => c.user === name);
+    const riskColors = { Critical: "#D71A28", High: "#D71A28", Elevated: "#E67E22", Contained: "#2C7BB6", Low: "#2FBF71" };
+    const emptyStyle = { padding: "18px 22px", fontSize: "12.5px", color: "#7A8593" };
+    return {
+      isProfile: this.state.profile !== null,
+      pfBack: () => this.setState({ profile: null }),
+      pf: {
+        name, account, ...p,
+        initials: name.split(" ").map(w => w[0]).join("").replace(".", ""),
+        riskStyle: chip(riskColors[p.riskNow] || "#7A8593"),
+      },
+      pfAlertCount: alerts.length, pfCaseCount: cases.length,
+      pfAlerts: alerts.map(x => ({
+        ...x,
+        open: () => this.setState({ profile: null, review: this.alertDefs.indexOf(x), selected: this.alertDefs.indexOf(x), replayStep: 0 }),
+        scoreStyle: { width: 40, height: 40, borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Barlow', sans-serif", fontWeight: 800, fontSize: 14, color: "#fff", flexShrink: 0, background: x.score >= 85 ? "#D71A28" : x.score >= 70 ? "#E67E22" : "#95A0AC" },
+        typeStyle: chip(this.typeColors[x.type]),
+      })),
+      pfNoAlertsStyle: alerts.length ? { display: "none" } : emptyStyle,
+      pfCases: cases.map(c => ({
+        ...c,
+        open: () => this.setState({ profile: null, screen: "Case Management", caseSel: this.caseDefs.indexOf(c), caseFilter: "All" }),
+        statusStyle: chip(this.statusColors[c.status]),
+      })),
+      pfNoCasesStyle: cases.length ? { display: "none" } : emptyStyle,
+      pfBaseline: p.baseline,
+      pfDevices: p.devices.map(dv => ({ ...dv, dotStyle: { width: 10, height: 10, borderRadius: "50%", flexShrink: 0, background: dv.ok ? "#2FBF71" : "#D71A28" } })),
+    };
+  }
+
+  reviewVals() {
+    const chip = (color) => ({
+      display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 11, fontWeight: 700,
+      fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+      color, background: "#F7F8FA", border: "1px solid #E3E7EB",
+    });
+    const i = this.state.review ?? 0;
+    const a = this.alertDefs[i];
+    const d = this.reviewDefs[i];
+    const flagColors = { Anomaly: "#E67E22", Critical: "#D71A28" };
+    const stateColors = { Open: "#E67E22", Contained: "#2C7BB6", Resolved: "#2FBF71", Terminated: "#D71A28" };
+    const disp = d.disposition;
+    return {
+      isReview: this.state.review !== null && this.state.profile === null,
+      backToQueue: () => { this.stopReplay(); this.setState({ review: null, replayPlaying: false }); },
+      ...this.replayVals(d),
+      ...this.rvGraphVals(a.user),
+      rv: {
+        ...a, ...d,
+        openProfile: () => { this.stopReplay(); this.setState({ profile: a.user, review: null }); },
+        scoreStyle: {
+          width: 72, height: 72, borderRadius: "4px", display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 2, color: "#fff", flexShrink: 0,
+          background: a.score >= 85 ? "#D71A28" : a.score >= 70 ? "#E67E22" : "#95A0AC",
+        },
+        typeStyle: chip(this.typeColors[a.type]),
+        stateLabel: d.state,
+        stateStyle: chip(stateColors[d.state] || "#7A8593"),
+        terminateLabel: d.state === "Terminated" ? "Session terminated" : "Terminate session",
+        terminate: () => { d.state = "Terminated"; this.forceUpdate(); },
+        escalate: () => { d.disposition = "✓ Escalated to Cyber Fraud Fusion Center — case handed over with full session evidence."; this.forceUpdate(); },
+      },
+      rvTimeline: d.timeline.map((ev, j) => ({
+        ...ev,
+        dotStyle: { width: 10, height: 10, borderRadius: "50%", marginTop: 5, flexShrink: 0, background: ev.flag ? flagColors[ev.flag] : "#C9CED4" },
+        lineStyle: j === d.timeline.length - 1 ? { display: "none" } : { width: 2, flex: 1, background: "#E9EDF1" },
+        boxStyle: { paddingBottom: 16 },
+        flagLabel: ev.flag ?? "",
+        flagStyle: ev.flag ? {
+          fontSize: 10, fontWeight: 700, fontFamily: "'Barlow', sans-serif", letterSpacing: "0.06em",
+          textTransform: "uppercase", padding: "2px 7px", borderRadius: 3, color: "#fff", background: flagColors[ev.flag],
+        } : { display: "none" },
+      })),
+      rvHasTxn: !!d.txn,
+      rvTxn: d.txn ? {
+        ...d.txn,
+        decisionStyle: chip(d.txn.decision === "Held" ? "#D71A28" : d.txn.decision === "Released" ? "#2FBF71" : "#B8121F"),
+        actionsStyle: d.txn.decision === "Held" ? { display: "flex", gap: 10, marginTop: 14 } : { display: "none" },
+        resolvedStyle: d.txn.decision !== "Held" && d.txn.resolution ? { marginTop: 14, fontSize: 12.5, fontWeight: 700, color: d.txn.decision === "Released" ? "#2FBF71" : "#D71A28" } : { display: "none" },
+        release: () => { d.txn.decision = "Released"; d.txn.resolution = "✓ Payment released to payee — customer notified."; this.forceUpdate(); },
+        block: () => { d.txn.decision = "Blocked"; d.txn.resolution = "✕ Payment blocked — funds returned to account."; this.forceUpdate(); },
+      } : {},
+      rvFacts: d.facts.map(f => ({
+        ...f,
+        vStyle: { fontWeight: 700, textAlign: "right", color: f.ok ? "#3E4753" : "#D71A28" },
+      })),
+      rvHasIntel: !!d.intel,
+      rvIntel: d.intel || {},
+      rvHistory: d.history.map(h => ({
+        ...h,
+        dotStyle: { width: 8, height: 8, borderRadius: "50%", flexShrink: 0, background: h.kind === "alert" ? "#D71A28" : "#2FBF71" },
+      })),
+      rvDispActionsStyle: disp ? { display: "none" } : { display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" },
+      rvDispResultStyle: disp ? { marginTop: 14, padding: "12px 14px", background: "#F7F8FA", border: "1px solid #E9EDF1", borderRadius: 4, fontSize: 12.5, fontWeight: 700, color: "#2FBF71" } : { display: "none" },
+      rvDispResult: disp ?? "",
+      rvOpenCaseStyle: d.caseId ? { marginTop: 10, padding: "10px 16px", background: "#fff", color: "#D71A28", border: "1px solid #D71A28", borderRadius: 3, fontFamily: "'Barlow', sans-serif", fontSize: "11.5px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", cursor: "pointer", alignSelf: "flex-start" } : { display: "none" },
+      rvOpenCase: () => {
+        const ci = this.caseDefs.findIndex(c => c.id === d.caseId);
+        this.setState({ screen: "Case Management", review: null, caseSel: Math.max(0, ci), caseFilter: "All" });
+      },
+      rvConfirmFraud: () => {
+        const caseId = "C-" + (1043 + this.caseDefs.filter(c => c.fromAlert).length);
+        this.caseDefs.unshift({
+          id: caseId, user: a.user, account: a.account, type: a.type, status: "Investigating", assignee: "You", age: "now", fromAlert: d.id,
+          summary: "Opened from alert " + d.id + " — fraud confirmed by analyst. " + a.signal + ".",
+          timeline: [{ event: "Alert " + d.id + " raised — " + a.type, when: d.detected }, { event: "Investigated in alert review", when: "Today" }, { event: "Fraud confirmed — case opened", when: "Just now" }],
+        });
+        d.caseId = caseId;
+        d.disposition = "✓ Fraud confirmed — case " + caseId + " opened and assigned to you.";
+        d.state = "Resolved"; this.forceUpdate();
+      },
+      rvFalsePositive: () => { d.disposition = "✓ Closed as false positive — profile feedback sent to Smart Insights tuning."; d.state = "Resolved"; this.forceUpdate(); },
+      rvNeedsInfo: () => { d.disposition = "✓ Customer callback scheduled — alert stays open, payment remains held."; this.forceUpdate(); },
+    };
+  }
+
+  renderVals() {
+    const filters = ["All", "Scams", "ATO", "Mules"].map(label => ({
+      label,
+      go: () => this.setState({ filter: label }),
+      style: {
+        padding: "7px 14px", borderRadius: "3px", border: "1px solid " + (this.state.filter === label ? "#D71A28" : "#E0E5EA"),
+        background: this.state.filter === label ? "#D71A28" : "#fff",
+        color: this.state.filter === label ? "#fff" : "#5A6976",
+        fontFamily: "'Barlow', sans-serif", fontSize: "11.5px", fontWeight: 700,
+        letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+      },
+    }));
+
+    const filterMap = { Scams: ["APP Scam", "Phishing"], ATO: ["Account Takeover"], Mules: ["Money Mule"] };
+    let visible = this.state.typeFilter ? this.alertDefs.filter(a => a.type === this.state.typeFilter) : this.alertDefs;
+    if (this.state.filter !== "All") visible = visible.filter(a => filterMap[this.state.filter].includes(a.type));
+
+    const alerts = visible.map((a, i) => ({
+      ...a,
+      review: () => { const idx = this.alertDefs.indexOf(a); this.setState({ selected: idx, review: idx, replayStep: 0, replayPlaying: false }); },
+      openProfile: () => this.setState({ profile: a.user, review: null }),
+      scoreStyle: {
+        width: 44, height: 44, borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center",
+        fontFamily: "'Barlow', sans-serif", fontWeight: 800, fontSize: 15, color: "#fff",
+        background: a.score >= 85 ? "#D71A28" : a.score >= 70 ? "#E67E22" : "#95A0AC",
+      },
+      typeStyle: {
+        display: "inline-block", padding: "4px 10px", borderRadius: "3px", fontSize: 11.5, fontWeight: 700,
+        fontFamily: "'Barlow', sans-serif", letterSpacing: "0.04em", textTransform: "uppercase",
+        color: this.typeColors[a.type], background: "#F7F8FA", border: "1px solid #E3E7EB",
+      },
+    }));
+
+    const jitter = this.state.recalcTick * 3;
+    const signals = this.signalDefs.map(s => {
+      const pct = Math.max(8, Math.min(96, s.pct + (s.bad ? -jitter : jitter) % 10));
+      return {
+        ...s,
+        valStyle: { fontWeight: 700, color: s.bad ? "#D71A28" : "#2FBF71" },
+        barStyle: { width: pct + "%", height: "100%", background: s.bad ? "#D71A28" : "#2FBF71", borderRadius: 3, transition: "width .5s" },
+      };
+    });
+
+    const max = Math.max(...this.threatDefs.map(t => t.count));
+    const threatMix = this.threatDefs.map(t => ({
+      ...t,
+      barStyle: { width: Math.round((t.count / max) * 100) + "%", height: "100%", background: "#D71A28", opacity: 0.4 + 0.6 * (t.count / max), borderRadius: 4 },
+    }));
+
+    const maxDet = Math.max(...this.detectionDefs.map(d => d.count));
+    const detections = this.detectionDefs.map(d => ({
+      ...d,
+      countStyle: {
+        fontFamily: "'Barlow', sans-serif", fontWeight: 800, fontSize: 22,
+        color: d.count >= 90 ? "#D71A28" : "#3E4753",
+      },
+      barStyle: { width: Math.round((d.count / maxDet) * 100) + "%", height: "100%", background: "#D71A28", opacity: 0.4 + 0.6 * (d.count / maxDet), borderRadius: 4 },
+      open: () => this.setState({ screen: d.name, filter: "All", typeFilter: d.type }),
+    }));
+
+    return {
+      screenTitle: this.state.profile !== null ? "Customer profile — " + this.state.profile
+        : this.state.review !== null ? "Alert review — " + this.reviewDefs[this.state.review].id
+        : this.state.typeFilter ? this.state.screen + " — alerts" : this.state.screen,
+      isDetections: this.state.review === null && this.state.profile === null && this.state.screen === "Detections",
+      isCases: this.state.review === null && this.state.profile === null && this.state.screen === "Case Management",
+      isIntel: this.state.review === null && this.state.profile === null && this.state.screen === "ScamFlag & FraudIntel",
+      isTxn: this.state.review === null && this.state.profile === null && this.state.screen === "Transaction Risk",
+      isOverview: this.state.review === null && this.state.profile === null && this.state.screen === "Overview",
+      isDashboard: this.state.review === null && this.state.profile === null && !["Overview", "Detections", "Case Management", "ScamFlag & FraudIntel", "Transaction Risk", "Risk Policies", "Reporting", "Platform Settings", "Transaction Graph"].includes(this.state.screen),
+      ...this.reviewVals(),
+      ...this.profileVals(),
+      ...this.policyVals(),
+      ...this.reportVals(),
+      ...this.settingsVals(),
+      ...this.graphVals(),
+      ...this.overviewVals(),
+      ...this.intelVals(),
+      ...this.txnVals(),
+      detections,
+      ...this.caseVals(),
+      navGroups: this.navGroupDefs.map(g => ({ title: g.title, items: g.items.map(n => ({
+        label: n.label, badge: n.badge ?? "",
+        go: () => { this.stopReplay(); this.setState({ screen: n.label, filter: "All", typeFilter: null, review: null, profile: null, replayPlaying: false }); },
+        style: {
+          display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%",
+          textAlign: "left", padding: "11px 12px", borderRadius: "3px", border: "none", cursor: "pointer",
+          fontFamily: "'Barlow', sans-serif", fontSize: 13.5, fontWeight: 600, letterSpacing: "0.02em",
+          background: this.state.screen === n.label ? "#D71A28" : "transparent",
+          color: this.state.screen === n.label ? "#fff" : "#C9CCCF",
+        },
+        badgeStyle: n.badge ? {
+          fontSize: 10.5, fontWeight: 800, padding: "2px 7px", borderRadius: 10,
+          background: this.state.screen === n.label ? "rgba(255,255,255,0.25)" : "#D71A28", color: "#fff",
+        } : { display: "none" },
+      })) })),
+      kpis: this.kpiDefs.map(k => ({
+        ...k,
+        deltaStyle: { fontFamily: "'Barlow', sans-serif", fontWeight: 700, fontSize: 13, color: k.up ? "#D71A28" : "#2FBF71" },
+      })),
+      filters, alerts, signals, threatMix,
+      selectedUser: this.alertDefs[this.state.selected].user,
+      recalc: () => this.setState(s => ({ recalcTick: s.recalcTick + 1 })),
+    };
+  }
+}
+</script>
+</body>
+</html>
