@@ -1,0 +1,98 @@
+import { useParams } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useLanguage } from '../i18n/LanguageContext';
+import { solutionPages, solutionOrder } from '../data/solutionPages';
+import { Breadcrumb } from '../components/Breadcrumb';
+import { StatsGrid } from '../components/StatsGrid';
+import { CardsGrid } from '../components/CardsGrid';
+import { RedCta } from '../components/RedCta';
+import { Seo } from '../components/Seo';
+
+export function SolutionDetail() {
+  const { slug = '' } = useParams();
+  const { t } = useLanguage();
+
+  const page = solutionPages[slug];
+  if (!page) return <Navigate to="/solutions/app-scams" replace />;
+
+  const related = solutionOrder
+    .filter((s) => s !== slug)
+    .slice(0, 5)
+    .map((s) => ({ title: solutionPages[s].title, href: `/solutions/${s}` }));
+
+  return (
+    <>
+      <Seo title={page.title} description={page.intro} />
+
+      <Breadcrumb
+        items={[
+          { label: 'Home', to: '/' },
+          { label: page.category, to: '/' },
+          ...(page.isSub ? [{ label: page.title }] : []),
+        ]}
+      />
+
+      {/* HERO */}
+      <section style={{ position: 'relative', overflow: 'hidden' }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: -120,
+            width: 640,
+            height: 640,
+            background: "url('https://www.threatmark.com/wp-content/uploads/2023/09/background-3.webp') center/cover",
+            opacity: 0.18,
+          }}
+        />
+        <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: '96px 15px 110px' }}>
+          <h1 style={{ fontSize: 64, lineHeight: 1.04, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28', maxWidth: 860 }}>
+            {t(page.title)}
+          </h1>
+          <h2 style={{ fontSize: 27, lineHeight: 1.35, fontWeight: 700, marginTop: 26, maxWidth: 760 }}>{t(page.sub)}</h2>
+          <p style={{ fontSize: 17, color: '#5A6976', marginTop: 20, maxWidth: 760, lineHeight: 1.75 }}>{t(page.intro)}</p>
+          <a href="#contact" className="btn-primary" style={{ marginTop: 34 }}>
+            {t('Talk to a fraud fighter')}
+          </a>
+        </div>
+      </section>
+
+      <StatsGrid title={page.statsTitle} stats={page.stats} />
+
+      {/* SPOT IN REAL-TIME */}
+      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px 100px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '0.85fr 1.15fr', gap: 64, alignItems: 'start' }}>
+          <h2 style={{ fontSize: 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: 'sticky', top: 110 }}>
+            {t(page.spotTitle)}
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 22, fontSize: '16.5px', color: '#3E4753', lineHeight: 1.75 }}>
+            {page.paras.map((text) => (
+              <p key={text}>{t(text)}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CardsGrid title={page.cardsTitle} cards={page.cards} />
+
+      {/* RELATED PAGES */}
+      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '70px 15px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span style={{ fontFamily: 'Barlow', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7A8593' }}>
+            More solutions:
+          </span>
+          {related.map((rl) => (
+            <Link key={rl.href} to={rl.href} className="pill-link">
+              {t(rl.title)}
+            </Link>
+          ))}
+          <Link to="/instant-payment-scams" className="pill-link">
+            {t('Instant Payment Scams')}
+          </Link>
+        </div>
+      </section>
+
+      <RedCta />
+    </>
+  );
+}

@@ -3,7 +3,20 @@
     "allow": [
       "Bash(npm create *)",
       "Bash(set -e)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(/opt/homebrew/bin/node -e ' *)",
+      "Read(//opt/homebrew/lib/node_modules/**)",
+      "Bash(npx --yes playwright --version)",
+      "Bash(npx --yes playwright install chromium --with-deps)",
+      "Bash(sed -i '' 's/bodyText.includes\\(r.expect\\)/bodyText.toLowerCase\\(\\).includes\\(r.expect.toLowerCase\\(\\)\\)/' smoke.mjs)",
+      "Bash(sed -i '' \"s/frText.includes\\('Pourquoi '\\)/frText.toLowerCase\\(\\).includes\\('pourquoi '\\)/\" smoke.mjs)",
+      "Bash(/opt/homebrew/bin/node smoke.mjs)",
+      "Bash(kill %1)",
+      "Bash(npm uninstall *)",
+      "Bash(pkill -f \"vite --port 5183\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5183/console)"
     ]
   }
 }

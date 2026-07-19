@@ -24,4 +24,4 @@ export const fonts = {
   body: "'Open Sans', sans-serif",
 } as const;
 
-export const maxWidth = 1280;
+export const maxWidth = 1080;
