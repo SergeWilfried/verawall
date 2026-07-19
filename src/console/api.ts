@@ -211,6 +211,32 @@ export interface ActivityItem {
   at: string;
 }
 
+export interface TenantSettings {
+  tenant: {
+    name: string;
+    environment: string;
+    dataRegion: string;
+    dataRetention: string;
+    platformVersion: string;
+    sessionIngestion: number;
+  };
+  notifications: Record<string, boolean>;
+  modules: Record<string, boolean>;
+  integrations: { name: string; detail: string; status: string; ok: boolean }[];
+}
+
+export interface ApiKey {
+  id: string;
+  name: string;
+  prefix: string;
+  last4: string;
+  scope: string;
+  created_at: string;
+  last_used_at: string | null;
+  revoked: boolean;
+  key?: string; // full secret, only on creation
+}
+
 export interface TeamMember {
   id: number;
   email: string;
@@ -282,6 +308,15 @@ export const consoleApi = {
   detections: (days = 30) => api<DetectionCount[]>(`/v1/console/detections?days=${days}`),
   transactionRisk: () => api<TransactionRisk>('/v1/console/transaction-risk'),
   activity: (limit = 8) => api<ActivityItem[]>(`/v1/console/activity?limit=${limit}`),
+
+  settings: () => api<TenantSettings>('/v1/console/settings'),
+  patchSettings: (patch: Partial<TenantSettings>) =>
+    api<TenantSettings>('/v1/console/settings', { method: 'PATCH', body: patch }),
+  apiKeys: () => api<ApiKey[]>('/v1/console/api-keys'),
+  createApiKey: (name: string, scope: string) =>
+    api<ApiKey>('/v1/console/api-keys', { method: 'POST', body: { name, scope } }),
+  revokeApiKey: (id: string) =>
+    api<{ ok: boolean }>(`/v1/console/api-keys/${id}`, { method: 'DELETE' }),
 
   team: () => api<TeamMember[]>('/v1/console/team'),
   invitations: () => api<ServerInvitation[]>('/v1/console/team/invitations'),

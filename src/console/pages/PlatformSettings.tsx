@@ -1,16 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useConsoleTitle } from '../TitleContext';
-import {
-  tenantInfo, moduleToggleDefs, notifDefs, integrationDefs, roleColors, keyDefs,
-} from '../../data/console/settings';
+import { roleColors } from '../../data/console/settings';
 import { Chip } from '../components/Chip';
 import { Toggle } from '../components/Toggle';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { useAuth } from '../auth';
 import { consoleApi, displayRole, expiryLabel, serverRole } from '../api';
-import type { ServerInvitation, ServerRole, TeamMember } from '../api';
+import type { ApiKey, ServerInvitation, ServerRole, TeamMember, TenantSettings } from '../api';
 import { useApi } from '../useApi';
 
 function initialsOf(name: string) {
@@ -273,25 +271,77 @@ const sections = [
 
 type SectionKey = (typeof sections)[number]['key'];
 
+const notifLabels: Record<string, { name: string; desc: string }> = {
+  digest: { name: 'Daily e-mail digest', desc: 'Queue summary at 07:00 to the fraud-ops list' },
+  webhook: { name: 'Teams webhook', desc: 'New critical alerts posted to #fraud-ops' },
+  sms: { name: 'SMS on critical', desc: 'Score ≥ 90 pages the on-call analyst' },
+  weekly: { name: 'Weekly report', desc: 'Reporting summary mailed every Friday 17:00' },
+};
+const moduleLabels: Record<string, { name: string; desc: string }> = {
+  bip: { name: 'Behavioral Intelligence', desc: 'Session profiling & anomaly detection' },
+  scamflag: { name: 'ScamFlag', desc: 'GenAI scam analysis of customer submissions' },
+  insights: { name: 'Smart Insights', desc: 'False-positive tuning & model feedback' },
+  fraudintel: { name: 'FraudIntel sharing', desc: 'Contribute & consume network intelligence' },
+  cffc: { name: 'CFFC monitoring', desc: '24/7 Fusion Center escalation channel' },
+};
+const tenantFields: { key: keyof TenantSettings['tenant']; label: string; editable: boolean }[] = [
+  { key: 'name', label: 'Tenant', editable: true },
+  { key: 'environment', label: 'Environment', editable: true },
+  { key: 'dataRegion', label: 'Data region', editable: true },
+  { key: 'dataRetention', label: 'Data retention', editable: true },
+  { key: 'platformVersion', label: 'Platform version', editable: true },
+  { key: 'sessionIngestion', label: 'Session ingestion (24h)', editable: false },
+];
+
 export function PlatformSettings() {
   useConsoleTitle('Platform Settings');
+  const { session } = useAuth();
+  const isAdmin = session?.role === 'Admin';
   const [section, setSection] = useState<SectionKey>('general');
-  const [off, setOff] = useState<Record<string, boolean>>({});
-  const [keys, setKeys] = useState(keyDefs);
+
+  const settingsQuery = useApi<TenantSettings>(() => consoleApi.settings(), []);
+  const [draft, setDraft] = useState<TenantSettings | null>(null);
   const [savedMsg, setSavedMsg] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  const toggle = (key: string) => {
-    setOff((cur) => ({ ...cur, [key]: !cur[key] }));
+  // Seed the editable draft once settings arrive.
+  useEffect(() => {
+    if (settingsQuery.data && !draft) setDraft(structuredClone(settingsQuery.data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settingsQuery.data]);
+
+  const dirty = !!draft && !!settingsQuery.data &&
+    JSON.stringify(draft) !== JSON.stringify(settingsQuery.data);
+
+  const setNotif = (k: string, v: boolean) =>
+    setDraft((d) => d && ({ ...d, notifications: { ...d.notifications, [k]: v } }));
+  const setModule = (k: string, v: boolean) =>
+    setDraft((d) => d && ({ ...d, modules: { ...d.modules, [k]: v } }));
+  const setTenant = (k: string, v: string) =>
+    setDraft((d) => d && ({ ...d, tenant: { ...d.tenant, [k]: v } }));
+
+  const save = async () => {
+    if (!draft) return;
+    setSaving(true);
     setSavedMsg('');
+    try {
+      const updated = await consoleApi.patchSettings({
+        tenant: draft.tenant, notifications: draft.notifications, modules: draft.modules,
+      });
+      setDraft(structuredClone(updated));
+      settingsQuery.reload();
+      setSavedMsg('✓ Settings saved.');
+    } catch (e) {
+      setSavedMsg(e instanceof Error ? e.message : 'Could not save settings.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const generateKey = () => {
-    setKeys((cur) => [
-      ...cur,
-      { name: 'New key — unnamed', masked: `tm_live_ •••• ${Math.random().toString(16).slice(2, 6)}`, scope: 'read', used: 'never used' },
-    ]);
-    setSavedMsg('');
-  };
+  const cardStyle: CSSProperties = { background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 };
+  const readOnlyNote = !isAdmin && (
+    <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2 }}>Read-only — only tenant admins can change settings.</div>
+  );
 
   return (
     <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -317,34 +367,53 @@ export function PlatformSettings() {
 
         {/* SECTION CONTENT */}
         <div>
-          {section === 'general' && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+          {settingsQuery.loading && !draft && section !== 'team' && (
+            <div style={{ ...cardStyle, fontSize: 13, color: '#7A8593' }}>Loading settings…</div>
+          )}
+          {settingsQuery.error && section !== 'team' && (
+            <div style={{ ...cardStyle, fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{settingsQuery.error.message}</div>
+          )}
+
+          {section === 'general' && draft && (
+            <div style={cardStyle}>
               <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Tenant &amp; environment</div>
+              {readOnlyNote}
               <div style={{ display: 'flex', flexDirection: 'column', marginTop: 12 }}>
-                {tenantInfo.map((tv) => (
-                  <div key={tv.k} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
-                    <span style={{ color: '#7A8593', whiteSpace: 'nowrap' }}>{tv.k}</span>
-                    <span style={{ fontWeight: 700, textAlign: 'right' }}>{tv.v}</span>
+                {tenantFields.map((f) => (
+                  <div key={f.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
+                    <span style={{ color: '#7A8593', whiteSpace: 'nowrap' }}>{f.label}</span>
+                    {isAdmin && f.editable ? (
+                      <input
+                        value={String(draft.tenant[f.key] ?? '')}
+                        onChange={(e) => setTenant(f.key, e.target.value)}
+                        style={{ fontWeight: 700, textAlign: 'right', fontFamily: 'Open Sans', fontSize: '12.5px', color: '#1E262E', border: '1px solid #E3E7EB', borderRadius: 3, padding: '6px 10px', minWidth: 180 }}
+                      />
+                    ) : (
+                      <span style={{ fontWeight: 700, textAlign: 'right' }}>
+                        {f.key === 'sessionIngestion' ? `${Number(draft.tenant.sessionIngestion).toLocaleString()} / day` : String(draft.tenant[f.key] ?? '')}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {section === 'notifications' && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+          {section === 'notifications' && draft && (
+            <div style={cardStyle}>
               <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Notifications</div>
               <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2 }}>Where the fraud-ops team is alerted</div>
+              {readOnlyNote}
               <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
-                {notifDefs.map((nf) => {
-                  const key = `nf_${nf.key}`;
+                {Object.entries(draft.notifications).map(([k, on]) => {
+                  const label = notifLabels[k] ?? { name: k, desc: '' };
                   return (
-                    <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5' }}>
+                    <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5' }}>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 13, fontWeight: 700 }}>{nf.name}</div>
-                        <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2 }}>{nf.desc}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700 }}>{label.name}</div>
+                        <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2 }}>{label.desc}</div>
                       </div>
-                      <Toggle on={!off[key]} onClick={() => toggle(key)} />
+                      <Toggle on={on} onClick={() => isAdmin && setNotif(k, !on)} />
                     </div>
                   );
                 })}
@@ -352,61 +421,36 @@ export function PlatformSettings() {
             </div>
           )}
 
-          {section === 'keys' && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>API keys</div>
-                <button
-                  type="button"
-                  onClick={generateKey}
-                  style={{
-                    marginLeft: 'auto', padding: '8px 14px', background: '#fff', color: '#D71A28', border: '1px solid #D71A28',
-                    borderRadius: 3, fontFamily: 'Barlow', fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.06em',
-                    textTransform: 'uppercase', cursor: 'pointer',
-                  }}
-                >
-                  Generate key
-                </button>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
-                {keys.map((ky) => (
-                  <div key={ky.name + ky.masked} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5' }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700 }}>{ky.name}</div>
-                      <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2, fontFamily: 'monospace' }}>{ky.masked}</div>
-                    </div>
-                    <Chip color={ky.scope === 'read' ? '#2C7BB6' : '#D71A28'}>{ky.scope}</Chip>
-                    <div style={{ fontSize: '11.5px', color: '#7A8593', whiteSpace: 'nowrap' }}>{ky.used}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {section === 'keys' && <ApiKeysSection isAdmin={isAdmin} cardStyle={cardStyle} />}
 
-          {section === 'modules' && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+          {section === 'modules' && draft && (
+            <div style={cardStyle}>
               <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Platform modules</div>
-              <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2 }}>Disabling a module stops its detections within minutes</div>
+              <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2 }}>Enabled modules for this tenant</div>
+              {readOnlyNote}
               <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
-                {moduleToggleDefs.map((md) => (
-                  <div key={md.key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5' }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: off[md.key] ? '#C9CED4' : '#2FBF71' }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700 }}>{md.name}</div>
-                      <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2 }}>{md.desc}</div>
+                {Object.entries(draft.modules).map(([k, on]) => {
+                  const label = moduleLabels[k] ?? { name: k, desc: '' };
+                  return (
+                    <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5' }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: on ? '#2FBF71' : '#C9CED4' }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700 }}>{label.name}</div>
+                        <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2 }}>{label.desc}</div>
+                      </div>
+                      <Toggle on={on} onClick={() => isAdmin && setModule(k, !on)} />
                     </div>
-                    <Toggle on={!off[md.key]} onClick={() => toggle(md.key)} />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {section === 'integrations' && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+          {section === 'integrations' && draft && (
+            <div style={cardStyle}>
               <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Integrations</div>
               <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
-                {integrationDefs.map((ig) => (
+                {draft.integrations.map((ig) => (
                   <div key={ig.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5' }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, fontWeight: 700 }}>{ig.name}</div>
@@ -421,20 +465,147 @@ export function PlatformSettings() {
 
           {section === 'team' && <TeamSection />}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 24 }}>
-            <button
-              type="button"
-              onClick={() => setSavedMsg('✓ Settings saved — changes propagate to all detection nodes within 5 minutes.')}
-              style={{
-                padding: '13px 24px', background: '#D71A28', color: '#fff', border: 'none', borderRadius: 3,
-                fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer',
-              }}
-            >
-              Save changes
+          {section !== 'team' && section !== 'keys' && isAdmin && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 24 }}>
+              <button
+                type="button"
+                disabled={!dirty || saving}
+                onClick={save}
+                style={{
+                  padding: '13px 24px', background: dirty && !saving ? '#D71A28' : '#E3B4B8', color: '#fff', border: 'none', borderRadius: 3,
+                  fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+                  cursor: dirty && !saving ? 'pointer' : 'default',
+                }}
+              >
+                {saving ? 'Saving…' : 'Save changes'}
+              </button>
+              {savedMsg && <div style={{ fontSize: '12.5px', fontWeight: 700, color: savedMsg.startsWith('✓') ? '#2FBF71' : '#D71A28' }}>{savedMsg}</div>}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ApiKeysSection({ isAdmin, cardStyle }: { isAdmin: boolean; cardStyle: CSSProperties }) {
+  const keysQuery = useApi<ApiKey[]>(() => consoleApi.apiKeys(), []);
+  const keys = keysQuery.data ?? [];
+  const [formOpen, setFormOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [scope, setScope] = useState('read');
+  const [error, setError] = useState('');
+  const [reveal, setReveal] = useState<{ name: string; key: string } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  if (!isAdmin) {
+    return (
+      <div style={cardStyle}>
+        <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>API keys</div>
+        <div style={{ fontSize: '12.5px', color: '#7A8593', marginTop: 8 }}>Only tenant admins can view and manage API keys.</div>
+      </div>
+    );
+  }
+
+  const generate = async () => {
+    if (!name.trim()) { setError('Enter a name for the key.'); return; }
+    try {
+      const k = await consoleApi.createApiKey(name.trim(), scope);
+      setReveal({ name: k.name, key: k.key! });
+      setName(''); setScope('read'); setFormOpen(false); setError('');
+      keysQuery.reload();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not create the key.');
+    }
+  };
+
+  const revoke = async (id: string) => {
+    await consoleApi.revokeApiKey(id).catch(() => {});
+    keysQuery.reload();
+  };
+
+  const inputStyle: CSSProperties = {
+    padding: '10px 12px', fontSize: 13, fontFamily: 'Open Sans', color: '#1E262E',
+    border: '1px solid #E3E7EB', borderRadius: 3, outline: 'none', background: '#fff',
+  };
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>
+          <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>API keys</div>
+          <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2 }}>Machine credentials for integrations — shown once at creation.</div>
+        </div>
+        <button
+          type="button"
+          onClick={() => { setFormOpen((o) => !o); setError(''); setReveal(null); }}
+          style={{
+            marginLeft: 'auto', padding: '8px 14px', background: '#fff', color: '#D71A28', border: '1px solid #D71A28',
+            borderRadius: 3, fontFamily: 'Barlow', fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.06em',
+            textTransform: 'uppercase', cursor: 'pointer',
+          }}
+        >
+          {formOpen ? 'Cancel' : 'Generate key'}
+        </button>
+      </div>
+
+      {formOpen && (
+        <div style={{ marginTop: 14, padding: 14, background: '#F7F8FA', border: '1px solid #E3E7EB', borderRadius: 3, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <input value={name} placeholder="Key name (e.g. SIEM export)" autoFocus
+            onChange={(e) => { setName(e.target.value); setError(''); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') generate(); }}
+            style={{ ...inputStyle, flex: '1 1 220px', borderColor: error ? '#D71A28' : '#E3E7EB' }} />
+          <select value={scope} onChange={(e) => setScope(e.target.value)} style={{ ...inputStyle, fontWeight: 600, cursor: 'pointer' }}>
+            <option value="read">read</option>
+            <option value="read/write">read/write</option>
+          </select>
+          <button type="button" onClick={generate}
+            style={{ padding: '10px 18px', background: '#D71A28', color: '#fff', border: 'none', borderRadius: 3, fontFamily: 'Barlow', fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer' }}>
+            Create key
+          </button>
+          {error && <div style={{ flexBasis: '100%', fontSize: '11.5px', fontWeight: 700, color: '#D71A28' }}>{error}</div>}
+        </div>
+      )}
+
+      {reveal && (
+        <div style={{ marginTop: 14, padding: 14, background: '#FBF1F2', border: '1px solid #F2D9DB', borderRadius: 3 }}>
+          <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#D71A28' }}>Copy your new key now — it won&apos;t be shown again.</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
+            <code style={{ flex: 1, fontFamily: 'monospace', fontSize: '12.5px', color: '#1E262E', overflowWrap: 'anywhere' }}>{reveal.key}</code>
+            <button type="button"
+              onClick={() => { navigator.clipboard?.writeText(reveal.key).catch(() => {}); setCopied(true); window.setTimeout(() => setCopied(false), 1800); }}
+              style={{ ...ghostBtn, color: '#D71A28' }}>
+              {copied ? '✓ Copied' : 'Copy'}
             </button>
-            {savedMsg && <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#2FBF71' }}>{savedMsg}</div>}
           </div>
         </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', marginTop: 12 }}>
+        {keysQuery.loading && <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '12px 0' }}>Loading keys…</div>}
+        {!keysQuery.loading && keys.length === 0 && (
+          <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '12px 0' }}>No API keys yet.</div>
+        )}
+        {keys.map((ky) => (
+          <div key={ky.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5', opacity: ky.revoked ? 0.55 : 1 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 700 }}>
+                {ky.name}
+                {ky.revoked && <span style={{ fontWeight: 600, color: '#D71A28' }}> · revoked</span>}
+              </div>
+              <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2, fontFamily: 'monospace' }}>
+                {ky.prefix}••••{ky.last4}
+              </div>
+            </div>
+            <Chip color={ky.scope === 'read' ? '#2C7BB6' : '#D71A28'}>{ky.scope}</Chip>
+            <div style={{ fontSize: '11.5px', color: '#7A8593', whiteSpace: 'nowrap', minWidth: 96, textAlign: 'right' }}>
+              {ky.last_used_at ? `used ${new Date(ky.last_used_at).toLocaleDateString()}` : 'never used'}
+            </div>
+            {!ky.revoked && (
+              <button type="button" style={{ ...ghostBtn, color: '#D71A28' }} onClick={() => revoke(ky.id)}>Revoke</button>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -84,11 +84,14 @@ the action channel or manage the team).
 Live pages (Go server): Overview KPIs + activity feed + top threats,
 Alert Queue, Alert Review, Case Management, Customer Profile, Detections
 (alert counts by threat type), Transaction Risk (decision stream +
-auth-outcome mix), Team & Roles. Still demo: the Overview 8-week chart
-(no time-series in a fresh platform — labelled "demo data") and platform
-modules panel, Transaction Graph, FraudIntel, ScamFlag, and the non-team
-Platform Settings sections (tenant, notifications, API keys, modules,
-integrations).
+auth-outcome mix), and all of Platform Settings — General (editable
+tenant config + derived session-ingestion count), Notifications and
+Modules toggles, Integrations, Team & Roles, and API Keys (functional
+credentials: generated once, hashed at rest, revocable, and they
+authenticate the service-key path — read → read-only, read/write →
+senior). Still demo: the Overview 8-week chart (no time-series in a
+fresh platform — labelled "demo data") and platform modules panel,
+Transaction Graph, FraudIntel, and ScamFlag.
 
 ## Notes
 
