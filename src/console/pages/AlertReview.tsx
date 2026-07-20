@@ -60,6 +60,12 @@ function presentEvent(ev: ServerEvent): TimelineStep {
       return { t, event: 'Location', detail: `Coarse geohash ${String(p.geohash ?? '')}.` };
     case 'PASSIVE_DEVICE_FINGERPRINT':
       return { t, event: 'Device fingerprint', detail: `${String(p.manufacturer ?? '')} ${String(p.model ?? '')}`.trim() || 'Device fingerprint captured.' };
+    case 'PASSIVE_WEB_FINGERPRINT':
+      return { t, event: 'Browser fingerprint',
+        detail: p.headless ? `Headless / automated browser${Array.isArray(p.botFlags) && p.botFlags.length ? ` — ${p.botFlags.join(', ')}` : ''}.` : `${String(p.userAgent ?? 'Browser fingerprint captured.')}`.slice(0, 90),
+        flag: p.headless ? 'Critical' : undefined };
+    case 'PASSIVE_MOUSE_STROKES':
+      return { t, event: 'Mouse behavior', detail: 'Mouse movement dynamics captured.' };
     case 'PASSIVE_REMOTE_ACCESS': {
       const suspect = p.screenShareLikely || p.accessibilitySuspect;
       const matches = Array.isArray(p.accessibilityMatches) ? p.accessibilityMatches.join(', ') : '';
