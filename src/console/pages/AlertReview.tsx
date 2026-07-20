@@ -60,6 +60,15 @@ function presentEvent(ev: ServerEvent): TimelineStep {
       return { t, event: 'Location', detail: `Coarse geohash ${String(p.geohash ?? '')}.` };
     case 'PASSIVE_DEVICE_FINGERPRINT':
       return { t, event: 'Device fingerprint', detail: `${String(p.manufacturer ?? '')} ${String(p.model ?? '')}`.trim() || 'Device fingerprint captured.' };
+    case 'PASSIVE_REMOTE_ACCESS': {
+      const suspect = p.screenShareLikely || p.accessibilitySuspect;
+      const matches = Array.isArray(p.accessibilityMatches) ? p.accessibilityMatches.join(', ') : '';
+      return { t, event: 'Remote access check',
+        detail: p.screenShareLikely ? `Screen sharing active — ${Number(p.extraDisplays ?? 0)} extra display(s)${matches ? ` · ${matches}` : ''}.`
+              : p.accessibilitySuspect ? `Remote-control accessibility service${matches ? `: ${matches}` : ''}.`
+              : 'No remote-access indicators.',
+        flag: suspect ? 'Critical' : undefined };
+    }
     case 'PASSIVE_COMMAND_ACK':
       return { t, event: 'Kill-switch acknowledged', detail: 'Device confirmed the terminate command.', flag: 'Critical' };
     case 'SCREEN_VIEWED':
