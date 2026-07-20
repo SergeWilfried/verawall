@@ -57,7 +57,10 @@ function presentEvent(ev: ServerEvent): TimelineStep {
         detail: p.simChangedSinceLastSession ? 'SIM changed since the last session.' : 'SIM state read.',
         flag: p.simChangedSinceLastSession ? 'Anomaly' : undefined };
     case 'PASSIVE_LOCATION_COARSE':
-      return { t, event: 'Location', detail: `Coarse geohash ${String(p.geohash ?? '')}.` };
+      return { t, event: 'Location',
+        detail: `Coarse geohash ${String(p.geohash ?? '')}.` +
+          (p.mock ? ' Injected by a mock provider (fake GPS).' : ''),
+        flag: p.mock ? 'Critical' : undefined };
     case 'PASSIVE_DEVICE_FINGERPRINT':
       return { t, event: 'Device fingerprint', detail: `${String(p.manufacturer ?? '')} ${String(p.model ?? '')}`.trim() || 'Device fingerprint captured.' };
     case 'PASSIVE_WEB_FINGERPRINT':
