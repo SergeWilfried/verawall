@@ -1,0 +1,16 @@
+// Cloudflare Workers deployment for the Verawall console (static SPA).
+// The build output in dist/ is served as Worker static assets; SPA routing
+// keeps deep links like /console/alerts/ALT-1 working. No Worker script —
+// assets only. Deploy with `pnpm deploy:cf` (builds first).
+//
+// The API base is baked in at BUILD time via VITE_API_BASE (.env.production
+// or the shell env) — it is not a runtime setting of this Worker.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "verawall-console",
+  "compatibility_date": "2026-07-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
