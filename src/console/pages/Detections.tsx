@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
 import { consoleApi } from '../api';
 import { useApi } from '../useApi';
+import { Skeleton } from '../components/Skeleton';
 
 // Explanatory copy per threat type — static text, not fabricated counts.
 const descriptions: Record<string, string> = {
@@ -32,7 +33,22 @@ export function Detections() {
         </div>
       </div>
 
-      {loading && <div style={{ fontSize: 13, color: '#7A8593' }}>Loading detections…</div>}
+      {loading && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 16 }}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                <Skeleton w={`${52 + ((i * 13) % 28)}%`} h={16} />
+                <Skeleton w={34} h={22} />
+              </div>
+              <Skeleton w="92%" h={12} />
+              <Skeleton w="70%" h={12} />
+              <Skeleton h={8} r={4} style={{ marginTop: 'auto' }} />
+              <Skeleton w={120} h={11} />
+            </div>
+          ))}
+        </div>
+      )}
       {error && <div style={{ fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{error.message}</div>}
       {!loading && !error && rows.length === 0 && (
         <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No detections recorded yet.</div>

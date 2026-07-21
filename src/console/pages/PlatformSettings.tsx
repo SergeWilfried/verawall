@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useConsoleTitle } from '../TitleContext';
+import { Skeleton, SkeletonLines } from '../components/Skeleton';
 import { roleColors } from '../../data/console/settings';
 import { Chip } from '../components/Chip';
 import { Toggle } from '../components/Toggle';
@@ -161,7 +162,18 @@ function TeamSection() {
 
       <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
         {team.loading && !team.data && (
-          <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '12px 0' }}>Loading team…</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '6px 0' }}>
+            {Array.from({ length: 3 }, (_, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #F0F2F5' }}>
+                <Skeleton w={34} h={34} r={17} />
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  <Skeleton w={`${30 + ((i * 17) % 20)}%`} h={12} />
+                  <Skeleton w={`${45 + ((i * 11) % 25)}%`} h={10} />
+                </div>
+                <Skeleton w={80} h={22} r={11} />
+              </div>
+            ))}
+          </div>
         )}
         {team.error && (
           <div style={{ fontSize: '12.5px', fontWeight: 600, color: '#D71A28', padding: '12px 0' }}>
@@ -368,7 +380,10 @@ export function PlatformSettings() {
         {/* SECTION CONTENT */}
         <div>
           {settingsQuery.loading && !draft && section !== 'team' && (
-            <div style={{ ...cardStyle, fontSize: 13, color: '#7A8593' }}>Loading settings…</div>
+            <div style={cardStyle}>
+              <Skeleton w={160} h={16} style={{ marginBottom: 18 }} />
+              <SkeletonLines n={4} gap={18} />
+            </div>
           )}
           {settingsQuery.error && section !== 'team' && (
             <div style={{ ...cardStyle, fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{settingsQuery.error.message}</div>
@@ -582,7 +597,19 @@ function ApiKeysSection({ isAdmin, cardStyle }: { isAdmin: boolean; cardStyle: C
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', marginTop: 12 }}>
-        {keysQuery.loading && <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '12px 0' }}>Loading keys…</div>}
+        {keysQuery.loading && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '6px 0' }}>
+            {Array.from({ length: 2 }, (_, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #F0F2F5' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  <Skeleton w={`${28 + ((i * 19) % 18)}%`} h={12} />
+                  <Skeleton w={170} h={10} />
+                </div>
+                <Skeleton w={64} h={22} r={11} />
+              </div>
+            ))}
+          </div>
+        )}
         {!keysQuery.loading && keys.length === 0 && (
           <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '12px 0' }}>No API keys yet.</div>
         )}

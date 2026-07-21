@@ -7,6 +7,7 @@ import { TabButton } from '../components/TabButton';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { consoleApi, subjectLabel } from '../api';
+import { SkeletonRow } from '../components/Skeleton';
 import type { DecisionRow } from '../api';
 import { useApi } from '../useApi';
 
@@ -94,7 +95,19 @@ export function TransactionRisk() {
             </div>
           </div>
 
-          {loading && <div style={{ padding: '28px 22px', fontSize: 13, color: '#7A8593' }}>Loading decisions…</div>}
+          {loading && (
+            <div>
+              {Array.from({ length: 6 }, (_, i) => (
+                <SkeletonRow
+                  key={i}
+                  seed={i}
+                  grid="56px minmax(0,1fr) minmax(0,1fr) 130px 120px 90px"
+                  cells={[{ w: 36, h: 36, r: 3 }, {}, {}, { w: 70 }, { w: 84, h: 22, r: 11 }, { w: 44 }]}
+                  padding="13px 22px"
+                />
+              ))}
+            </div>
+          )}
           {error && <div style={{ padding: '28px 22px', fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{error.message}</div>}
           {!loading && !error && visible.length === 0 && (
             <div style={{ padding: '40px 22px', textAlign: 'center', color: '#7A8593', fontSize: '12.5px' }}>

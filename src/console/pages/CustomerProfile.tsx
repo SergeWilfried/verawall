@@ -3,6 +3,7 @@ import { useConsoleTitle } from '../TitleContext';
 import { Chip } from '../components/Chip';
 import { ScoreBadge } from '../components/ScoreBadge';
 import { consoleApi, shortRef, subjectLabel, subjectName } from '../api';
+import { Skeleton, SkeletonLines } from '../components/Skeleton';
 import type { UserProfile } from '../api';
 import { useApi } from '../useApi';
 
@@ -13,7 +14,31 @@ export function CustomerProfile() {
 
   const { data: p, loading, error } = useApi<UserProfile>(() => consoleApi.user(userRef), [userRef]);
 
-  if (loading) return <div style={{ padding: 28, fontSize: 13, color: '#7A8593' }}>Loading profile…</div>;
+  if (loading) {
+    return (
+      <div style={{ padding: '24px 28px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <Skeleton w={70} h={12} />
+        <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22, display: 'flex', alignItems: 'center', gap: 20 }}>
+          <Skeleton w={64} h={64} r={32} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <Skeleton w={160} h={17} />
+              <Skeleton w={100} h={22} r={11} />
+            </div>
+            <Skeleton w="45%" h={12} />
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 20, alignItems: 'start' }}>
+          {[0, 1].map((i) => (
+            <div key={i} style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+              <Skeleton w={120} h={15} style={{ marginBottom: 18 }} />
+              <SkeletonLines n={3} gap={16} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   if (error || !p) {
     return (
       <div style={{ padding: 28 }}>

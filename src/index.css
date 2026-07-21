@@ -247,3 +247,30 @@ button {
   white-space: nowrap;
   border: 0;
 }
+
+/* Skeleton loading — shimmer runs on transform (compositable), stills under
+   prefers-reduced-motion. Base tone sits between the console's #EEF1F4
+   meters and #F0F2F5 row borders. */
+.vw-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #edf0f3;
+}
+.vw-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: vw-shimmer 1.4s linear infinite;
+}
+@keyframes vw-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-skeleton::after {
+    animation: none;
+  }
+}

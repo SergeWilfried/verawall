@@ -6,6 +6,7 @@ import { buildGraph } from '../graphLayout';
 import { GraphSvg } from '../components/GraphSvg';
 import { Chip } from '../components/Chip';
 import { consoleApi, subjectLabel, subjectName, type GraphResponse } from '../api';
+import { Skeleton, SkeletonLines } from '../components/Skeleton';
 
 export function TransactionGraph() {
   useConsoleTitle('Transaction Graph');
@@ -115,6 +116,27 @@ export function TransactionGraph() {
       {!error && !subject && (
         <div style={{ padding: '12px 16px', background: '#F7F8FA', border: '1px solid #E9EDF1', borderRadius: 4, fontSize: 13, color: '#5A6976' }}>
           No subjects with alerts yet — the graph seeds from an alert subject or a case's "View money flow" link.
+        </div>
+      )}
+
+      {loading && !def && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.7fr) minmax(0,1fr)', gap: 20, alignItems: 'start' }}>
+          <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 10 }}>
+            <Skeleton h={620} r={4} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+              <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+                <Skeleton w={120} h={16} />
+                <Skeleton w={110} h={22} r={11} />
+              </div>
+              <SkeletonLines n={3} gap={16} />
+            </div>
+            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+              <Skeleton w={70} h={15} style={{ marginBottom: 16 }} />
+              <SkeletonLines n={4} gap={12} />
+            </div>
+          </div>
         </div>
       )}
 

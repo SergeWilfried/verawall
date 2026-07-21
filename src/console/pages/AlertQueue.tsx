@@ -10,6 +10,7 @@ import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { consoleApi, shortRef, subjectLabel } from '../api';
 import type { ServerAlert } from '../api';
+import { SkeletonRow } from '../components/Skeleton';
 import { useApi } from '../useApi';
 
 const PAGE_SIZE = 8;
@@ -100,7 +101,18 @@ export function AlertQueue() {
             </div>
           </div>
 
-          {loading && <div style={{ padding: '28px 22px', fontSize: 13, color: '#7A8593' }}>Loading alerts…</div>}
+          {loading && (
+            <div>
+              {Array.from({ length: 6 }, (_, i) => (
+                <SkeletonRow
+                  key={i}
+                  seed={i}
+                  grid="64px 96px minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.4fr) 92px"
+                  cells={[{ w: 36, h: 36, r: 3 }, { w: 60 }, {}, { w: 120, h: 22, r: 11 }, {}, { w: 70, h: 30, r: 3 }]}
+                />
+              ))}
+            </div>
+          )}
           {error && (
             <div style={{ padding: '28px 22px', fontSize: 13, fontWeight: 600, color: '#D71A28' }}>
               {error.message}

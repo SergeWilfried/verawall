@@ -4,6 +4,7 @@ import { weekData, moduleDefs } from '../../data/console/overview';
 import { consoleApi } from '../api';
 import type { ActivityItem } from '../api';
 import { useApi } from '../useApi';
+import { Skeleton } from '../components/Skeleton';
 
 const DemoTag = () => (
   <span style={{ fontFamily: 'Barlow', fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.08em',
@@ -57,7 +58,9 @@ export function Overview() {
               {k.label}
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
-              <div style={{ fontFamily: 'Barlow', fontSize: 30, fontWeight: 800, color: '#1D1D1B' }}>{k.value}</div>
+              {k.value === '—' && !stats
+                ? <Skeleton w={64} h={30} style={{ margin: '4px 0' }} />
+                : <div style={{ fontFamily: 'Barlow', fontSize: 30, fontWeight: 800, color: '#1D1D1B', fontVariantNumeric: 'tabular-nums' }}>{k.value}</div>}
             </div>
             <div style={{ fontSize: 12, color: '#7A8593', marginTop: 4 }}>{k.sub}</div>
           </div>
@@ -100,7 +103,20 @@ export function Overview() {
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
             <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Latest activity</div>
             <div style={{ display: 'flex', flexDirection: 'column', marginTop: 14 }}>
-              {(activity ?? []).length === 0 && (
+              {!activity && (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 0', borderBottom: '1px solid #F0F2F5' }}>
+                      <Skeleton w={8} h={8} r={4} />
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                        <Skeleton w={`${60 + ((i * 13) % 30)}%`} h={12} />
+                        <Skeleton w={90} h={10} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {activity && activity.length === 0 && (
                 <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '8px 0' }}>No recent activity.</div>
               )}
               {(activity ?? []).map((ac, i) => {

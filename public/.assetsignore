@@ -1,0 +1,3 @@
+# Not for public serving: the Cloudflare vite-plugin emits its resolved
+# config into dist/, and Workers assets would otherwise upload it.
+wrangler.json

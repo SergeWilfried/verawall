@@ -8,6 +8,7 @@ import { Chip } from '../components/Chip';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { consoleApi, subjectLabel } from '../api';
+import { Skeleton, SkeletonLines, SkeletonRow } from '../components/Skeleton';
 import type { CaseDetail, ServerCase } from '../api';
 import { useApi } from '../useApi';
 
@@ -87,7 +88,18 @@ export function CaseManagement() {
             </div>
           </div>
 
-          {casesQuery.loading && <div style={{ padding: '28px 22px', fontSize: 13, color: '#7A8593' }}>Loading cases…</div>}
+          {casesQuery.loading && (
+            <div>
+              {Array.from({ length: 5 }, (_, i) => (
+                <SkeletonRow
+                  key={i}
+                  seed={i}
+                  grid="88px minmax(0,1.2fr) minmax(0,1fr) 120px 110px 70px"
+                  cells={[{ w: 52 }, {}, { w: 110, h: 22, r: 11 }, { w: 96, h: 22, r: 11 }, {}, { w: 34 }]}
+                />
+              ))}
+            </div>
+          )}
           {casesQuery.error && <div style={{ padding: '28px 22px', fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{casesQuery.error.message}</div>}
           {!casesQuery.loading && cases.length === 0 && (
             <div style={{ padding: '40px 22px', textAlign: 'center', color: '#7A8593' }}>
@@ -140,7 +152,16 @@ export function CaseManagement() {
 
         {/* CASE DETAIL */}
         <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
-          {!selected ? (
+          {!selected && detailQuery.loading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Skeleton w={72} h={16} />
+                <Skeleton w={96} h={22} r={11} />
+              </div>
+              <Skeleton h={64} r={4} />
+              <SkeletonLines n={3} />
+            </div>
+          ) : !selected ? (
             <div style={{ fontSize: '12.5px', color: '#7A8593' }}>Select a case to see its timeline.</div>
           ) : (
             <>

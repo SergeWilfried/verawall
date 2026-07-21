@@ -6,6 +6,7 @@ import type { ThreatType } from '../../data/console/types';
 import { Chip } from '../components/Chip';
 import { useAuth } from '../auth';
 import { consoleApi, shortRef, subjectLabel } from '../api';
+import { Skeleton, SkeletonLines } from '../components/Skeleton';
 import type { AlertDetail, ServerEvent, ServerSignal } from '../api';
 import { useApi } from '../useApi';
 
@@ -130,7 +131,35 @@ export function AlertReview() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
 
-  if (loading) return <div style={{ padding: 28, fontSize: 13, color: '#7A8593' }}>Loading alert…</div>;
+  if (loading) {
+    return (
+      <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <Skeleton w={140} h={12} />
+        <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22, display: 'flex', gap: 20, alignItems: 'center' }}>
+          <Skeleton w={64} h={64} r={4} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <Skeleton w={90} h={18} />
+              <Skeleton w={130} h={22} r={11} />
+            </div>
+            <Skeleton w="55%" h={12} />
+            <Skeleton w="80%" h={12} />
+          </div>
+          <Skeleton w={150} h={38} r={3} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 20, alignItems: 'start' }}>
+          <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+            <Skeleton w={130} h={15} style={{ marginBottom: 18 }} />
+            <SkeletonLines n={4} gap={18} />
+          </div>
+          <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+            <Skeleton w={150} h={15} style={{ marginBottom: 18 }} />
+            <SkeletonLines n={3} gap={16} />
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (error || !data) {
     return (
       <div style={{ padding: 28 }}>
