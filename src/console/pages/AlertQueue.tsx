@@ -8,7 +8,7 @@ import { Chip } from '../components/Chip';
 import { TabButton } from '../components/TabButton';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
-import { consoleApi, shortRef } from '../api';
+import { consoleApi, shortRef, subjectLabel } from '../api';
 import type { ServerAlert } from '../api';
 import { useApi } from '../useApi';
 
@@ -150,7 +150,7 @@ export function AlertQueue() {
                             }}
                             title={al.user_ref}
                           >
-                            {shortRef(al.user_ref)}
+                            {subjectLabel(al.user_ref)}
                           </button>
                         ) : (
                           <span style={{ fontSize: 12, color: '#7A8593', fontFamily: 'monospace' }}>

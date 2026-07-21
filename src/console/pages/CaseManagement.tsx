@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
 import { statusColors } from '../../data/console/cases';
 import { typeColors } from '../../data/console/alerts';
@@ -6,7 +7,7 @@ import type { ThreatType } from '../../data/console/types';
 import { Chip } from '../components/Chip';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
-import { consoleApi, shortRef } from '../api';
+import { consoleApi, shortRef, subjectLabel } from '../api';
 import type { CaseDetail, ServerCase } from '../api';
 import { useApi } from '../useApi';
 
@@ -22,6 +23,7 @@ const relAge = (iso: string) => {
 
 export function CaseManagement() {
   useConsoleTitle('Case Management');
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<(typeof filters)[number]>('All');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -118,8 +120,11 @@ export function CaseManagement() {
                         cursor: 'pointer', fontFamily: 'inherit', background: c.id === effectiveId ? '#FBF1F2' : '#fff',
                       }}
                     >
-                      <div style={{ fontFamily: 'Barlow', fontWeight: 700, fontSize: 13, color: '#D71A28', textAlign: 'left' }}>{c.id}</div>
-                      <div style={{ textAlign: 'left', fontFamily: 'monospace', fontSize: '12.5px', fontWeight: 700, color: '#3E4753' }}>{shortRef(c.user_ref, 10)}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, textAlign: 'left' }}>
+                        <span style={{ fontFamily: 'Barlow', fontWeight: 700, fontSize: 13, color: '#D71A28' }}>{c.id}</span>
+                        {c.case_type === 'AML' && <Chip color="#7B4B94">AML</Chip>}
+                      </div>
+                      <div style={{ textAlign: 'left', fontSize: '12.5px', fontWeight: 700, color: '#3E4753' }} title={c.user_ref ?? undefined}>{subjectLabel(c.user_ref, 10)}</div>
                       <div style={{ textAlign: 'left' }}>{c.threat_type ? <Chip color={threatColor(c.threat_type)}>{c.threat_type}</Chip> : <span style={{ fontSize: 12, color: '#7A8593' }}>—</span>}</div>
                       <div style={{ textAlign: 'left' }}><Chip color={statusColors[c.status]}>{c.status}</Chip></div>
                       <div style={{ textAlign: 'left', fontSize: '12.5px', color: '#5A6976' }}>{c.assignee}</div>
@@ -140,15 +145,33 @@ export function CaseManagement() {
           ) : (
             <>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>{selected.id}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>{selected.id}</div>
+                  {selected.case_type === 'AML' && <Chip color="#7B4B94">AML file</Chip>}
+                </div>
                 <Chip color={statusColors[selected.status]}>{selected.status}</Chip>
               </div>
               <div style={{ fontSize: '12.5px', color: '#7A8593', marginTop: 4 }}>
                 {selected.threat_type || 'Unclassified'} · {selected.assignee} · opened {relAge(selected.created_at)} ago
+                {selected.case_type === 'AML' && selected.linked_case_id ? ` · derived from ${selected.linked_case_id}` : ''}
+                {selected.case_type === 'AML' && !selected.linked_case_id && selected.alert_id ? ` · derived from ${selected.alert_id}` : ''}
               </div>
               <div style={{ marginTop: 16, padding: '14px 16px', background: '#FBF1F2', border: '1px solid #F2D9DB', borderRadius: 4, fontSize: 13, lineHeight: 1.6, color: '#5A6976' }}>
                 {selected.summary || 'No summary.'}
               </div>
+              {selected.case_type === 'AML' && selected.user_ref && (
+                <button
+                  type="button"
+                  onClick={() => navigate(`/console/graph?subject=${encodeURIComponent(selected.user_ref!)}`)}
+                  style={{
+                    marginTop: 12, width: '100%', padding: 11, background: '#7B4B94', color: '#fff',
+                    border: 'none', borderRadius: 3, fontFamily: 'Barlow', fontSize: 11, fontWeight: 700,
+                    letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer',
+                  }}
+                >
+                  View money flow →
+                </button>
+              )}
 
               {selected.alerts.length > 0 && (
                 <>

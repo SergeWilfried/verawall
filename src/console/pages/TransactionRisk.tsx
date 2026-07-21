@@ -6,7 +6,7 @@ import { Chip } from '../components/Chip';
 import { TabButton } from '../components/TabButton';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
-import { consoleApi, shortRef } from '../api';
+import { consoleApi, shortRef, subjectLabel } from '../api';
 import type { DecisionRow } from '../api';
 import { useApi } from '../useApi';
 
@@ -131,7 +131,7 @@ export function TransactionRisk() {
                           <button type="button" onClick={() => navigate(`/console/customers/${t.user_ref}`)}
                             style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '12.5px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3E4753', borderBottom: '1px dotted #C9CED4' }}
                             title={t.user_ref}>
-                            {shortRef(t.user_ref)}
+                            {subjectLabel(t.user_ref)}
                           </button>
                         ) : <span style={{ fontSize: 12, color: '#7A8593' }}>unbound</span>}
                       </div>

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
 import { Chip } from '../components/Chip';
 import { ScoreBadge } from '../components/ScoreBadge';
-import { consoleApi, shortRef } from '../api';
+import { consoleApi, shortRef, subjectLabel, subjectName } from '../api';
 import type { UserProfile } from '../api';
 import { useApi } from '../useApi';
 
@@ -28,7 +28,10 @@ export function CustomerProfile() {
   }
 
   const openAlerts = p.alerts.filter((a) => a.state !== 'Resolved').length;
-  const initials = shortRef(p.user_ref, 2).slice(0, 2).toUpperCase();
+  const alias = subjectName(p.user_ref);
+  const initials = alias
+    ? alias.split(' ').map((w) => w[0]).slice(0, 2).join('')
+    : shortRef(p.user_ref, 2).slice(0, 2).toUpperCase();
 
   return (
     <div style={{ padding: '24px 28px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -50,7 +53,8 @@ export function CustomerProfile() {
         </div>
         <div style={{ flex: 1, minWidth: 240 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <div style={{ fontFamily: 'monospace', fontSize: 16, fontWeight: 700, color: '#1D1D1B' }} title={p.user_ref}>{shortRef(p.user_ref, 20)}</div>
+            <div style={{ fontFamily: 'Barlow', fontSize: 17, fontWeight: 700, color: '#1D1D1B' }} title={p.user_ref}>{subjectLabel(p.user_ref, 20)}</div>
+            <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#9AA4AF' }}>{shortRef(p.user_ref, 12)}</span>
             <Chip color={openAlerts > 0 ? '#D71A28' : '#2FBF71'}>{openAlerts > 0 ? `${openAlerts} open` : 'No open alerts'}</Chip>
           </div>
           <div style={{ fontSize: 13, color: '#5A6976', marginTop: 6 }}>

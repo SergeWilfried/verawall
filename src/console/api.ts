@@ -115,6 +115,8 @@ export interface ServerAlert {
   txn: Record<string, unknown> | null;
   disposition: string | null;
   case_id: string | null;
+  /** Set on the PATCH response when resolving auto-opened a parallel AML file. */
+  aml_case_id?: string;
   created_at: string;
   updated_at: string;
 }
@@ -166,6 +168,10 @@ export interface ServerCase {
   status: 'Investigating' | 'Escalated' | 'Pending' | 'Closed';
   assignee: string;
   summary: string;
+  /** FRAUD (default) or AML — the auto-opened parallel laundering file. */
+  case_type?: 'FRAUD' | 'AML';
+  alert_id?: string | null;
+  linked_case_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -278,6 +284,24 @@ export interface UserProfile {
                     event_count: number; sim_changed: boolean }[];
 }
 
+export interface GraphNodeResp {
+  id: string;
+  parent?: string;
+  label: string;
+  sub: string;
+  kind: 'safe' | 'warn' | 'mule' | 'intel' | 'device';
+  dir: 'in' | 'out';
+  amount: string;
+  weight: number;
+  stats?: { k: string; v: string }[];
+  flags?: string[];
+}
+
+export interface GraphResponse {
+  subject: { label: string; sub: string; stats: { k: string; v: string }[]; flags: string[] | null };
+  nodes: GraphNodeResp[];
+}
+
 // ---------- endpoint helpers ----------
 
 export const consoleApi = {
@@ -304,6 +328,7 @@ export const consoleApi = {
   patchCase: (id: string, body: { status?: string; assignee?: string; note?: string }) =>
     api<ServerCase>(`/v1/console/cases/${id}`, { method: 'PATCH', body }),
 
+  graph: (userRef: string) => api<GraphResponse>(`/v1/console/graph/${encodeURIComponent(userRef)}`),
   user: (ref: string) => api<UserProfile>(`/v1/console/users/${ref}`),
   detections: (days = 30) => api<DetectionCount[]>(`/v1/console/detections?days=${days}`),
   transactionRisk: () => api<TransactionRisk>('/v1/console/transaction-risk'),
@@ -346,4 +371,41 @@ export function expiryLabel(expiresAt: string): string {
 export function shortRef(ref: string | null | undefined, n = 8): string {
   if (!ref) return '—';
   return ref.length > n ? ref.slice(0, n) + '…' : ref;
+}
+
+// ---------- subject pseudonyms ----------
+//
+// Subjects arrive as SHA-256 hashes by design (PII never leaves the bank),
+// which analysts can't read or discuss. subjectName derives a STABLE
+// pseudonym from the hash — same subject, same name, on every page — so
+// "Amber Falcon 27" replaces "f98b80f9eb…" in the UI while the short hash
+// stays available as secondary detail. Pseudonyms are display-only and
+// carry no identity; tenant-supplied masked labels (e.g. "CZ89 •• 4412")
+// remain the production upgrade path.
+
+const NAME_ADJ = [
+  'Amber', 'Cobalt', 'Crimson', 'Ivory', 'Jade', 'Onyx', 'Saffron', 'Teal',
+  'Umber', 'Violet', 'Coral', 'Slate', 'Pearl', 'Rust', 'Sable', 'Fawn',
+];
+const NAME_NOUN = [
+  'Falcon', 'Heron', 'Lynx', 'Otter', 'Marten', 'Ibis', 'Puffin', 'Osprey',
+  'Badger', 'Stork', 'Plover', 'Kestrel', 'Raven', 'Swift', 'Crane', 'Wren',
+];
+
+/** Stable pseudonym for a hashed ref, or null when the ref isn't a hash
+ *  (tenant-meaningful ids like acc-…/agt-… display as-is). Tolerates
+ *  already-truncated hashes ("487f740329…") down to 8 hex chars. */
+export function subjectName(ref: string | null | undefined): string | null {
+  if (!ref) return null;
+  const hex = ref.endsWith('…') ? ref.slice(0, -1) : ref;
+  if (!/^[0-9a-f]{8,}$/i.test(hex)) return null;
+  const a = parseInt(hex.slice(0, 2), 16) % NAME_ADJ.length;
+  const n = parseInt(hex.slice(2, 4), 16) % NAME_NOUN.length;
+  const num = parseInt(hex.slice(4, 8), 16) % 100;
+  return `${NAME_ADJ[a]} ${NAME_NOUN[n]} ${String(num).padStart(2, '0')}`;
+}
+
+/** "Amber Falcon 27" when the ref is a hash, else the shortened ref. */
+export function subjectLabel(ref: string | null | undefined, n = 8): string {
+  return subjectName(ref) ?? shortRef(ref, n);
 }

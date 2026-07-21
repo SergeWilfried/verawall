@@ -180,8 +180,10 @@ export function AlertReview() {
   const applyDisposition = async (state: string | undefined, label: string) => {
     setDispositionMsg(null);
     try {
-      await consoleApi.patchAlert(data.id, { state, disposition: disposition || label });
-      setDispositionMsg(`✓ ${label}`);
+      const res = await consoleApi.patchAlert(data.id, { state, disposition: disposition || label });
+      setDispositionMsg(res.aml_case_id
+        ? `✓ ${label} AML file ${res.aml_case_id} opened automatically — funds moved after compromise.`
+        : `✓ ${label}`);
       reload();
     } catch (e) {
       setDispositionMsg(e instanceof Error ? e.message : 'Could not save disposition.');
@@ -246,8 +248,10 @@ export function AlertReview() {
           <div style={{ fontSize: 13, color: '#5A6976', marginTop: 6 }}>
             {data.user_ref ? (
               <>Subject <button type="button" onClick={() => navigate(`/console/customers/${data.user_ref}`)}
-                style={{ fontFamily: 'monospace', background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3E4753', borderBottom: '1px dotted #C9CED4' }}>
-                {shortRef(data.user_ref, 16)}</button></>
+                title={data.user_ref}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3E4753', fontWeight: 700, borderBottom: '1px dotted #C9CED4' }}>
+                {subjectLabel(data.user_ref, 16)}</button>
+                {' '}<span style={{ fontFamily: 'monospace', fontSize: 11, color: '#9AA4AF' }}>{shortRef(data.user_ref, 10)}</span></>
             ) : data.account_ref ? <>Account <span style={{ fontFamily: 'monospace' }}>{shortRef(data.account_ref, 16)}</span></> : 'No bound subject'}
             {' · '}detected {new Date(data.created_at).toLocaleString()}
           </div>
