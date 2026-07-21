@@ -17,6 +17,18 @@ export const typeColors: Record<ThreatType, string> = {
   'New Account Fraud': '#2C7BB6',
 };
 
+// Severity by policy band (55 step-up / 85 hold). Within the hold band the
+// colour ramps from a warm red at 85 to a deep crimson at 100, so a queue of
+// all-hold alerts still separates 85 from 100 at a glance instead of reading
+// as one flat red.
 export function scoreColor(score: number) {
-  return score >= 85 ? '#D71A28' : score >= 70 ? '#E67E22' : '#95A0AC';
+  if (score >= 85) {
+    const t = Math.min(1, Math.max(0, (score - 85) / 15));
+    const a = [232, 96, 104]; // #E86068 at 85
+    const b = [155, 13, 23]; //  #9B0D17 at 100
+    const c = a.map((x, i) => Math.round(x + (b[i] - x) * t));
+    return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+  }
+  if (score >= 55) return '#E67E22'; // step-up band
+  return '#95A0AC'; // allow band
 }

@@ -68,6 +68,7 @@ export function AlertQueue() {
   const [tab, setTab] = useState<'queue' | 'stats'>('queue');
   const [filter, setFilter] = useState<'All' | 'Scams' | 'ATO' | 'Mules'>('All');
   const [stateFilter, setStateFilter] = useState<'Open' | 'all'>('Open');
+  const [sort, setSort] = useState<'risk' | 'newest' | 'oldest'>('risk');
 
   const { data, loading, error } = useApi<ServerAlert[]>(
     () => consoleApi.alerts(stateFilter === 'Open' ? 'Open' : undefined),
@@ -78,7 +79,17 @@ export function AlertQueue() {
   let visible = typeFilter ? alerts.filter((a) => a.threat_type === typeFilter) : alerts;
   if (filter !== 'All') visible = visible.filter((a) => a.threat_type && filterMap[filter].includes(a.threat_type));
 
-  const { pageItems, page, setPage, totalPages, totalItems } = usePagination(visible, PAGE_SIZE);
+  // Default to highest-risk-first — the triage order an analyst wants.
+  const sorted = useMemo(() => {
+    const ts = (a: ServerAlert) => new Date(a.created_at).getTime();
+    const copy = [...visible];
+    if (sort === 'risk') copy.sort((a, b) => b.score - a.score || ts(b) - ts(a));
+    else if (sort === 'newest') copy.sort((a, b) => ts(b) - ts(a));
+    else copy.sort((a, b) => ts(a) - ts(b));
+    return copy;
+  }, [visible, sort]);
+
+  const { pageItems, page, setPage, totalPages, totalItems } = usePagination(sorted, PAGE_SIZE);
 
   // Threat mix, computed from the live queue.
   const threatMix = useMemo(() => {
@@ -106,7 +117,25 @@ export function AlertQueue() {
               {stateFilter === 'Open' ? 'Open alerts' : 'All alerts'}
               <span style={{ fontWeight: 600, color: '#7A8593' }}> · {visible.length}</span>
             </div>
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ display: 'flex', border: '1px solid #E0E5EA', borderRadius: 3, overflow: 'hidden' }} role="group" aria-label="Sort alerts">
+                {([['risk', 'Risk'], ['newest', 'Newest'], ['oldest', 'Oldest']] as const).map(([v, lab], i) => (
+                  <button
+                    key={v}
+                    type="button"
+                    aria-pressed={sort === v}
+                    onClick={() => setSort(v)}
+                    style={{
+                      padding: '7px 12px', border: 'none', borderLeft: i > 0 ? '1px solid #E0E5EA' : 'none',
+                      background: sort === v ? '#F2F4F6' : '#fff', color: sort === v ? '#1E262E' : '#7A8593',
+                      fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.06em',
+                      textTransform: 'uppercase', cursor: 'pointer',
+                    }}
+                  >
+                    {lab}
+                  </button>
+                ))}
+              </div>
               <button
                 type="button"
                 onClick={() => setStateFilter((s) => (s === 'Open' ? 'all' : 'Open'))}
