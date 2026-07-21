@@ -26,6 +26,39 @@ const filterMap: Record<string, string[]> = {
 const threatColor = (t: string | null) =>
   (t && typeColors[t as ThreatType]) || '#7A8593';
 
+// The queue is scanned, not read: show the two defining signals as chips and
+// roll the rest into "+N", with the full stack on hover. The complete list
+// lives in Alert Review.
+function SignalCell({ signal }: { signal: string }) {
+  const parts = (signal || '').split(' + ').map((s) => s.trim()).filter(Boolean);
+  const shown = parts.slice(0, 2);
+  const extra = parts.length - shown.length;
+  if (parts.length === 0) {
+    return <div style={{ fontSize: '12px', color: '#9AA4AF' }}>—</div>;
+  }
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, alignItems: 'center' }} title={parts.join(' · ')}>
+      {shown.map((s) => (
+        <span
+          key={s}
+          style={{
+            fontSize: '11px', lineHeight: 1.3, color: '#3E4753', background: '#F2F4F6',
+            border: '1px solid #E4E8EC', borderRadius: 4, padding: '2px 7px',
+            maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}
+        >
+          {s}
+        </span>
+      ))}
+      {extra > 0 && (
+        <span style={{ fontSize: '11px', fontWeight: 700, color: '#7A8593', whiteSpace: 'nowrap' }}>
+          +{extra} more
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function AlertQueue() {
   useConsoleTitle('Alert Queue');
   const navigate = useNavigate();
@@ -183,7 +216,7 @@ export function AlertQueue() {
                         )}
                       </div>
                       <div><Chip color={threatColor(al.threat_type)}>{al.threat_type || 'Unclassified'}</Chip></div>
-                      <div style={{ fontSize: '12.5px', color: '#5A6976', overflow: 'hidden', textOverflow: 'ellipsis' }}>{al.signal}</div>
+                      <SignalCell signal={al.signal} />
                       <div style={{ textAlign: 'right' }}>
                         <button
                           type="button"
