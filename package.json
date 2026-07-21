@@ -12,6 +12,7 @@
     "deploy:cf:dry": "pnpm build && wrangler deploy --dry-run"
   },
   "dependencies": {
+    "@cloudflare/vite-plugin": "^1.45.1",
     "qrcode-generator": "^2.0.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
