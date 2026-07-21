@@ -194,6 +194,15 @@ export interface DetectionCount {
   open: number;
 }
 
+export interface SignalStat { code: string; label: string; weight: number; count: number }
+export interface TrendPoint { day: string; count: number }
+export interface DetectionAnalytics {
+  byThreat: DetectionCount[];
+  bySignal: SignalStat[];
+  trend: TrendPoint[];
+  outcomes: { hold: number; step_up: number; allow: number; total: number };
+}
+
 export interface DecisionRow {
   session_id: string | null;
   user_ref: string | null;
@@ -342,6 +351,7 @@ export const consoleApi = {
   locations: (userRef: string) => api<LocationFix[]>(`/v1/console/users/${encodeURIComponent(userRef)}/locations`),
   user: (ref: string) => api<UserProfile>(`/v1/console/users/${ref}`),
   detections: (days = 30) => api<DetectionCount[]>(`/v1/console/detections?days=${days}`),
+  detectionAnalytics: (days = 30) => api<DetectionAnalytics>(`/v1/console/detection-analytics?days=${days}`),
   transactionRisk: () => api<TransactionRisk>('/v1/console/transaction-risk'),
   activity: (limit = 8) => api<ActivityItem[]>(`/v1/console/activity?limit=${limit}`),
 
