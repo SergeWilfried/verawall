@@ -4,7 +4,9 @@ import { navGroups } from '../data/console/nav';
 import { roleColors } from '../data/console/settings';
 import { ConsoleTitleProvider, useConsoleTitleValue } from './TitleContext';
 import { useAuth } from './auth';
-import { consoleApi } from './api';
+import { consoleApi, shortRef, subjectLabel } from './api';
+import type { SearchResults } from './api';
+import { scoreColor } from '../data/console/alerts';
 import { useApi } from './useApi';
 import { Chip } from './components/Chip';
 
@@ -140,28 +142,107 @@ function Sidebar() {
   );
 }
 
+// Global search: jump straight to an alert (by id) or a subject (by ref).
+// Debounced; the dropdown groups alerts and subjects, Enter opens the first
+// hit, Escape/click-outside closes.
+function GlobalSearch() {
+  const navigate = useNavigate();
+  const [q, setQ] = useState('');
+  const [res, setRes] = useState<SearchResults | null>(null);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const term = q.trim();
+    if (term.length < 2) { setRes(null); return; }
+    let alive = true;
+    const t = setTimeout(() => {
+      consoleApi.search(term).then((r) => { if (alive) { setRes(r); setOpen(true); } }).catch(() => {});
+    }, 180);
+    return () => { alive = false; clearTimeout(t); };
+  }, [q]);
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, []);
+
+  const go = (href: string) => { setOpen(false); setQ(''); setRes(null); navigate(href); };
+  const alerts = res?.alerts ?? [];
+  const subjects = res?.subjects ?? [];
+  const empty = q.trim().length >= 2 && alerts.length === 0 && subjects.length === 0;
+
+  const first = () => {
+    if (alerts[0]) go(`/console/alerts/${alerts[0].id}`);
+    else if (subjects[0]) go(`/console/customers/${subjects[0].user_ref}`);
+  };
+
+  const itemStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', gap: 10, width: '100%', textAlign: 'left',
+    padding: '9px 14px', background: 'none', border: 'none', cursor: 'pointer',
+    borderTop: '1px solid #F0F2F5', fontSize: '12.5px', color: '#3E4753',
+  };
+  const groupLabel: React.CSSProperties = {
+    fontFamily: 'Barlow', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+    color: '#9AA4AF', padding: '10px 14px 4px',
+  };
+
+  return (
+    <div ref={ref} style={{ position: 'relative', width: 300 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#F4F6F8', border: `1px solid ${open ? '#D71A28' : '#E3E7EB'}`, borderRadius: 3, padding: '0 12px' }}>
+        <span style={{ color: '#9AA4AF', fontSize: 14 }} aria-hidden>⌕</span>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onFocus={() => { if (res) setOpen(true); }}
+          onKeyDown={(e) => { if (e.key === 'Enter') first(); if (e.key === 'Escape') setOpen(false); }}
+          placeholder="Search alert id, user, account…"
+          aria-label="Search alerts and subjects"
+          style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', padding: '9px 0', fontSize: 13, color: '#1E262E' }}
+        />
+      </div>
+
+      {open && (alerts.length > 0 || subjects.length > 0 || empty) && (
+        <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, width: 340, background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, boxShadow: '0 6px 16px rgba(30,38,46,0.12)', zIndex: 50, overflow: 'hidden', maxHeight: 420, overflowY: 'auto' }}>
+          {empty && <div style={{ padding: '16px 14px', fontSize: '12.5px', color: '#7A8593' }}>No matches for “{q.trim()}”.</div>}
+          {alerts.length > 0 && (
+            <>
+              <div style={groupLabel}>Alerts</div>
+              {alerts.map((a) => (
+                <button key={a.id} type="button" style={itemStyle} onClick={() => go(`/console/alerts/${a.id}`)}>
+                  <span style={{ display: 'inline-flex', width: 34, height: 22, borderRadius: 3, background: scoreColor(a.score), color: '#fff', fontFamily: 'Barlow', fontWeight: 800, fontSize: 11, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{a.score}</span>
+                  <span style={{ fontFamily: 'Barlow', fontWeight: 700 }}>{a.id}</span>
+                  <span style={{ color: '#7A8593', fontSize: 11.5, marginLeft: 'auto' }}>{a.threat_type || 'Unclassified'} · {a.state}</span>
+                </button>
+              ))}
+            </>
+          )}
+          {subjects.length > 0 && (
+            <>
+              <div style={groupLabel}>Subjects</div>
+              {subjects.map((s) => (
+                <button key={s.user_ref} type="button" style={itemStyle} onClick={() => go(`/console/customers/${s.user_ref}`)}>
+                  <span style={{ fontWeight: 700 }}>{subjectLabel(s.user_ref)}</span>
+                  <span style={{ fontFamily: 'monospace', color: '#9AA4AF', fontSize: 11 }}>{shortRef(s.user_ref, 10)}</span>
+                  <span style={{ color: '#7A8593', fontSize: 11.5, marginLeft: 'auto' }}>{s.alerts} alert{s.alerts === 1 ? '' : 's'}</span>
+                </button>
+              ))}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Topbar() {
   const title = useConsoleTitleValue();
   return (
     <div style={{ height: 64, background: '#fff', borderBottom: '1px solid #E3E7EB', display: 'flex', alignItems: 'center', gap: 16, padding: '0 28px' }}>
       <h1 style={{ fontFamily: 'Barlow', fontSize: 18, fontWeight: 700 }}>{title}</h1>
       <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            background: '#F4F6F8',
-            border: '1px solid #E3E7EB',
-            borderRadius: 3,
-            padding: '8px 14px',
-            fontSize: 13,
-            color: '#7A8593',
-            width: 260,
-          }}
-        >
-          ⌕ Search user, account, device…
-        </div>
+        <GlobalSearch />
         <div
           style={{
             fontFamily: 'Barlow',

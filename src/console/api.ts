@@ -199,6 +199,11 @@ export interface DetectionCount {
   open: number;
 }
 
+export interface SearchResults {
+  alerts: { id: string; score: number; threat_type: string | null; state: string; user_ref: string | null; account_ref: string | null }[];
+  subjects: { user_ref: string; alerts: number }[];
+}
+
 export interface SignalStat { code: string; label: string; weight: number; count: number }
 export interface TrendPoint { day: string; count: number }
 export interface DetectionAnalytics {
@@ -357,6 +362,7 @@ export const consoleApi = {
     api<ServerCase>(`/v1/console/cases/${id}`, { method: 'PATCH', body }),
 
   graph: (userRef: string) => api<GraphResponse>(`/v1/console/graph/${encodeURIComponent(userRef)}`),
+  search: (q: string) => api<SearchResults>(`/v1/console/search?q=${encodeURIComponent(q)}`),
   locations: (userRef: string) => api<LocationFix[]>(`/v1/console/users/${encodeURIComponent(userRef)}/locations`),
   user: (ref: string) => api<UserProfile>(`/v1/console/users/${ref}`),
   detections: (days = 30) => api<DetectionCount[]>(`/v1/console/detections?days=${days}`),
