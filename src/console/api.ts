@@ -305,6 +305,13 @@ export interface GraphResponse {
   nodes: GraphNodeResp[];
 }
 
+export interface LocationFix {
+  geohash: string;
+  mock: boolean;
+  session_id: string | null;
+  ts: string;
+}
+
 // ---------- endpoint helpers ----------
 
 export const consoleApi = {
@@ -332,6 +339,7 @@ export const consoleApi = {
     api<ServerCase>(`/v1/console/cases/${id}`, { method: 'PATCH', body }),
 
   graph: (userRef: string) => api<GraphResponse>(`/v1/console/graph/${encodeURIComponent(userRef)}`),
+  locations: (userRef: string) => api<LocationFix[]>(`/v1/console/users/${encodeURIComponent(userRef)}/locations`),
   user: (ref: string) => api<UserProfile>(`/v1/console/users/${ref}`),
   detections: (days = 30) => api<DetectionCount[]>(`/v1/console/detections?days=${days}`),
   transactionRisk: () => api<TransactionRisk>('/v1/console/transaction-risk'),

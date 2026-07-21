@@ -11,6 +11,7 @@ import { SkeletonRow } from '../components/Skeleton';
 import { EmptyState } from '../components/EmptyState';
 import { GaugeArt } from '../components/emptyArt';
 import { SubjectGraph } from '../components/SubjectGraph';
+import { LocationMap } from '../components/LocationMap';
 import type { DecisionRow } from '../api';
 import { useApi } from '../useApi';
 
@@ -224,8 +225,13 @@ export function TransactionRisk() {
   );
 }
 
-// Expanded row: why the payment scored what it did, plus the money-flow graph
-// for the subject — the same link-analysis surface used on the Graph page.
+// Location-driven risk shows a map of where the session came from; everything
+// else shows the money-flow graph. Evidence follows the anomaly.
+const GEO_CODES = new Set(['IMPOSSIBLE_TRAVEL', 'MOCK_LOCATION', 'GEO_UNUSUAL']);
+const isGeoRisk = (signals: { code: string }[]) => signals.some((s) => GEO_CODES.has(s.code));
+
+// Expanded row: why the payment scored what it did, plus the evidence surface
+// that fits the risk — a location map for geo anomalies, otherwise the graph.
 function TxnDetail({ t }: { t: DecisionRow }) {
   const navigate = useNavigate();
   const signals = t.signals ?? [];
@@ -258,18 +264,27 @@ function TxnDetail({ t }: { t: DecisionRow }) {
       )}
 
       {t.user_ref ? (
-        <>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593' }}>
-              Money flow around this subject
-            </span>
-            <button type="button" onClick={() => navigate(`/console/graph?subject=${encodeURIComponent(t.user_ref!)}`)}
-              style={{ fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#D71A28', background: 'none', border: 'none', cursor: 'pointer' }}>
-              Open full graph →
-            </button>
-          </div>
-          <SubjectGraph subject={t.user_ref} width={520} height={420} showLegend={false} />
-        </>
+        isGeoRisk(signals) ? (
+          <>
+            <div style={{ marginBottom: 12, fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593' }}>
+              Where this session came from
+            </div>
+            <LocationMap subject={t.user_ref} height={420} />
+          </>
+        ) : (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <span style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593' }}>
+                Money flow around this subject
+              </span>
+              <button type="button" onClick={() => navigate(`/console/graph?subject=${encodeURIComponent(t.user_ref!)}`)}
+                style={{ fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#D71A28', background: 'none', border: 'none', cursor: 'pointer' }}>
+                Open full graph →
+              </button>
+            </div>
+            <SubjectGraph subject={t.user_ref} width={520} height={420} showLegend={false} />
+          </>
+        )
       ) : (
         <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No bound subject — link analysis needs a user reference.</div>
       )}
