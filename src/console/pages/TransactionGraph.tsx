@@ -7,6 +7,8 @@ import { GraphSvg } from '../components/GraphSvg';
 import { Chip } from '../components/Chip';
 import { consoleApi, subjectLabel, subjectName, type GraphResponse } from '../api';
 import { Skeleton, SkeletonLines } from '../components/Skeleton';
+import { EmptyState } from '../components/EmptyState';
+import { NetworkArt } from '../components/emptyArt';
 
 export function TransactionGraph() {
   useConsoleTitle('Transaction Graph');
@@ -114,8 +116,12 @@ export function TransactionGraph() {
         </div>
       )}
       {!error && !subject && (
-        <div style={{ padding: '12px 16px', background: '#F7F8FA', border: '1px solid #E9EDF1', borderRadius: 4, fontSize: 13, color: '#5A6976' }}>
-          No subjects with alerts yet — the graph seeds from an alert subject or a case's "View money flow" link.
+        <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6 }}>
+          <EmptyState
+            illustration={<NetworkArt />}
+            title="No graph subject yet"
+            description={'The graph seeds from a subject: pick one from a recent alert, or follow a case’s "View money flow" link. Money flows and shared-device links expand from there.'}
+          />
         </div>
       )}
 

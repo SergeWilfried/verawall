@@ -9,6 +9,8 @@ import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { consoleApi, subjectLabel } from '../api';
 import { Skeleton, SkeletonLines, SkeletonRow } from '../components/Skeleton';
+import { EmptyState, SuggestChip } from '../components/EmptyState';
+import { CaseFolderArt } from '../components/emptyArt';
 import type { CaseDetail, ServerCase } from '../api';
 import { useApi } from '../useApi';
 
@@ -102,10 +104,12 @@ export function CaseManagement() {
           )}
           {casesQuery.error && <div style={{ padding: '28px 22px', fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{casesQuery.error.message}</div>}
           {!casesQuery.loading && cases.length === 0 && (
-            <div style={{ padding: '40px 22px', textAlign: 'center', color: '#7A8593' }}>
-              <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700, color: '#3E4753' }}>No cases yet</div>
-              <div style={{ fontSize: '12.5px', marginTop: 4 }}>Open a case from an alert review to start an investigation record.</div>
-            </div>
+            <EmptyState
+              illustration={<CaseFolderArt />}
+              title="No cases yet"
+              description="Open a case from an alert review to start an investigation record. Confirmed frauds with fund movement also open AML files here automatically."
+              suggestedActions={<SuggestChip onClick={() => navigate('/console/alerts')}>Review open alerts</SuggestChip>}
+            />
           )}
 
           {cases.length > 0 && (

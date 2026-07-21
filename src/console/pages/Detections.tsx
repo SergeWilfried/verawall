@@ -3,6 +3,8 @@ import { useConsoleTitle } from '../TitleContext';
 import { consoleApi } from '../api';
 import { useApi } from '../useApi';
 import { Skeleton } from '../components/Skeleton';
+import { EmptyState } from '../components/EmptyState';
+import { RadarArt } from '../components/emptyArt';
 
 // Explanatory copy per threat type — static text, not fabricated counts.
 const descriptions: Record<string, string> = {
@@ -51,7 +53,13 @@ export function Detections() {
       )}
       {error && <div style={{ fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{error.message}</div>}
       {!loading && !error && rows.length === 0 && (
-        <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No detections recorded yet.</div>
+        <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6 }}>
+          <EmptyState
+            illustration={<RadarArt />}
+            title="No detections recorded yet"
+            description="As sessions and transactions stream in, alerts group here by threat type — APP scams, account takeover, mule activity and more."
+          />
+        </div>
       )}
 
       {rows.length > 0 && (

@@ -11,6 +11,8 @@ import { usePagination } from '../usePagination';
 import { consoleApi, shortRef, subjectLabel } from '../api';
 import type { ServerAlert } from '../api';
 import { SkeletonRow } from '../components/Skeleton';
+import { EmptyState, SuggestChip } from '../components/EmptyState';
+import { ShieldClearArt } from '../components/emptyArt';
 import { useApi } from '../useApi';
 
 const PAGE_SIZE = 8;
@@ -119,13 +121,23 @@ export function AlertQueue() {
             </div>
           )}
           {!loading && !error && visible.length === 0 && (
-            <div style={{ padding: '40px 22px', textAlign: 'center', color: '#7A8593' }}>
-              <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700, color: '#3E4753' }}>Queue is clear</div>
-              <div style={{ fontSize: '12.5px', marginTop: 4 }}>
-                No {stateFilter === 'Open' ? 'open ' : ''}alerts match this filter. Alerts appear here when
-                the scoring engine holds a payment or the ledger detector flags an account.
-              </div>
-            </div>
+            <EmptyState
+              illustration={<ShieldClearArt />}
+              eyebrow="All clear"
+              eyebrowColor="#2FBF71"
+              title="Queue is clear"
+              description={`No ${stateFilter === 'Open' ? 'open ' : ''}alerts match this filter. Alerts appear here when the scoring engine holds a payment or the ledger detector flags an account.`}
+              suggestedActions={
+                <>
+                  {stateFilter === 'Open' && (
+                    <SuggestChip onClick={() => setStateFilter('all')}>Show all states</SuggestChip>
+                  )}
+                  {(filter !== 'All' || typeFilter) && (
+                    <SuggestChip onClick={() => { setFilter('All'); navigate('/console/alerts'); }}>Clear filters</SuggestChip>
+                  )}
+                </>
+              }
+            />
           )}
 
           {!loading && !error && visible.length > 0 && (

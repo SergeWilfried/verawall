@@ -5,6 +5,8 @@ import { consoleApi } from '../api';
 import type { ActivityItem } from '../api';
 import { useApi } from '../useApi';
 import { Skeleton } from '../components/Skeleton';
+import { EmptyInline } from '../components/EmptyState';
+import { PulseArt } from '../components/emptyArt';
 
 const DemoTag = () => (
   <span style={{ fontFamily: 'Barlow', fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.08em',
@@ -117,7 +119,12 @@ export function Overview() {
                 </div>
               )}
               {activity && activity.length === 0 && (
-                <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '8px 0' }}>No recent activity.</div>
+                <EmptyInline message={
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ color: '#C9CED4', display: 'flex' }}><PulseArt size={22} /></span>
+                    No recent activity — alerts, analyst actions and cases will stream in here.
+                  </span>
+                } />
               )}
               {(activity ?? []).map((ac, i) => {
                 const p = presentActivity(ac);
@@ -160,7 +167,7 @@ export function Overview() {
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
             <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Top threats</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
-              {topThreats.length === 0 && <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No detections yet.</div>}
+              {topThreats.length === 0 && <EmptyInline message="No detections yet — threat types rank here once alerts fire." />}
               {topThreats.map((d) => (
                 <button
                   key={d.threat_type}

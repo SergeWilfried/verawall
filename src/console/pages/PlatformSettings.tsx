@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { useConsoleTitle } from '../TitleContext';
 import { Skeleton, SkeletonLines } from '../components/Skeleton';
+import { EmptyState } from '../components/EmptyState';
+import { KeyArt } from '../components/emptyArt';
 import { roleColors } from '../../data/console/settings';
 import { Chip } from '../components/Chip';
 import { Toggle } from '../components/Toggle';
@@ -611,7 +613,12 @@ function ApiKeysSection({ isAdmin, cardStyle }: { isAdmin: boolean; cardStyle: C
           </div>
         )}
         {!keysQuery.loading && keys.length === 0 && (
-          <div style={{ fontSize: '12.5px', color: '#7A8593', padding: '12px 0' }}>No API keys yet.</div>
+          <EmptyState
+            variant="compact"
+            icon={<KeyArt />}
+            title="No API keys yet"
+            description="Generate a key to let your backend call the ingest and console APIs — the full value is shown once, at creation."
+          />
         )}
         {keys.map((ky) => (
           <div key={ky.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #F0F2F5', opacity: ky.revoked ? 0.55 : 1 }}>

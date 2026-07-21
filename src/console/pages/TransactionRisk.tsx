@@ -8,6 +8,8 @@ import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { consoleApi, subjectLabel } from '../api';
 import { SkeletonRow } from '../components/Skeleton';
+import { EmptyState } from '../components/EmptyState';
+import { GaugeArt } from '../components/emptyArt';
 import type { DecisionRow } from '../api';
 import { useApi } from '../useApi';
 
@@ -110,9 +112,11 @@ export function TransactionRisk() {
           )}
           {error && <div style={{ padding: '28px 22px', fontSize: 13, fontWeight: 600, color: '#D71A28' }}>{error.message}</div>}
           {!loading && !error && visible.length === 0 && (
-            <div style={{ padding: '40px 22px', textAlign: 'center', color: '#7A8593', fontSize: '12.5px' }}>
-              No scoring decisions recorded for this filter.
-            </div>
+            <EmptyState
+              illustration={<GaugeArt />}
+              title="No scoring decisions"
+              description="Nothing recorded for this filter. Decisions appear the moment your backend calls /v1/score on a transaction."
+            />
           )}
 
           {!loading && visible.length > 0 && (
