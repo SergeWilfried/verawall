@@ -111,10 +111,15 @@ export interface ServerAlert {
   score: number;
   threat_type: string | null;
   signal: string;
-  state: 'Open' | 'Contained' | 'Resolved';
+  state: 'Open' | 'Contained' | 'Resolved' | 'Dismissed';
   txn: Record<string, unknown> | null;
   disposition: string | null;
   case_id: string | null;
+  /** Queue ownership. */
+  assignee?: string | null;
+  assigned_at?: string | null;
+  snoozed?: boolean;
+  snoozed_until?: string | null;
   /** Set on the PATCH response when resolving auto-opened a parallel AML file. */
   aml_case_id?: string;
   created_at: string;
@@ -336,6 +341,10 @@ export const consoleApi = {
   alert: (id: string) => api<AlertDetail>(`/v1/console/alerts/${id}`),
   patchAlert: (id: string, body: { state?: string; disposition?: string }) =>
     api<ServerAlert>(`/v1/console/alerts/${id}`, { method: 'PATCH', body }),
+  assignAlert: (id: string, assignee?: string) =>
+    api<ServerAlert>(`/v1/console/alerts/${id}/assign`, { method: 'POST', body: assignee === undefined ? {} : { assignee } }),
+  snoozeAlert: (id: string, minutes: number) =>
+    api<ServerAlert>(`/v1/console/alerts/${id}/snooze`, { method: 'POST', body: { minutes } }),
   postAction: (id: string, kind: string, note?: string) =>
     api<ServerAction>(`/v1/console/alerts/${id}/actions`, { method: 'POST', body: { kind, note } }),
   openCase: (id: string, body: { assignee?: string; summary?: string }) =>

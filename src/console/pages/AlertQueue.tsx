@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
+import { useAuth } from '../auth';
 import { typeColors } from '../../data/console/alerts';
 import type { ThreatType } from '../../data/console/types';
 import { ScoreBadge } from '../components/ScoreBadge';
@@ -25,6 +26,93 @@ const filterMap: Record<string, string[]> = {
 
 const threatColor = (t: string | null) =>
   (t && typeColors[t as ThreatType]) || '#7A8593';
+
+const GRID = '56px 78px minmax(0,0.9fr) 118px minmax(0,1.05fr) 88px 120px';
+
+const nameFromEmail = (email: string) => (email || '').split('@')[0].replace(/[._-]+/g, ' ').trim();
+const initialsOf = (email: string) => {
+  const n = nameFromEmail(email);
+  const parts = n.split(' ').filter(Boolean);
+  return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? parts[0]?.[1] ?? '')).toUpperCase() || '?';
+};
+
+// Who's working this alert — an avatar when owned, a faint dash when free.
+function OwnerCell({ assignee, mine }: { assignee?: string | null; mine: boolean }) {
+  if (!assignee) return <span style={{ color: '#C9CED4', fontSize: 13 }}>—</span>;
+  return (
+    <span
+      title={assignee}
+      style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: 26, height: 26, borderRadius: '50%',
+        background: mine ? '#D71A28' : '#E9EDF1', color: mine ? '#fff' : '#5A6976',
+        fontFamily: 'Barlow', fontWeight: 700, fontSize: 10.5, letterSpacing: '0.02em',
+      }}
+    >
+      {initialsOf(assignee)}
+    </span>
+  );
+}
+
+// Per-row triage menu: assign/unassign, snooze, dismiss. Actions run against
+// the server then the parent reloads the queue.
+function RowActions({ al, mine, onAct }: {
+  al: ServerAlert; mine: boolean; onAct: (fn: () => Promise<unknown>) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', esc); };
+  }, [open]);
+
+  const run = (fn: () => Promise<unknown>) => { setOpen(false); onAct(fn); };
+  const item: React.CSSProperties = {
+    display: 'block', width: '100%', textAlign: 'left', padding: '9px 14px', background: 'none',
+    border: 'none', cursor: 'pointer', fontFamily: 'Barlow', fontSize: '12px', fontWeight: 600, color: '#3E4753',
+  };
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Alert actions"
+        onClick={() => setOpen((o) => !o)}
+        style={{
+          width: 30, height: 30, borderRadius: 3, border: '1px solid #E0E5EA', background: open ? '#F2F4F6' : '#fff',
+          color: '#5A6976', cursor: 'pointer', fontSize: 16, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}
+      >
+        ⋯
+      </button>
+      {open && (
+        <div role="menu" style={{
+          position: 'absolute', top: 'calc(100% + 6px)', right: 0, width: 168, zIndex: 30,
+          background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, boxShadow: '0 4px 10px rgba(30,38,46,0.12)', overflow: 'hidden',
+        }}>
+          <button type="button" role="menuitem" style={item}
+            onClick={() => run(() => consoleApi.assignAlert(al.id, mine ? '' : undefined))}>
+            {mine ? 'Unassign' : 'Assign to me'}
+          </button>
+          <button type="button" role="menuitem" style={{ ...item, borderTop: '1px solid #F0F2F5' }}
+            onClick={() => run(() => consoleApi.snoozeAlert(al.id, 60))}>
+            {al.snoozed ? 'Snooze +1 hour' : 'Snooze 1 hour'}
+          </button>
+          <button type="button" role="menuitem" style={{ ...item, borderTop: '1px solid #F0F2F5', color: '#D71A28' }}
+            onClick={() => run(() => consoleApi.patchAlert(al.id, { state: 'Dismissed', disposition: 'Dismissed from queue.' }))}>
+            Dismiss
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // The queue is scanned, not read: show the two defining signals as chips and
 // roll the rest into "+N", with the full stack on hover. The complete list
@@ -65,19 +153,31 @@ export function AlertQueue() {
   const [searchParams] = useSearchParams();
   const typeFilter = searchParams.get('type');
 
+  const { session } = useAuth();
   const [tab, setTab] = useState<'queue' | 'stats'>('queue');
   const [filter, setFilter] = useState<'All' | 'Scams' | 'ATO' | 'Mules'>('All');
   const [stateFilter, setStateFilter] = useState<'Open' | 'all'>('Open');
   const [sort, setSort] = useState<'risk' | 'newest' | 'oldest'>('risk');
+  const [mineOnly, setMineOnly] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
 
-  const { data, loading, error } = useApi<ServerAlert[]>(
+  const { data, loading, error, reload } = useApi<ServerAlert[]>(
     () => consoleApi.alerts(stateFilter === 'Open' ? 'Open' : undefined),
     [stateFilter],
   );
   const alerts = useMemo(() => data ?? [], [data]);
+  const isMine = (a: ServerAlert) => !!a.assignee && !!session && a.assignee === session.email;
+
+  // Run a triage action, then refresh the queue.
+  const act = (fn: () => Promise<unknown>) => {
+    setBusy('x');
+    fn().then(() => reload()).catch(() => {}).finally(() => setBusy(null));
+  };
 
   let visible = typeFilter ? alerts.filter((a) => a.threat_type === typeFilter) : alerts;
   if (filter !== 'All') visible = visible.filter((a) => a.threat_type && filterMap[filter].includes(a.threat_type));
+  if (mineOnly) visible = visible.filter(isMine);
+  const mineCount = alerts.filter(isMine).length;
 
   // Default to highest-risk-first — the triage order an analyst wants.
   const sorted = useMemo(() => {
@@ -117,6 +217,19 @@ export function AlertQueue() {
               {stateFilter === 'Open' ? 'Open alerts' : 'All alerts'}
               <span style={{ fontWeight: 600, color: '#7A8593' }}> · {visible.length}</span>
             </div>
+            <button
+              type="button"
+              aria-pressed={mineOnly}
+              onClick={() => setMineOnly((m) => !m)}
+              style={{
+                padding: '7px 14px', borderRadius: 3, border: `1px solid ${mineOnly ? '#D71A28' : '#E0E5EA'}`,
+                background: mineOnly ? '#D71A28' : '#fff', color: mineOnly ? '#fff' : '#5A6976',
+                fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.06em',
+                textTransform: 'uppercase', cursor: 'pointer',
+              }}
+            >
+              Mine · {mineCount}
+            </button>
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
               <div style={{ display: 'flex', border: '1px solid #E0E5EA', borderRadius: 3, overflow: 'hidden' }} role="group" aria-label="Sort alerts">
                 {([['risk', 'Risk'], ['newest', 'Newest'], ['oldest', 'Oldest']] as const).map(([v, lab], i) => (
@@ -171,8 +284,8 @@ export function AlertQueue() {
                 <SkeletonRow
                   key={i}
                   seed={i}
-                  grid="64px 96px minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.4fr) 92px"
-                  cells={[{ w: 36, h: 36, r: 3 }, { w: 60 }, {}, { w: 120, h: 22, r: 11 }, {}, { w: 70, h: 30, r: 3 }]}
+                  grid={GRID}
+                  cells={[{ w: 36, h: 36, r: 3 }, { w: 56 }, {}, { w: 110, h: 22, r: 11 }, {}, { w: 26, h: 26, r: 13 }, { w: 100, h: 30, r: 3 }]}
                 />
               ))}
             </div>
@@ -204,23 +317,24 @@ export function AlertQueue() {
 
           {!loading && !error && visible.length > 0 && (
             <>
-              <div style={{ overflowX: 'auto' }}>
-                <div style={{ minWidth: 760 }}>
+              <div style={{ overflowX: 'auto', opacity: busy ? 0.6 : 1, transition: 'opacity 0.1s' }}>
+                <div style={{ minWidth: 840 }}>
                   <div
                     style={{
-                      display: 'grid', gridTemplateColumns: '64px 96px minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.4fr) 92px',
+                      display: 'grid', gridTemplateColumns: GRID,
                       padding: '10px 22px', fontFamily: 'Barlow', fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.1em',
                       textTransform: 'uppercase', color: '#7A8593', borderBottom: '1px solid #E9EDF1',
                     }}
                   >
-                    <div>Risk</div><div>Alert</div><div>Subject</div><div>Threat type</div><div>Signal</div><div style={{ textAlign: 'right' }}>Action</div>
+                    <div>Risk</div><div>Alert</div><div>Subject</div><div>Threat type</div><div>Signal</div><div>Owner</div><div style={{ textAlign: 'right' }}>Actions</div>
                   </div>
                   {pageItems.map((al) => (
                     <div
                       key={al.id}
                       style={{
-                        display: 'grid', gridTemplateColumns: '64px 96px minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.4fr) 92px',
+                        display: 'grid', gridTemplateColumns: GRID,
                         alignItems: 'center', padding: '14px 22px', borderBottom: '1px solid #F0F2F5',
+                        background: isMine(al) ? '#FDF9F9' : undefined,
                       }}
                     >
                       <ScoreBadge score={al.score} />
@@ -246,7 +360,8 @@ export function AlertQueue() {
                       </div>
                       <div><Chip color={threatColor(al.threat_type)}>{al.threat_type || 'Unclassified'}</Chip></div>
                       <SignalCell signal={al.signal} />
-                      <div style={{ textAlign: 'right' }}>
+                      <div><OwnerCell assignee={al.assignee} mine={isMine(al)} /></div>
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'flex-end' }}>
                         <button
                           type="button"
                           onClick={() => navigate(`/console/alerts/${al.id}`)}
@@ -258,6 +373,7 @@ export function AlertQueue() {
                         >
                           Review
                         </button>
+                        <RowActions al={al} mine={isMine(al)} onAct={act} />
                       </div>
                     </div>
                   ))}
