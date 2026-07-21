@@ -21,7 +21,7 @@ export const navGroups: ConsoleNavGroup[] = [
   },
   {
     title: 'Investigation',
-    items: [{ label: 'Case Management', to: '/console/cases' }, { label: 'Transaction Graph', to: '/console/graph' }],
+    items: [{ label: 'Case Management', to: '/console/cases' }],
   },
   {
     title: 'Intelligence',
