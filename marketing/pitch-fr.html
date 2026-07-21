@@ -1,0 +1,456 @@
+<style>
+  :root {
+    --ground: #f6f2ef;
+    --surface: #ffffff;
+    --ink: #1a1310;
+    --muted: #6e625c;
+    --faint: #9a8d86;
+    --hair: rgba(26, 19, 16, 0.12);
+    --hair-strong: rgba(26, 19, 16, 0.22);
+    --accent: #d71a28;
+    --accent-deep: #a91320;
+    --ok: #1e9e5a;
+    --warn: #c67c00;
+    --shadow: 0 1px 2px rgba(26, 19, 16, 0.04), 0 18px 50px -22px rgba(26, 19, 16, 0.28);
+
+    --font-display: "Helvetica Neue", Arial, system-ui, sans-serif;
+    --font-body: system-ui, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #120d0b;
+      --surface: #1c1613;
+      --ink: #f1ebe8;
+      --muted: #a89b94;
+      --faint: #7d716b;
+      --hair: rgba(255, 255, 255, 0.11);
+      --hair-strong: rgba(255, 255, 255, 0.2);
+      --accent: #ff2e3a;
+      --accent-deep: #ff5860;
+      --ok: #38c46e;
+      --warn: #e6a82e;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 60px -26px rgba(0, 0, 0, 0.7);
+    }
+  }
+  :root[data-theme="light"] {
+    --ground: #f6f2ef; --surface: #ffffff; --ink: #1a1310; --muted: #6e625c;
+    --faint: #9a8d86; --hair: rgba(26, 19, 16, 0.12); --hair-strong: rgba(26, 19, 16, 0.22);
+    --accent: #d71a28; --accent-deep: #a91320; --ok: #1e9e5a; --warn: #c67c00;
+    --shadow: 0 1px 2px rgba(26, 19, 16, 0.04), 0 18px 50px -22px rgba(26, 19, 16, 0.28);
+  }
+  :root[data-theme="dark"] {
+    --ground: #120d0b; --surface: #1c1613; --ink: #f1ebe8; --muted: #a89b94;
+    --faint: #7d716b; --hair: rgba(255, 255, 255, 0.11); --hair-strong: rgba(255, 255, 255, 0.2);
+    --accent: #ff2e3a; --accent-deep: #ff5860; --ok: #38c46e; --warn: #e6a82e;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 60px -26px rgba(0, 0, 0, 0.7);
+  }
+
+  * { box-sizing: border-box; }
+
+  .page {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    padding: clamp(16px, 4vw, 56px) clamp(12px, 3vw, 40px);
+    line-height: 1.5;
+  }
+
+  .sheet {
+    width: 100%;
+    max-width: 860px;
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    border-radius: 3px;
+    box-shadow: var(--shadow);
+    padding: clamp(26px, 5vw, 58px) clamp(22px, 5vw, 60px) clamp(24px, 4vw, 44px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(28px, 4.5vw, 46px);
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: clamp(18px, 3vw, 28px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand svg { width: 26px; height: 26px; display: block; }
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .masthead .tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- hero ---------- */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.03;
+    font-size: clamp(2.05rem, 5.6vw, 3.35rem);
+    text-wrap: balance;
+    margin: 0 0 18px;
+    max-width: 18ch;
+  }
+  .lede {
+    font-size: clamp(1rem, 1.6vw, 1.16rem);
+    color: var(--muted);
+    max-width: 60ch;
+    margin: 0;
+  }
+  .lede em { color: var(--ink); font-style: normal; font-weight: 600; }
+
+  /* ---------- section labels ---------- */
+  .slabel {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--hair-strong);
+    padding-top: 12px;
+    margin-bottom: clamp(20px, 3vw, 30px);
+  }
+  .slabel .name {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .slabel .name::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 2px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  .slabel .src {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  /* ---------- hero stat ---------- */
+  .stat-hero {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: clamp(18px, 4vw, 40px);
+    padding-bottom: clamp(26px, 4vw, 38px);
+    margin-bottom: clamp(26px, 4vw, 34px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .stat-hero .num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+    line-height: 0.82;
+    font-size: clamp(5.4rem, 20vw, 11rem);
+    color: var(--accent);
+  }
+  .stat-hero .num .unit { font-size: 0.42em; vertical-align: super; letter-spacing: -0.02em; }
+  .stat-hero .cap {
+    font-size: clamp(1.05rem, 2.1vw, 1.5rem);
+    line-height: 1.32;
+    margin: 0;
+    color: var(--ink);
+    max-width: 22ch;
+  }
+  .stat-hero .cap strong { color: var(--accent); font-weight: 700; }
+  .stat-hero .cap .after { display: block; color: var(--muted); font-size: 0.82em; margin-top: 8px; }
+
+  /* ---------- stat row ---------- */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 3vw, 30px);
+  }
+  .stat { display: flex; flex-direction: column; gap: 8px; }
+  .stat .n {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-size: clamp(2.1rem, 5.4vw, 3.1rem);
+    color: var(--ink);
+  }
+  .stat .n .u { font-size: 0.44em; color: var(--accent); vertical-align: super; margin-left: 1px; letter-spacing: 0; }
+  .stat p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 26ch;
+    padding-top: 8px;
+    border-top: 1px solid var(--hair);
+  }
+
+  /* ---------- response ---------- */
+  .turn {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin: 0 0 22px;
+    max-width: 24ch;
+    text-wrap: balance;
+  }
+  .turn em { color: var(--accent); font-style: normal; }
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .pill {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 999px;
+    border: 1.5px solid;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+  .pill.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+  .pill.stop { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+
+  .caps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .caps li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 15px 0;
+    border-top: 1px solid var(--hair);
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .caps li:last-child { border-bottom: 1px solid var(--hair); }
+  .caps li strong { color: var(--ink); font-weight: 600; }
+  .caps .k {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 3px;
+    white-space: nowrap;
+  }
+
+  /* ---------- cta ---------- */
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 28px;
+    flex-wrap: wrap;
+    background: var(--ink);
+    color: var(--ground);
+    border-radius: 4px;
+    padding: clamp(20px, 3.4vw, 30px) clamp(20px, 3.4vw, 34px);
+  }
+  .cta .cta-line {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+    line-height: 1.15;
+    margin: 0;
+    max-width: 26ch;
+    text-wrap: balance;
+  }
+  .cta-right { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .cta-btn {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    padding: 13px 22px;
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: transform 0.12s ease, background 0.12s ease;
+  }
+  .cta-btn:hover { background: var(--accent-deep); }
+  .cta-btn:active { transform: scale(0.97); }
+  .cta-mail {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: color-mix(in srgb, var(--ground) 62%, transparent);
+    text-decoration: none;
+  }
+  .cta-mail:hover { color: var(--ground); }
+
+  /* ---------- footer ---------- */
+  footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    color: var(--faint);
+  }
+  footer .src-full { max-width: 62ch; }
+  footer em { font-style: italic; color: var(--muted); }
+
+  a:focus-visible, .cta-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------- entrance ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(14px); animation: rise 0.7s cubic-bezier(0.2, 0, 0, 1) forwards; }
+    .reveal.d1 { animation-delay: 0.05s; }
+    .reveal.d2 { animation-delay: 0.16s; }
+    .reveal.d3 { animation-delay: 0.28s; }
+    .reveal.d4 { animation-delay: 0.4s; }
+    .reveal.d5 { animation-delay: 0.5s; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+  }
+
+  @media (max-width: 560px) {
+    .stat-hero { grid-template-columns: 1fr; gap: 10px; }
+    .stat-row { grid-template-columns: 1fr; gap: 0; }
+    .stat p { max-width: none; }
+    .cta { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<div class="page">
+  <div class="sheet">
+
+    <header class="masthead reveal d1">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 1.5l8 2.6v6.4c0 5.1-3.2 8.8-8 10.5-4.8-1.7-8-5.4-8-10.5V4.1l8-2.6z" fill="var(--accent)"/>
+          <path d="M8.2 12.2l2.7 2.7 5-5.6" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="wordmark">Verawall</span>
+      </div>
+      <span class="tag">Intelligence comportementale antifraude</span>
+    </header>
+
+    <section class="hero reveal d2">
+      <p class="eyebrow">Note d'introduction · Banque mobile · Afrique</p>
+      <h1>Quand votre système détecte la fraude, l'argent est déjà parti.</h1>
+      <p class="lede">Verawall analyse le comportement de la <em>session</em> — pas seulement la transaction — et rend une décision <em>avant le règlement</em>. L'intelligence antifraude conçue pour la banque mobile et le mobile money.</p>
+    </section>
+
+    <section class="constat reveal d3">
+      <div class="slabel">
+        <span class="name">Le constat</span>
+        <span class="src">GSMA · 2024 · enquête, 34 pays</span>
+      </div>
+
+      <div class="stat-hero">
+        <div class="num">96<span class="unit">%</span></div>
+        <p class="cap">des fraudes sont détectées par une <strong>réclamation client</strong>.<span class="after">Autrement dit : le client s'en aperçoit avant le système.</span></p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat">
+          <div class="n">1,06<span class="u">M$</span></div>
+          <p>perte annuelle moyenne, par opérateur de mobile money</p>
+        </div>
+        <div class="stat">
+          <div class="n">10<span class="u">%</span></div>
+          <p>seulement des prestataires utilisent l'IA ou l'apprentissage automatique</p>
+        </div>
+        <div class="stat">
+          <div class="n">78<span class="u">%</span></div>
+          <p>des cas : quasi aucune récupération, une fois l'argent parti</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="reponse reveal d4">
+      <div class="slabel">
+        <span class="name">La réponse Verawall</span>
+      </div>
+
+      <p class="turn">Nous analysons la session en temps réel et décidons <em>avant que l'argent ne bouge</em>.</p>
+
+      <div class="pills" role="list" aria-label="Décisions en temps réel">
+        <span class="pill ok" role="listitem">Autoriser</span>
+        <span class="pill warn" role="listitem">Renforcer</span>
+        <span class="pill stop" role="listitem">Suspendre</span>
+      </div>
+
+      <ul class="caps">
+        <li>
+          <span class="k">Signaux</span>
+          <span><strong>Comportement en temps réel.</strong> Cadence de frappe, appel actif pendant un virement, SIM changée, GPS falsifié — ce qu'un moteur de règles transactionnelles ne voit jamais.</span>
+        </li>
+        <li>
+          <span class="k">Console</span>
+          <span><strong>Pensée pour les petites équipes.</strong> File d'alertes classée par risque, revue en un seul écran, blocage du paiement et coupure de session en un clic.</span>
+        </li>
+        <li>
+          <span class="k">Conformité</span>
+          <span><strong>Du dossier de fraude au dossier LBC, automatiquement.</strong> Fonds déjà tracés, prêt pour la déclaration de soupçon.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="cta reveal d5">
+      <p class="cta-line">Voyons ce que Verawall aurait suspendu sur votre trafic réel.</p>
+      <div class="cta-right">
+        <a class="cta-btn" href="mailto:contact@verawall.com?subject=D%C3%A9mo%20Verawall%20(20%20min)">Réserver une démo de 20 min →</a>
+        <a class="cta-mail" href="mailto:contact@verawall.com">contact@verawall.com</a>
+      </div>
+    </section>
+
+    <footer>
+      <span class="src-full">Source : GSMA, <em>Mobile money fraud typologies and mitigation strategies</em>, 2024 — enquête menée dans 34 pays d'Afrique, d'Asie et d'Amérique latine.</span>
+      <span>© Verawall 2026 · verawall.com</span>
+    </footer>
+
+  </div>
+</div>

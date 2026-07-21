@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Verawall — Livre blanc (FR)</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1310;
+    --muted: #6e625c;
+    --faint: #9a8d86;
+    --hair: #e5ddd7;
+    --hair2: #d4c9c2;
+    --paper: #ffffff;
+    --tint: #f6f2ef;
+    --tint2: #faf7f5;
+    --accent: #d71a28;
+    --accent-dark: #a91320;
+    --dark: #15100e;
+    --ok: #1e9e5a;
+    --warn: #c67c00;
+    --display: "Helvetica Neue", Arial, sans-serif;
+    --body: "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", Menlo, "Courier New", monospace;
+  }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: var(--body); color: var(--ink); background: #fff; }
+
+  .page {
+    width: 210mm; height: 297mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+    padding: 18mm 20mm 16mm;
+    display: flex; flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* running head + folio */
+  .runhead {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--mono); font-size: 7pt; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--faint);
+    padding-bottom: 4mm; border-bottom: 0.4pt solid var(--hair);
+    margin-bottom: 9mm;
+  }
+  .runhead .rh-brand { color: var(--accent); font-weight: 600; }
+  .folio {
+    position: absolute; bottom: 9mm; left: 20mm; right: 20mm;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--mono); font-size: 7pt; letter-spacing: 0.08em;
+    color: var(--faint);
+    border-top: 0.4pt solid var(--hair); padding-top: 3mm;
+  }
+  .folio .pn { font-weight: 600; color: var(--muted); }
+
+  /* type roles */
+  .eyebrow {
+    font-family: var(--mono); font-size: 8pt; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+  }
+  .secnum {
+    font-family: var(--display); font-weight: 800; font-size: 30pt;
+    letter-spacing: -0.02em; color: var(--hair2); line-height: 1;
+  }
+  h2.sec {
+    font-family: var(--display); font-weight: 800; letter-spacing: -0.02em;
+    font-size: 21pt; line-height: 1.06; margin: 2mm 0 6mm; max-width: 150mm;
+  }
+  h3 {
+    font-family: var(--display); font-weight: 700; font-size: 11.5pt;
+    letter-spacing: -0.01em; margin: 6mm 0 2.2mm;
+  }
+  p { font-size: 9.6pt; line-height: 1.52; color: var(--ink); margin-bottom: 2.8mm; max-width: 165mm; }
+  p.muted, li.muted { color: var(--muted); }
+  strong { font-weight: 700; }
+  .lead { font-size: 11pt; line-height: 1.5; color: var(--muted); }
+  .lead strong { color: var(--ink); }
+  ul.plain { list-style: none; }
+  ul.plain li {
+    font-size: 9.6pt; line-height: 1.5; margin-bottom: 2.6mm;
+    padding-left: 6mm; position: relative; max-width: 162mm;
+  }
+  ul.plain li::before {
+    content: ""; position: absolute; left: 0; top: 5.2pt;
+    width: 3.2mm; height: 1.1pt; background: var(--accent);
+  }
+
+  .pull {
+    border-left: 2.2pt solid var(--accent);
+    padding: 2.5mm 0 2.5mm 6mm; margin: 5.5mm 0;
+    font-family: var(--display); font-weight: 700; font-size: 12.5pt;
+    line-height: 1.3; letter-spacing: -0.01em; max-width: 150mm;
+  }
+  .src {
+    font-family: var(--mono); font-size: 6.8pt; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--faint);
+  }
+
+  /* stat components */
+  .statband {
+    display: flex; gap: 8mm; margin: 5mm 0 6mm;
+    background: var(--tint); border-radius: 2mm; padding: 6mm 7mm;
+  }
+  .statband .st { flex: 1; }
+  .statband .n {
+    font-family: var(--display); font-weight: 800; font-size: 21pt;
+    letter-spacing: -0.03em; line-height: 1; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .statband .n small { font-size: 11pt; vertical-align: 6pt; }
+  .statband p { font-size: 7.8pt; line-height: 1.4; color: var(--muted); margin: 1.8mm 0 0; }
+
+  /* pillar cards */
+  .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 5mm; }
+  .pillar { border: 0.6pt solid var(--hair2); border-top: 2.2pt solid var(--accent); border-radius: 1.5mm; padding: 5mm 5.5mm; background: var(--tint2); }
+  .pillar .pk { font-family: var(--mono); font-size: 7pt; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .pillar h4 { font-family: var(--display); font-weight: 700; font-size: 10.5pt; margin: 1.6mm 0 1.8mm; letter-spacing: -0.01em; }
+  .pillar p { font-size: 8.4pt; line-height: 1.46; color: var(--muted); margin: 0; }
+
+  /* pipeline diagram */
+  .pipe { display: flex; align-items: stretch; gap: 0; margin: 6mm 0 2mm; }
+  .pipe .step {
+    flex: 1; border: 0.6pt solid var(--hair2); background: #fff;
+    border-radius: 1.5mm; padding: 3.5mm 3mm; text-align: center; position: relative;
+  }
+  .pipe .step + .step { margin-left: 4.5mm; }
+  .pipe .step + .step::before {
+    content: "→"; position: absolute; left: -4mm; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-size: 9pt; font-weight: 700;
+  }
+  .pipe .step.hot { background: var(--dark); border-color: var(--dark); }
+  .pipe .step.hot .t1 { color: #fff; }
+  .pipe .step.hot .t2 { color: #b9aca5; }
+  .pipe .t1 { font-family: var(--display); font-weight: 700; font-size: 8pt; line-height: 1.25; letter-spacing: -0.01em; }
+  .pipe .t2 { font-family: var(--mono); font-size: 5.8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-top: 1.4mm; line-height: 1.35; }
+
+  .pills { display: flex; gap: 3mm; margin: 3.5mm 0 0; justify-content: center; }
+  .pill {
+    font-family: var(--mono); font-size: 7.2pt; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 600; padding: 1.8mm 4mm; border-radius: 6mm; border: 1pt solid;
+  }
+  .pill.ok { color: var(--ok); border-color: #bfe3cf; background: #f0faf4; }
+  .pill.warn { color: var(--warn); border-color: #ecd9b6; background: #fdf7ec; }
+  .pill.stop { color: var(--accent); border-color: #f2c2c6; background: #fdf1f2; }
+
+  /* use-case stages */
+  .stage { display: grid; grid-template-columns: 11mm 1fr; gap: 4.5mm; margin-bottom: 4.2mm; }
+  .stage .sn {
+    font-family: var(--display); font-weight: 800; font-size: 16pt; color: var(--accent);
+    line-height: 1; padding-top: 0.5mm; letter-spacing: -0.02em;
+  }
+  .stage h4 { font-family: var(--display); font-weight: 700; font-size: 10.3pt; letter-spacing: -0.01em; margin-bottom: 1.4mm; }
+  .stage p { font-size: 8.8pt; line-height: 1.48; color: var(--muted); margin: 0; max-width: 150mm; }
+  .stage p strong { color: var(--ink); }
+
+  .minicase { border: 0.6pt solid var(--hair2); border-radius: 1.5mm; padding: 4.5mm 5mm; background: var(--tint2); }
+  .minicase h4 { font-family: var(--display); font-weight: 700; font-size: 9.5pt; margin-bottom: 1.5mm; }
+  .minicase p { font-size: 8.2pt; line-height: 1.45; color: var(--muted); margin: 0; }
+
+  /* two-files diagram */
+  .twofiles { display: grid; grid-template-columns: 1fr 26mm 1fr; align-items: center; margin: 6mm 0; }
+  .file { border: 0.7pt solid var(--hair2); border-radius: 1.5mm; overflow: hidden; background: #fff; }
+  .file .fh { font-family: var(--mono); font-size: 7pt; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; color: #fff; background: var(--dark); padding: 2.6mm 4mm; }
+  .file.aml .fh { background: var(--accent); }
+  .file ul { list-style: none; padding: 3mm 4mm; }
+  .file li { font-size: 8pt; line-height: 1.45; color: var(--muted); padding: 1mm 0; border-bottom: 0.4pt solid var(--hair); }
+  .file li:last-child { border-bottom: none; }
+  .file li strong { color: var(--ink); }
+  .tf-link { text-align: center; }
+  .tf-link .q { font-family: var(--mono); font-size: 6.4pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+  .tf-link .arrow { color: var(--accent); font-size: 14pt; font-weight: 700; line-height: 1.1; }
+
+  /* impact list */
+  .impact { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5mm; margin-top: 5mm; }
+  .imp { border-left: 2pt solid var(--accent); padding: 1mm 0 1mm 4.5mm; }
+  .imp h4 { font-family: var(--display); font-weight: 700; font-size: 10pt; margin-bottom: 1.4mm; letter-spacing: -0.01em; }
+  .imp p { font-size: 8.4pt; line-height: 1.48; color: var(--muted); margin: 0; }
+
+  /* adoption steps */
+  .steps { counter-reset: step; margin-top: 5mm; }
+  .astep { display: grid; grid-template-columns: 30mm 1fr; gap: 6mm; padding: 4.2mm 0; border-top: 0.5pt solid var(--hair); }
+  .astep .when { font-family: var(--mono); font-size: 7.4pt; letter-spac

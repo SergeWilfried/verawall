@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Verawall — Livre blanc (FR)</title>
+<style>
+  :root {
+    --ink: #1a1310;
+    --muted: #5f5650;
+    --faint: #8b8079;
+    --paper: #f7f3f0;
+    --hair: #e4ddd7;
+    --hair-strong: #cfc6bf;
+    --accent: #d71a28;
+    --accent-deep: #a91320;
+    --ok: #1e9e5a;
+    --warn: #c67c00;
+    --cover: #15100e;
+    --cover-2: #241b17;
+    --font-display: "Helvetica Neue", Arial, sans-serif;
+    --font-body: Georgia, "Times New Roman", serif;
+    --font-sans: system-ui, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: var(--ink); font-family: var(--font-body); font-size: 10.5pt; line-height: 1.58; }
+
+  @page { size: A4; margin: 20mm 19mm 18mm; }
+  @page :first { margin: 0; }
+
+  /* running header / footer: dark text, no background — invisible on the
+     dark cover, present on every white content page (Chromium repeats
+     position:fixed on each printed page). */
+  .runhead, .runfoot {
+    position: fixed; left: 19mm; right: 19mm;
+    font-family: var(--font-mono); font-size: 7.5pt; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--faint);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .runhead { top: 8mm; border-bottom: 0.5pt solid var(--hair); padding-bottom: 3mm; }
+  .runhead .r { color: var(--accent); }
+  .runfoot { bottom: 8mm; }
+
+  /* ---------- cover ---------- */
+  .cover {
+    background: var(--cover); color: #f3ede9;
+    width: 210mm; height: 297mm; padding: 26mm 22mm;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+    break-after: page;
+  }
+  .cover::before {
+    content: ""; position: absolute; top: -60mm; right: -70mm;
+    width: 190mm; height: 190mm; border-radius: 50%;
+    background: radial-gradient(circle, rgba(215,26,40,0.34) 0%, rgba(215,26,40,0) 62%);
+  }
+  .cover .brand { display: flex; align-items: center; gap: 9px; position: relative; z-index: 1; }
+  .cover .brand svg { width: 26px; height: 26px; }
+  .cover .brand .wm { font-family: var(--font-display); font-weight: 800; font-size: 17pt; letter-spacing: -0.02em; }
+  .cover .kicker {
+    font-family: var(--font-mono); font-size: 9pt; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--accent-deep); color: #ff5860; margin-top: 46mm; position: relative; z-index: 1;
+  }
+  .cover h1 {
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.02;
+    font-size: 40pt; margin: 10mm 0 0; max-width: 15ch; position: relative; z-index: 1;
+  }
+  .cover .sub {
+    font-family: var(--font-sans); font-weight: 600; font-size: 15pt; line-height: 1.3;
+    color: #d9cfc9; margin-top: 8mm; max-width: 26ch; position: relative; z-index: 1;
+  }
+  .cover .dek {
+    font-family: var(--font-body); font-style: italic; font-size: 11pt; line-height: 1.5;
+    color: #a99e97; margin-top: auto; max-width: 52ch; position: relative; z-index: 1;
+    border-top: 1px solid rgba(255,255,255,0.14); padding-top: 7mm;
+  }
+  .cover .cfoot {
+    font-family: var(--font-mono); font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #857a73; margin-top: 8mm; position: relative; z-index: 1;
+  }
+
+  /* ---------- flowing content ---------- */
+  main { padding-top: 6mm; }
+
+  .toc { break-after: page; }
+  .toc h2 { margin-top: 0; }
+  .toc ol { list-style: none; counter-reset: toc; padding: 0; margin: 8mm 0 0; }
+  .toc li {
+    counter-increment: toc; display: flex; align-items: baseline; gap: 10px;
+    padding: 4.2mm 0; border-bottom: 0.5pt solid var(--hair);
+    font-family: var(--font-sans); font-size: 12pt;
+  }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero); font-family: var(--font-mono); font-size: 9pt;
+    color: var(--accent); font-weight: 700; min-width: 22px;
+  }
+
+  h2 {
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.08;
+    font-size: 22pt; margin: 0 0 5mm; text-wrap: balance; break-after: avoid;
+  }
+  .sec { break-before: page; }
+  .sec > h2 { padding-top: 2mm; }
+  .sec-num {
+    font-family: var(--font-mono); font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; display: block; margin-bottom: 3mm;
+  }
+  h3 {
+    font-family: var(--font-sans); font-weight: 700; font-size: 12.5pt; letter-spacing: -0.01em;
+    margin: 8mm 0 2.5mm; break-after: avoid; color: var(--ink);
+  }
+  p { margin: 0 0 3.4mm; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .lead { font-size: 12pt; color: var(--muted); font-family: var(--font-sans); line-height: 1.5; }
+
+  ul.body, ol.body { margin: 0 0 4mm; padding-left: 0; list-style: none; }
+  ul.body li, ol.body li {
+    position: relative; padding-left: 8mm; margin-bottom: 3mm; break-inside: avoid;
+  }
+  ul.body li::before {
+    content: ""; position: absolute; left: 0; top: 2.6mm; width: 3.4mm; height: 1.4pt; background: var(--accent);
+  }
+  ol.body { counter-reset: step; }
+  ol.body li { counter-increment: step; padding-left: 10mm; }
+  ol.body li::before {
+    content: counter(step); position: absolute; left: 0; top: 0.3mm;
+    font-family: var(--font-mono); font-weight: 700; font-size: 9pt; color: #fff;
+    background: var(--accent); width: 6mm; height: 6mm; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* pull quote */
+  .quote {
+    break-inside: avoid; margin: 6mm 0; padding: 5mm 6mm; background: var(--paper);
+    border-left: 3pt solid var(--accent);
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.015em;
+    font-size: 15pt; line-height: 1.24; color: var(--ink); text-wrap: balance;
+  }
+
+  /* callout box */
+  .callout {
+    break-inside: avoid; margin: 5mm 0; padding: 4mm 5mm; background: #fbf9f7;
+    border: 0.75pt solid var(--hair-strong); border-radius: 3px;
+    font-family: var(--font-sans); font-size: 9.5pt; line-height: 1.5; color: var(--muted);
+  }
+  .callout .tag {
+    font-family: var(--font-mono); font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; display: block; margin-bottom: 1.5mm;
+  }
+
+  /* stat chips row */
+  .stats { break-inside: avoid; display: flex; gap: 4mm; margin: 6mm 0; }
+  .stats .chip {
+    flex: 1; border-top: 2pt solid var(--accent); padding-top: 3mm;
+  }
+  .stats .chip .n {
+    font-family: var(--font-display); font-weight: 800; font-size: 21pt; letter-spacing: -0.03em;
+    line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .stats .chip .n .u { font-size: 0.5em; color: var(--accent); vertical-align: super; }
+  .stats .chip p {
+    font-family: var(--font-sans); font-size: 8.5pt; line-height: 1.4; color: var(--muted); margin: 2mm 0 0;
+  }
+
+  /* decision pills */
+  .pills { display: flex; gap: 3mm; margin: 4mm 0; break-inside: avoid; }
+  .pill {
+    font-family: var(--font-mono); font-size: 8.5pt; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 700; padding: 2mm 4mm; border-radius: 999px; border: 1pt solid; display: inline-flex;
+    align-items: center; gap: 2mm;
+  }
+  .pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .pill.ok { color: var(--ok); border-color: var(--ok); }
+  .pill.warn { color: var(--warn); border-color: var(--warn); }
+  .pill.stop { color: var(--accent); border-color: var(--accent); }
+
+  /* figures */
+  figure { break-inside: avoid; margin: 6mm 0; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption {
+    font-family: var(--font-mono); font-size: 7.5pt; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--faint); margin-top: 2.5mm; text-align: center;
+  }
+
+  .signoff { break-inside: avoid; margin-top: 8mm; padding-top: 5mm; border-top: 1.5pt solid var(--accent); }
+  .signoff .a { font-family: var(--font-display); font-weight: 800; font-size: 13pt; }
+  .signoff .b { font-family: var(--font-sans); font-style: italic; color: var(--muted); font-size: 9.5pt; margin-top: 1mm; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 1.5l8 2.6v6.4c0 5.1-3.2 8.8-8 10.5-4.8-1.7-8-5.4-8-10.5V4.1l8-2.6z" fill="#d71a28"/>
+      <path d="M8.2 12.2l2.7 2.7 5-5.6" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="wm">Verawall</span>
+  </div>
+  <div class="kicker">Livre blanc · Banque mobile · Afrique</div>
+  <h1>Arrêter la fraude avant que l'argent ne parte</h1>
+  <div class="sub">L'intelligence comportementale pour la banque mobile en Afrique</div>
+  <p class="dek">Pourquoi les prises de contrôle par échange de SIM, les virements sous influence et la fraude des agents déjouent les contrôles à base de règles — et à quoi ressemble une défense native à la session.</p>
+  <div class="cfoot">© Verawall 2026 · verawall.com · contact@verawall.com</div>
+</section>
+
+<main>
+
+<!-- ============ TOC ============ -->
+<section class="toc">
+  <h2>Sommaire</h2>
+  <ol>
+    <li>Synthèse</li>
+    <li>Pourquoi la fraude l'emporte sur les rails mobiles</li>
+    <li>L'approche Verawall : analyser la session, pas seulement la transaction</li>
+    <li>Cas d'usage : neutraliser une prise de contrôle par échange de SIM</li>
+    <li>Du dossier de fraude au dossier LBC : la doctrine des deux dossiers</li>
+    <li>L'impact métier</li>
+    <li>Un parcours d'adoption concret</li>
+  </ol>
+
+  <h3 style="margin-top:14mm">Avant-propos</h3>
+  <p>La fraude dans la finance numérique africaine n'est pas un cas particulier de la fraude mondiale. Elle a sa propre forme : le numéro de téléphone <em>est</em> le compte, l'argent entre et sort par des réseaux d'agents humains, et les rails instantanés rendent chaque erreur irréversible en quelques secondes. Les défenses importées des manuels de fraude à la carte n'ont jamais été conçues pour cela.</p>
+  <p>Verawall, si. Nous construisons de l'intelligence comportementale pour la façon dont l'argent circule réellement ici — sur des terminaux Android d'entrée de gamme, via les rails de mobile money, en français et en anglais, sous des régulateurs qui attendent de plus en plus que le dossier de fraude et le dossier de blanchiment soient reliés.</p>
+  <p>Ce document explique où les défenses à base de règles cèdent, à quoi ressemble une défense native à la session, et comment une seule plateforme peut mener une institution du premier geste suspect sur un écran jusqu'à un dossier de blanchiment prêt pour le régulateur — automatiquement.</p>
+</section>
+
+<!-- ============ 1. SYNTHÈSE ============ -->
+<section class="sec">
+  <span class="sec-num">Section 01</span>
+  <h2>Synthèse</h2>
+  <p class="lead">La fraude numérique visant les banques, fintechs et opérateurs de mobile money africains se professionnalise plus vite que les défenses déployées contre elle.</p>
+
+  <div class="stats">
+    <div class="chip"><div class="n">1,06<span class="u">M$</span></div><p>perte annuelle moyenne, par opérateur de mobile money</p></div>
+    <div class="chip"><div class="n">96<span class="u">%</span></div><p>des fraudes détectées par une réclamation client — après coup</p></div>
+    <div class="chip"><div class="n">10<span class="u">%</span></div><p>seulement des prestataires utilisent l'IA / l'apprentissage automatique</p></div>
+    <div class="chip"><div class="n">78<span class="u">%</span></div><p>des cas : quasi aucune récupération une fois l'argent parti</p></div>
+  </div>
+
+  <p>L'enquête 2024 de la GSMA, menée dans 34 pays, le chiffre : l'opérateur moyen perd <strong>1,06 million de dollars par an</strong> à cause de la fraude au mobile money, et <strong>84 % des prestataires estiment qu'elle continue d'augmenter.</strong> Trois réalités structurelles creusent l'écart :</p>
+  <ul class="body">
+    <li><strong>L'identité réside dans la SIM.</strong> Là où le numéro de téléphone est à la fois le compte et le canal de récupération, un échange de SIM est un passe-partout — cité comme un schéma répandu par <strong>79 % des prestataires</strong> (GSMA, 2024).</li>
+    <li><strong>L'argent part instantanément et sans retour.</strong> Les transferts de portefeuille à portefeuille se règlent en quelques secondes ; le temps qu'une règle se déclenche sur le lot de la veille, les fonds ont franchi deux relais de mules et sont sortis par un agent de retrait. Et une fois partis, <strong>78 % des cas ne donnent lieu à quasiment aucune récupération</strong>.</li>
+    <li><strong>La victime autorise souvent la fraude elle-même.</strong> Les virements sous influence — un escroc au téléphone qui guide le client pas à pas — paraissent légitimes à tout système qui n'examine que la transaction. Les schémas d'ingénierie sociale sont cités par <strong>88 % des prestataires</strong>.</li>
+  </ul>
+  <p>Les moteurs à base de règles examinent les transactions. Or dans chacun de ces scénarios, l'indice n'est pas dans la transaction — il est dans la <strong>session</strong> : la cadence de frappe inhabituelle après un changement de SIM, l'appel actif pendant la saisie d'un virement, l'application de partage d'écran qui recopie l'affichage, la position GPS falsifiée ou physiquement impossible. Pourtant, <strong>seuls 10 % des prestataires utilisent l'IA ou l'apprentissage automatique</strong>, et <strong>96 % des fraudes sont détectées par une réclamation client</strong> — une fois l'argent parti.</p>
+  <p>La plateforme d'intelligence comportementale de Verawall, c'est précisément ce 10 % manquant. Elle analyse la session en temps réel, décide <strong>Autoriser / Renforcer / Suspendre</strong> avant que l'argent ne bouge — et non après une réclamation client — offre aux analystes une console conçue pour des équipes réduites, et, fait unique, traite la fraude confirmée comme le <em>début</em> de l'histoire de conformité, en ouvrant automatiquement le dossier de blanchiment et en traçant les fonds dès que l'analyste confirme la fraude.</p>
+  <div class="pills">
+    <span class="pill ok">Autoriser</span><span class="pill warn">Renforcer</span><span class="pill stop">Suspendre</span>
+  </div>
+</section>
+
+<!-- ============ 2. POURQUOI ============ -->
+<section class="sec">
+  <span class="sec-num">Section 02</span>
+  <h2>Pourquoi la fraude l'emporte sur les rails mobiles</h2>
+
+  <h3>La SIM est le périmètre — et il est poreux</h3>
+  <p>Dans les marchés mobile-first, la prise de contrôle de compte commence rarement par un logiciel malveillant. Elle commence au comptoir d'un opérateur, par un remplacement de SIM obtenu par ingénierie sociale. Une fois le numéro capté, l'attaquant possède le canal OTP, le parcours de récupération et, dans bien des produits, l'identifiant de connexion lui-même. Pour une règle transactionnelle, l'attaquant <em>est</em> le client.</p>
+  <div class="quote">Un échange de SIM déjoue tout contrôle qui fait confiance au numéro de téléphone. La seule chose qu'il ne peut pas imiter, c'est le comportement du client.</div>
+
+  <h3>Les virements sous influence sont légitimes par construction</h3>
+  <p>Le mode d'escroquerie dominant de la région est humain : un appel — souvent en français, souvent sur WhatsApp — d'un « conseiller bancaire », d'un « support mobile money », d'un « conseiller en placement ». Le client se connecte depuis son propre appareil, depuis son lieu habituel, et envoie l'argent lui-même. La fraude au virement autorisé (APP) est invisible pour les contrôles qui demandent <em>« cette transaction est-elle inhabituelle ? »</em> au lieu de <em>« ce client est-il manipulé en ce moment ? »</em>.</p>
+
+  <h3>Les réseaux d'agents ajoutent une surface de fraude que les banques ne modélisent pas</h3>
+  <p>Les réseaux d'agents de dépôt/retrait sont à la fois la force et l'angle mort de la région. Les grilles de commission invitent à la manipulation — dépôts fractionnés en rafales de transactions sous le seuil, montants quasi identiques, une seule contrepartie. C'est un pur motif de grand livre, endémique, et presque jamais couvert par les outils de fraude importés. La GSMA classe la fraude à la commission (arbitrage) <strong>premier schéma de fraude des agents, à 84 %</strong> — et la plupart des fraudes ne sont pas le fait d'un acteur isolé : <strong>94 % des cas impliquent une collusion entre parties internes et externes</strong>.</p>
+
+  <h3>La fraude par accès distant et par appareil arrive vite</h3>
+  <p>Les escroqueries au « support » par partage d'écran, les logiciels de superposition (overlay) et la saisie scriptée — matures sur d'autres marchés — migrent vers la finance mobile-first. Des fermes d'appareils au GPS falsifié récoltent les primes d'inscription à grande échelle. Les défenses qui ne regardent jamais l'appareil ni le flux de saisie ne peuvent rien voir de tout cela.</p>
+
+  <h3>La faille de conformité : un seul dossier là où il en faudrait deux</h3>
+  <p>Lorsque les produits de la fraude circulent, une seconde obligation commence : le déplacement des fonds volés est du <strong>blanchiment</strong>, et les cadres alignés sur le GAFI attendent une enquête LBC et, au-delà des seuils, une déclaration de soupçon (DS). En pratique, la plupart des institutions clôturent le dossier de fraude et n'ouvrent jamais le dossier LBC — les deux équipes travaillent sur des systèmes différents, sans passerelle. Les réseaux criminels lisent un dossier de fraude clos aux fonds non tracés comme un corridor resté ouvert.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, Arial, sans-serif">
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0l6 3-6 3z" fill="#8b8079"/></marker></defs>
+      <!-- 5-step lifecycle -->
+      <g>
+        <!-- baseline -->
+        <line x1="40" y1="96" x2="680" y2="96" stroke="#cfc6bf" stroke-width="1.5" marker-end="url(#ar)"/>
+        <g font-size="9" fill="#5f5650" text-anchor="middle">
+          <g><circle cx="72" cy="96" r="7" fill="#8b8079"/><text x="72" y="122" font-weight="700">1. Prise du</text><text x="72" y="134">numéro (SIM)</text></g>
+          <g><circle cx="216" cy="96" r="9" fill="#d71a28"/><text x="216" y="122" font-weight="700">2. Entrée</text><text x="216" y="134">au compte</text></g>
+          <g><circle cx="360" cy="96" r="9" fill="#d71a28"/><text x="360" y="122" font-weight="700">3. Extraction</text><text x="360" y="134">(virement)</text></g>
+          <g><circle cx="504" cy="96" r="9" fill="#d71a28"/><text x="504" y="122" font-weight="700">4. Couche</text><text x="504" y="134">de mules</text></g>
+          <g><circle cx="648" cy="96" r="7" fill="#8b8079"/><text x="648" y="122" font-weight="700">5. Retrait</text><text x="648" y="134">(agent)</text></g>
+        </g>
+        <!-- Verawall intervention flags -->
+        <g font-size="8" fill="#d71a28" text-anchor="middle" font-weight="700">
+          <line x1="216" y1="96" x2="216" y2="52" stroke="#d71a28" stroke-width="1" stroke-dasharray="2 2"/>
+          <line x1="360" y1="96" x2="360" y2="40" stroke="#d71a28" stroke-width="1" stroke-dasharray="2 2"/>
+          <line x1="504" y1="96" x2="504" y2="52" stroke="#d71a28" stroke-width="1" stroke-dasharray="2 2"/>
+          <rect x="150" y="30" width="420" height="16" rx="8" fill="#fbeaec"/>
+          <text x="360" y="41" fill="#a91320">▲ Verawall intervient : session · décision · trace des flux</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption>Schéma 2 — Cycle de vie de la fraude, régionalisé · points d'intervention Verawall</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 3. APPROCHE ============ -->
+<section class="sec">
+  <span class="sec-num">Section 03</span>
+  <h2>L'approche Verawall : analyser la session, pas seulement la transaction</h2>
+  <p class="lead">Au moment où la transaction existe, l'essentiel des preuves existe déjà. La plateforme recueille ces preuves passivement, les analyse en temps réel et agit avant le règlement.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 96" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, Arial, sans-serif">
+      <defs><marker id="ar2" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0 0l5 2.5-5 2.5z" fill="#b6aca4"/></marker></defs>
+      <g font-size="8.5" text-anchor="middle">
+        <g>
+          <rect x="8" y="30" width="120" height="36" rx="4" fill="#f7f3f0" stroke="#cfc6bf"/>
+          <text x="68" y="46" fill="#1a1310" font-weight="700">Session client</text>
+          <text x="68" y="58" fill="#5f5650">app / web</text>
+        </g>
+        <line x1="130" y1="48" x2="148" y2="48" stroke="#b6aca4" stroke-width="1.4" marker-end="url(#ar2)"/>
+        <g>
+          <rect x="150" y="30" width="120" height="36" rx="4" fill="#f7f3f0" stroke="#cfc6bf"/>
+          <text x="210" y="46" fill="#1a1310" font-weight="700">Capture passive</text>
+          <text x="210" y="58" fill="#5f5650">comportement</text>
+        </g>
+        <line x1="272" y1="48" x2="290" y2="48" stroke="#b6aca4" stroke-width="1.4" marker-end="url(#ar2)"/>
+        <g>
+          <rect x="292" y="30" width="126" height="36" rx="4" fill="#f7f3f0" stroke="#cfc6bf"/>
+          <text x="355" y="46" fill="#1a1310" font-weight="700">Scoring temps réel</text>
+          <text x="355" y="58" fill="#5f5650">références + signaux</text>
+        </g>
+        <line x1="420" y1="48" x2="438" y2="48" stroke="#b6aca4" stroke-width="1.4" marker-end="url(#ar2)"/>
+        <g>
+          <rect x="440" y="28" width="120" height="40" rx="4" fill="#fbeaec" stroke="#d71a28" stroke-width="1.4"/>
+          <text x="500" y="45" fill="#a91320" font-weight="700">Décision</text>
+          <text x="500" y="58" fill="#a91320" font-size="7.5">Autoriser·Renforcer·Suspendre</text>
+        </g>
+        <line x1="562" y1="48" x2="580" y2="48" stroke="#b6aca4" stroke-width="1.4" marker-end="url(#ar2)"/>
+        <g>
+          <rect x="582" y="30" width="130" height="36" rx="4" fill="#f7f3f0" stroke="#cfc6bf"/>
+          <text x="647" y="46" fill="#1a1310" font-weight="700">Console + action</text>
+          <text x="647" y="58" fill="#5f5650">bloquer · dossier LBC</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption>Schéma 1 — Le pipeline de la session à la décision</figcaption>
+  </figure>
+
+  <h3>Pilier 1 — Une capture comportementale là où sont réellement vos clients</h3>
+  <p>Un SDK léger pour Android — pensé pour les terminaux d'entrée de gamme qui dominent la région — et un SDK web prêt à l'emploi capturent des signaux comportementaux respectueux de la vie privée :</p>
+  <ul class="body">
+    <li><strong>Dynamique de saisie :</strong> cadence de frappe, gestes tactiles et de souris — durée et géométrie uniquement, jamais le contenu. L'historique propre à chaque client sert de référence.</li>
+    <li><strong>Contexte de session :</strong> télémétrie de changement de SIM, intégrité de l'appareil (root, hooking, émulateurs), détection de navigateur headless sur le web.</li>
+    <li><strong>Indicateurs de manipulation :</strong> appel vocal actif pendant un virement ; partage d'écran ou contrôle à distance ; touches masquées par une superposition ; saisie robotique et scriptée.</li>
+    <li><strong>Intégrité de la localisation :</strong> position grossière, uniquement en geohash, avec un indicateur de GPS falsifié — de sorte qu'usurper son « domicile » déclenche l'alerte au lieu de l'éteindre — plus la détection de déplacement impossible.</li>
+  </ul>
+  <div class="callout"><span class="tag">Confidentialité par construction</span>Les identifiants sont hachés avant de quitter l'appareil, la localisation ne sort jamais en coordonnées brutes, et le <em>contenu</em> des frappes n'est jamais capturé. Conforme au RGPD ; conçu pour l'examen BCEAO et des autorités nationales de protection des données.</div>
+
+  <h3>Pilier 2 — La détection au grand livre pour les fraudes qui vivent dans les comptes</h3>
+  <p>Certaines typologies n'apparaissent jamais dans une session. La plateforme ingère le flux de transactions et exécute des détecteurs pour les schémas de mules (entrée-sortie rapide, dispersion, réactivation de compte dormant) et la <strong>fraude à la commission des agents</strong> — le motif de dépôts fractionnés en rafale — nativement, et non en complément.</p>
+
+  <h3>Pilier 3 — Une décision en temps réel à laquelle votre système peut se fier</h3>
+  <p>Un seul appel d'API au moment du risque renvoie <strong>Autoriser / Renforcer / Suspendre</strong>, avec un score de 0 à 100 et des motifs nommés et lisibles. Les décisions sont idempotentes — un appel rejoué ne peut jamais créer de dossier en double — et chaque décision est explicable à un analyste, un auditeur ou un régulateur : <em>« +35 appel actif pendant le virement, +25 montant très supérieur au profil appris, +25 nouvel appareil ».</em> Le canal d'action renvoie les décisions dans votre cœur bancaire — bloquer le paiement, terminer la session, couper la session mobile sur l'appareil — via des webhooks signés et livrés « au moins une fois ».</p>
+
+  <h3>Pilier 4 — Une console conçue pour une équipe de cinq personnes</h3>
+  <p>File d'alertes classée par risque, revue d'alerte sur un seul écran avec chronologie et rejeu de la session, gestion des dossiers, et analyse de liens — le graphe « suivre l'argent » qui suit les fonds à travers la couche de mules et relie les comptes partageant un même appareil. Contrôle d'accès par rôle, MFA et intégration par invitation sont natifs. Les sujets apparaissent sous des pseudonymes stables — les analystes traitent les dossiers sans jamais voir d'identifiant client brut.</p>
+</section>
+
+<!-- ============ 4. CAS D'USAGE ============ -->
+<section class="sec">
+  <span class="sec-num">Section 04</span>
+  <h2>Cas d'usage : neutraliser une prise de contrôle par échange de SIM</h2>
+  <p><strong>La menace.</strong> Un attaquant obtient par ingénierie sociale le remplacement de la SIM d'un client au solde moyen, reçoit l'OTP et se connecte depuis un nouvel appareil. Tout ce que vérifie le système de connexion — numéro, OTP, mot de passe — est conforme.</p>
+
+  <h3>Étape 1 — La session trahit l'attaquant</h3>
+  <p>Dès le premier écran, la plateforme compare : cadence de frappe contre le profil appris du client (<em>écart</em>), appareil contre les installations connues (<em>première apparition</em>), état de la SIM (<em>changée depuis la dernière session</em>). Si l'attaquant falsifie le GPS vers le quartier de la victime, l'indicateur de localisation falsifiée se déclenche — l'esquive elle-même devient preuve.</p>
+
+  <h3>Étape 2 — Le virement est suspendu avant règlement</h3>
+  <p>L'attaquant saisit un virement proche du plafond du compte vers un nouveau bénéficiaire. L'appel de score renvoie <strong>Suspendre</strong> — l'empilement des signaux le place bien au-dessus du seuil — et le paiement est mis en attente de revue. Sur des rails instantanés, c'est le seul instant qui compte : <em>avant</em> le règlement.</p>
+
+  <h3>Étape 3 — L'analyste voit toute l'histoire d'un coup</h3>
+  <p>Une alerte : la chronologie (changement de SIM → nouvel appareil → frappe étrangère → virement au plafond vers un nouveau bénéficiaire), chaque signal avec son poids et sa preuve. Un clic termine la session sur l'appareil et bloque le paiement via le canal d'action.</p>
+
+  <h3>Étape 4 — Le réseau, pas seulement le dossier</h3>
+  <p>Le graphe d'analyse de liens part du sujet : si quoi que ce soit s'était réglé, les flux sortants remontent jusqu'à la couche de mules ; la vue « appareil partagé » expose les comptes frères pilotés depuis le même terminal. La fraude cesse d'être un incident pour devenir une carte.</p>
+
+  <div class="quote">La transaction semblait parfaite. La session, jamais.</div>
+
+  <h3>Cas d'usage secondaires</h3>
+  <ul class="body">
+    <li><strong>Le virement sous influence :</strong> détection d'appel actif + schémas d'hésitation et de correction + premier virement à un bénéficiaire pour un montant très supérieur au profil → Renforcer ou Suspendre <em>pendant que l'escroc est encore en ligne</em>.</li>
+    <li><strong>La fraude à la commission des agents :</strong> le détecteur au grand livre signale la rafale sous le seuil, aux montants quasi identiques vers une seule contrepartie ; l'alerte arrive avec la rafale visualisée — une fuite de revenus qu'aucun outil importé ne couvre.</li>
+  </ul>
+</section>
+
+<!-- ============ 5. DEUX DOSSIERS ============ -->
+<section class="sec">
+  <span class="sec-num">Section 05</span>
+  <h2>Du dossier de fraude au dossier LBC : la doctrine des deux dossiers</h2>
+  <p>Toute fraude qui capte des fonds constitue deux événements de conformité : la fraude, et le blanchiment de ce qui a été déplacé. La plupart des institutions traitent le premier et n'ouvrent jamais le second — non par négligence, mais parce qu'aucun système ne fait le pont.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 172" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, Arial, sans-serif">
+      <defs><marker id="ar3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0l6 3-6 3z" fill="#d71a28"/></marker></defs>
+      <!-- fraud card -->
+      <rect x="20" y="20" width="250" height="70" rx="5" fill="#f7f3f0" stroke="#cfc6bf"/>
+      <text x="36" y="42" font-size="10" font-weight="700" fill="#1a1310">DOSSIER DE FRAUDE</text>
+      <text x="36" y="60" font-size="8.5" fill="#5f5650">Alerte · preuves de session</text>
+      <text x="36" y="74" font-size="8.5" fill="#5f5650">Décision de l'analyste</text>
+      <!-- arrow + condition -->
+      <line x1="272" y1="55" x2="448" y2="55" stroke="#d71a28" stroke-width="1.6" marker-end="url(#ar3)"/>
+      <rect x="300" y="34" width="120" height="16" rx="8" fill="#fbeaec"/>
+      <text x="360" y="45" font-size="8" font-weight="700" fill="#a91320" text-anchor="middle">des fonds ont-ils bougé ?</text>
+      <!-- AML card -->
+      <rect x="450" y="20" width="250" height="70" rx="5" fill="#fbeaec" stroke="#d71a28" stroke-width="1.3"/>
+      <text x="466" y="42" font-size="10" font-weight="700" fill="#a91320">DOSSIER LBC</text>
+      <text x="466" y="60" font-size="8.5" fill="#7a2a30">Ouvert automatiquement · trace des flux</text>
+      <text x="466" y="74" font-size="8.5" fill="#7a2a30">Préparation de la déclaration de soupçon</text>
+      <!-- mini money-flow graph -->
+      <g transform="translate(0,118)">
+        <line x1="220" y1="14" x2="330" y2="14" stroke="#cfc6bf" stroke-width="1.4"/>
+        <line x1="360" y1="14" x2="470" y2="14" stroke="#cfc6bf" stroke-width="1.4"/>
+        <circle cx="200" cy="14" r="11" fill="#1a1310"/><text x="200" y="40" font-size="8" fill="#5f5650" text-anchor="middle">sujet</text>
+        <circle cx="345" cy="14" r="11" fill="#8e44ad"/><text x="345" y="40" font-size="8" fill="#5f5650" text-anchor="middle">mule</text>
+        <circle cx="490" cy="14" r="11" fill="#d71a28"/><text x="490" y="40" font-size="8" fill="#5f5650" text-anchor="middle">retrait</text>
+      </g>
+    </svg>
+    <figcaption>Schéma 3 — La doctrine des deux dossiers · le dossier LBC s'ouvre de lui-même quand les fonds bougent</figcaption>
+  </figure>
+
+  <p>Verawall comble structurellement cette faille. Lorsqu'un analyste clôture une alerte comme <strong>fraude confirmée</strong>, la plateforme vérifie si des fonds ont effectivement bougé après la compromission. Si oui, elle <strong>ouvre automatiquement un dossier LBC lié</strong> — pré-rempli avec les flux sortants tracés, rattaché au dossier de fraude, une seule fois par alerte — et le relie au graphe des flux. Si rien n'a bougé, aucun dossier ne s'ouvre : le tri est intégré, le volume de dossiers reste maîtrisé.</p>
+  <p>Les questions suivantes de l'analyste sont déjà posées : qui est la couche de mules, le total atteint-il le seuil de déclaration, quels autres comptes touchent aux mêmes contreparties ou appareils.</p>
+  <div class="quote">Quand votre institution clôture un dossier de fraude par échange de SIM, une enquête LBC sur les flux de fonds s'ouvre-t-elle jamais ? Avec Verawall, elle s'ouvre d'elle-même — l'argent étant déjà tracé.</div>
+</section>
+
+<!-- ============ 6. IMPACT ============ -->
+<section class="sec">
+  <span class="sec-num">Section 06</span>
+  <h2>L'impact métier</h2>
+  <ul class="body">
+    <li><strong>Les pertes s'arrêtent avant règlement.</strong> La suspension intervient avant règlement ; sur des rails instantanés, c'est la différence entre une perte évitée et une passation en perte. Le renforcement gère la zone grise sans friction généralisée.</li>
+    <li><strong>De petites équipes font un travail de fond.</strong> Files classées, revue sur un écran avec la preuve attachée, et actions en un clic : une poignée d'analystes couvre ce qui exigeait un service entier. L'alerte dit <em>pourquoi</em> en langage clair — pas d'archéologie de modèle.</li>
+    <li><strong>La posture de conformité s'améliore par défaut.</strong> Le dossier LBC existe, la trace des flux existe, la piste d'audit existe — parce que le système les a créés. La préparation de la DS part d'un dossier déjà rempli, pas d'une page blanche.</li>
+    <li><strong>Les clients gardent leur confiance.</strong> Les clients sont la partie <strong>la plus sévèrement touchée</strong> par la fraude au mobile money (GSMA, 2024). Sur des marchés où la confiance se construit encore, l'écart entre « la banque l'a arrêté » et « la banque m'a remboursé plus tard » se mesure en fidélité — d'autant que la récupération, à l'échelle du secteur, n'a que rarement lieu.</li>
+    <li><strong>Une seule plateforme, deux surfaces.</strong> Sessions Android et web, typologies comportementales et de grand livre, fraude et LBC — un modèle de données, une console, une intégration.</li>
+  </ul>
+  <div class="callout"><span class="tag">Périmètre honnête</span>Les références comportementales nécessitent une fenêtre d'apprentissage ; les seuils des détecteurs sont ajustés par institution lors de l'intégration ; les signaux au niveau de l'appareil sont les plus forts sur Android, plateforme dominante de la région.</div>
+</section>
+
+<!-- ============ 7. ADOPTION ============ -->
+<section class="sec">
+  <span class="sec-num">Section 07</span>
+  <h2>Un parcours d'adoption concret</h2>
+  <ol class="body">
+    <li><strong>Semaine 1 — Intégrer passivement.</strong> Ajoutez le SDK à l'application (aucun changement de permission, aucun impact UX) et dupliquez le flux de transactions. La plateforme observe et construit les références. Rien ne change côté client.</li>
+    <li><strong>Semaines 2 à 4 — Scoring en observation.</strong> Votre système appelle l'API de score mais n'applique rien. Vous regardez la console se remplir de ce que la plateforme <em>aurait</em> suspendu, et les seuils sont ajustés à votre portefeuille, vos montants, vos clients.</li>
+    <li><strong>Semaine 5 et au-delà — Appliquer progressivement.</strong> Activez d'abord le Renforcer pour la zone grise, puis le Suspendre pour la tranche la plus élevée. Le coupe-circuit et le canal de blocage de paiement passent en production sous contrôle de l'analyste.</li>
+    <li><strong>En continu — Étendre la couverture.</strong> Ajoutez le SDK web là où vous avez un canal web, activez la passerelle LBC pour votre équipe conformité, et allumez l'analyse de liens à mesure que votre historique de grand livre s'étoffe.</li>
+  </ol>
+  <p>L'intégration est volontairement légère : un SDK, un flux, un appel d'API au moment du risque. Un déploiement en partenariat pilote atteint le scoring en observation en un mois.</p>
+
+  <div class="signoff">
+    <div class="a">Verawall — L'intelligence comportementale au service de la prévention de la fraude</div>
+    <div class="b">Conçu pour la finance mobile-first. © Verawall 2026 · verawall.com · contact@verawall.com</div>
+    <div class="b" style="font-style:normal;margin-top:3mm;font-size:8pt;color:#8b8079">Source des données : GSMA, <em>Mobile money fraud typologies and mitigation strategies</em>, 2024 — enquête menée dans 34 pays d'Afrique, d'Asie et d'Amérique latine.</div>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
