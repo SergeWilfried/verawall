@@ -5,7 +5,7 @@ import { typeColors, scoreColor } from '../../data/console/alerts';
 import type { ThreatType } from '../../data/console/types';
 import { Chip } from '../components/Chip';
 import { useAuth } from '../auth';
-import { consoleApi, shortRef } from '../api';
+import { consoleApi, shortRef, subjectLabel } from '../api';
 import type { AlertDetail, ServerEvent, ServerSignal } from '../api';
 import { useApi } from '../useApi';
 

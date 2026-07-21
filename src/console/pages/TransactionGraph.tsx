@@ -5,7 +5,7 @@ import { graphKinds, type GraphSubject, type NodeKind } from '../../data/console
 import { buildGraph } from '../graphLayout';
 import { GraphSvg } from '../components/GraphSvg';
 import { Chip } from '../components/Chip';
-import { consoleApi, subjectLabel, subjectName, shortRef, type GraphResponse } from '../api';
+import { consoleApi, subjectLabel, subjectName, type GraphResponse } from '../api';
 
 export function TransactionGraph() {
   useConsoleTitle('Transaction Graph');

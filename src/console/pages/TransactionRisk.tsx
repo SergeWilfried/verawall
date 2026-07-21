@@ -6,7 +6,7 @@ import { Chip } from '../components/Chip';
 import { TabButton } from '../components/TabButton';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
-import { consoleApi, shortRef, subjectLabel } from '../api';
+import { consoleApi, subjectLabel } from '../api';
 import type { DecisionRow } from '../api';
 import { useApi } from '../useApi';
 

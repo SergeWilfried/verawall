@@ -7,7 +7,7 @@ import type { ThreatType } from '../../data/console/types';
 import { Chip } from '../components/Chip';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
-import { consoleApi, shortRef, subjectLabel } from '../api';
+import { consoleApi, subjectLabel } from '../api';
 import type { CaseDetail, ServerCase } from '../api';
 import { useApi } from '../useApi';
 
