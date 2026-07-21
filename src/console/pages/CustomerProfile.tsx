@@ -125,22 +125,6 @@ export function CustomerProfile() {
             )}
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, overflow: 'hidden' }}>
-            <div style={{ padding: '18px 22px', borderBottom: '1px solid #E9EDF1', fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>
-              Recent sessions
-            </div>
-            {p.recentSessions.length ? (
-              p.recentSessions.map((s) => (
-                <div key={s.session_id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 22px', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
-                  <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#3E4753' }}>{shortRef(s.session_id, 8)}</span>
-                  <span style={{ flex: 1, color: '#7A8593' }}>{new Date(s.started_at).toLocaleString()} · {s.event_count} events</span>
-                  {s.sim_changed && <Chip color="#E67E22">SIM change</Chip>}
-                </div>
-              ))
-            ) : (
-              <div style={{ padding: '18px 22px', fontSize: '12.5px', color: '#7A8593' }}>No sessions recorded.</div>
-            )}
-          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -164,6 +148,23 @@ export function CustomerProfile() {
                 );
               })}
             </div>
+          </div>
+
+          <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, overflow: 'hidden' }}>
+            <div style={{ padding: '18px 22px', borderBottom: '1px solid #E9EDF1', fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>
+              Recent sessions
+            </div>
+            {p.recentSessions.length ? (
+              p.recentSessions.map((s) => (
+                <div key={s.session_id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 22px', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
+                  <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#3E4753' }}>{shortRef(s.session_id, 8)}</span>
+                  <span style={{ flex: 1, color: '#7A8593' }}>{new Date(s.started_at).toLocaleString()} · {s.event_count} events</span>
+                  {s.sim_changed && <Chip color="#E67E22">SIM change</Chip>}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: '18px 22px', fontSize: '12.5px', color: '#7A8593' }}>No sessions recorded.</div>
+            )}
           </div>
         </div>
       </div>

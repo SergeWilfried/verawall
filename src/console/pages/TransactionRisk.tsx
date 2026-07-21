@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
 import { policyBands } from '../../data/console/transactions';
@@ -10,6 +10,7 @@ import { consoleApi, subjectLabel } from '../api';
 import { SkeletonRow } from '../components/Skeleton';
 import { EmptyState } from '../components/EmptyState';
 import { GaugeArt } from '../components/emptyArt';
+import { SubjectGraph } from '../components/SubjectGraph';
 import type { DecisionRow } from '../api';
 import { useApi } from '../useApi';
 
@@ -24,6 +25,7 @@ export function TransactionRisk() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<'table' | 'stats'>('table');
   const [filter, setFilter] = useState<'All' | 'Held' | 'Auto'>('All');
+  const [openRow, setOpenRow] = useState<string | null>(null);
 
   const { data, loading, error } = useApi(() => consoleApi.transactionRisk(), []);
   const stream = useMemo(() => data?.stream ?? [], [data]);
@@ -132,32 +134,46 @@ export function TransactionRisk() {
                   >
                     <div>Risk</div><div>Subject</div><div>Txn</div><div>Amount</div><div>Decision</div><div style={{ textAlign: 'right' }}>When</div>
                   </div>
-                  {pageItems.map((t, i) => (
-                    <div
-                      key={(t.txn_ref || '') + i}
-                      style={{
-                        display: 'grid', gridTemplateColumns: '56px minmax(0,1fr) minmax(0,1fr) 130px 120px 90px',
-                        alignItems: 'center', padding: '13px 22px', borderBottom: '1px solid #F0F2F5',
-                      }}
-                    >
-                      <div style={{ width: 36, height: 36, borderRadius: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Barlow', fontWeight: 800, fontSize: 13, color: '#fff', background: scoreColor(t.score) }}>
-                        {t.score}
-                      </div>
-                      <div>
-                        {t.user_ref ? (
-                          <button type="button" onClick={() => navigate(`/console/customers/${t.user_ref}`)}
-                            style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '12.5px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3E4753', borderBottom: '1px dotted #C9CED4' }}
-                            title={t.user_ref}>
-                            {subjectLabel(t.user_ref)}
-                          </button>
-                        ) : <span style={{ fontSize: 12, color: '#7A8593' }}>unbound</span>}
-                      </div>
-                      <div style={{ fontSize: 12, color: '#5A6976', fontFamily: 'monospace' }}>{t.txn_ref || '—'}</div>
-                      <div style={{ fontFamily: 'Barlow', fontWeight: 700, fontSize: '13px' }}>{amountOf(t)}</div>
-                      <div><Chip color={decisionColor[t.decision]}>{decisionLabel[t.decision] || t.decision}</Chip></div>
-                      <div style={{ textAlign: 'right', fontSize: '11.5px', color: '#7A8593' }}>{new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                    </div>
-                  ))}
+                  {pageItems.map((t, i) => {
+                    const rowKey = (t.txn_ref || 'row') + i;
+                    const isOpen = openRow === rowKey;
+                    return (
+                      <Fragment key={rowKey}>
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => setOpenRow(isOpen ? null : rowKey)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenRow(isOpen ? null : rowKey); } }}
+                          style={{
+                            display: 'grid', gridTemplateColumns: '56px minmax(0,1fr) minmax(0,1fr) 130px 120px 90px',
+                            alignItems: 'center', padding: '13px 22px', borderBottom: '1px solid #F0F2F5',
+                            cursor: 'pointer', background: isOpen ? '#FBF1F2' : 'transparent',
+                          }}
+                        >
+                          <div style={{ width: 36, height: 36, borderRadius: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Barlow', fontWeight: 800, fontSize: 13, color: '#fff', background: scoreColor(t.score) }}>
+                            {t.score}
+                          </div>
+                          <div>
+                            {t.user_ref ? (
+                              <button type="button" onClick={(e) => { e.stopPropagation(); navigate(`/console/customers/${t.user_ref}`); }}
+                                style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '12.5px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3E4753', borderBottom: '1px dotted #C9CED4' }}
+                                title={t.user_ref}>
+                                {subjectLabel(t.user_ref)}
+                              </button>
+                            ) : <span style={{ fontSize: 12, color: '#7A8593' }}>unbound</span>}
+                          </div>
+                          <div style={{ fontSize: 12, color: '#5A6976', fontFamily: 'monospace' }}>{t.txn_ref || '—'}</div>
+                          <div style={{ fontFamily: 'Barlow', fontWeight: 700, fontSize: '13px' }}>{amountOf(t)}</div>
+                          <div><Chip color={decisionColor[t.decision]}>{decisionLabel[t.decision] || t.decision}</Chip></div>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, textAlign: 'right', fontSize: '11.5px', color: '#7A8593' }}>
+                            {new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            <span style={{ display: 'inline-block', transition: 'transform 0.15s', transform: isOpen ? 'rotate(90deg)' : 'none', color: '#B6ABA4' }}>›</span>
+                          </div>
+                        </div>
+                        {isOpen && <TxnDetail t={t} />}
+                      </Fragment>
+                    );
+                  })}
                 </div>
               </div>
               <Pagination page={page} totalPages={totalPages} totalItems={totalItems} pageSize={PAGE_SIZE} onChange={setPage} />
@@ -203,6 +219,59 @@ export function TransactionRisk() {
             </div>
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+// Expanded row: why the payment scored what it did, plus the money-flow graph
+// for the subject — the same link-analysis surface used on the Graph page.
+function TxnDetail({ t }: { t: DecisionRow }) {
+  const navigate = useNavigate();
+  const signals = t.signals ?? [];
+  const amount = t.txn?.amount != null
+    ? `${Number(t.txn.amount).toLocaleString()} ${(t.txn.currency as string) || ''}`.trim() : '—';
+  return (
+    <div style={{ padding: '18px 22px 22px', background: '#FBF7F6', borderBottom: '1px solid #F0F2F5', borderTop: '1px solid #F2D9DB' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
+        <span style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593' }}>
+          Why this scored {t.score}
+        </span>
+        {t.threat_type && <Chip color="#D71A28">{t.threat_type}</Chip>}
+        <span style={{ marginLeft: 'auto', fontSize: '12.5px', color: '#7A8593' }}>
+          Txn <span style={{ fontFamily: 'monospace', color: '#3E4753' }}>{t.txn_ref || '—'}</span> · {amount}
+        </span>
+      </div>
+
+      {signals.length > 0 ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
+          {signals.map((s, i) => (
+            <div key={s.code + i} title={s.evidence}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 11px', background: '#fff', border: '1px solid #E9DCDA', borderRadius: 4, fontSize: 12 }}>
+              <span style={{ fontFamily: 'Barlow', fontWeight: 800, color: '#D71A28' }}>+{s.weight}</span>
+              <span style={{ fontWeight: 600, color: '#3E4753' }}>{s.label || s.code}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ fontSize: '12.5px', color: '#7A8593', marginBottom: 18 }}>No individual signals recorded for this decision.</div>
+      )}
+
+      {t.user_ref ? (
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <span style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593' }}>
+              Money flow around this subject
+            </span>
+            <button type="button" onClick={() => navigate(`/console/graph?subject=${encodeURIComponent(t.user_ref!)}`)}
+              style={{ fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#D71A28', background: 'none', border: 'none', cursor: 'pointer' }}>
+              Open full graph →
+            </button>
+          </div>
+          <SubjectGraph subject={t.user_ref} width={520} height={420} showLegend={false} />
+        </>
+      ) : (
+        <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No bound subject — link analysis needs a user reference.</div>
       )}
     </div>
   );

@@ -201,6 +201,9 @@ export interface DecisionRow {
   txn: Record<string, unknown> | null;
   decision: 'ALLOW' | 'STEP_UP' | 'HOLD';
   score: number;
+  signals?: ServerSignal[] | null;
+  reasons?: string[] | null;
+  threat_type?: string | null;
   created_at: string;
 }
 
