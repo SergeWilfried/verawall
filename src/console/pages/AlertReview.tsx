@@ -284,9 +284,6 @@ export function AlertReview() {
             ) : data.account_ref ? <>Account <span style={{ fontFamily: 'monospace' }}>{shortRef(data.account_ref, 16)}</span></> : 'No bound subject'}
             {' · '}detected {new Date(data.created_at).toLocaleString()}
           </div>
-          <div style={{ fontSize: 13, color: '#5A6976', marginTop: 4 }}>
-            <span style={{ fontWeight: 700, color: '#D71A28' }}>Signal:</span> {data.signal}
-          </div>
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {data.case_id ? (
