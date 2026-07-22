@@ -10,7 +10,7 @@ import { TabButton } from '../components/TabButton';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { consoleApi, shortRef, subjectLabel } from '../api';
-import type { ServerAlert } from '../api';
+import type { ServerAlert, TeamMember } from '../api';
 import { SkeletonRow } from '../components/Skeleton';
 import { EmptyState, SuggestChip } from '../components/EmptyState';
 import { ShieldClearArt } from '../components/emptyArt';
@@ -56,8 +56,9 @@ function OwnerCell({ assignee, mine }: { assignee?: string | null; mine: boolean
 
 // Per-row triage menu: assign/unassign, snooze, dismiss. Actions run against
 // the server then the parent reloads the queue.
-function RowActions({ al, mine, onAct }: {
+function RowActions({ al, mine, onAct, team, myEmail }: {
   al: ServerAlert; mine: boolean; onAct: (fn: () => Promise<unknown>) => void;
+  team: TeamMember[]; myEmail?: string;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -100,6 +101,32 @@ function RowActions({ al, mine, onAct }: {
             onClick={() => run(() => consoleApi.assignAlert(al.id, mine ? '' : undefined))}>
             {mine ? 'Unassign' : 'Assign to me'}
           </button>
+          {al.assignee && !mine && (
+            <button type="button" role="menuitem" style={{ ...item, borderTop: '1px solid #F0F2F5' }}
+              onClick={() => run(() => consoleApi.assignAlert(al.id, ''))}>
+              Unassign
+            </button>
+          )}
+          {team.length > 0 && (
+            <>
+              <div style={{ fontFamily: 'Barlow', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9AA4AF', padding: '10px 14px 4px', borderTop: '1px solid #F0F2F5' }}>
+                Assign to
+              </div>
+              <div style={{ maxHeight: 168, overflowY: 'auto' }}>
+                {team.filter((mem) => mem.email !== myEmail).map((mem) => (
+                  <button key={mem.id} type="button" role="menuitem"
+                    style={{ ...item, borderTop: 'none', alignItems: 'center', display: 'flex', gap: 8 }}
+                    onClick={() => run(() => consoleApi.assignAlert(al.id, mem.email))}>
+                    <span style={{ display: 'inline-flex', width: 20, height: 20, borderRadius: '50%', background: al.assignee === mem.email ? '#D71A28' : '#E9EDF1', color: al.assignee === mem.email ? '#fff' : '#5A6976', fontFamily: 'Barlow', fontWeight: 700, fontSize: 9, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {mem.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()}
+                    </span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mem.name}</span>
+                    {al.assignee === mem.email && <span style={{ marginLeft: 'auto', color: '#D71A28', fontSize: 11 }}>✓</span>}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
           <button type="button" role="menuitem" style={{ ...item, borderTop: '1px solid #F0F2F5' }}
             onClick={() => run(() => consoleApi.snoozeAlert(al.id, 60))}>
             {al.snoozed ? 'Snooze +1 hour' : 'Snooze 1 hour'}
@@ -160,6 +187,16 @@ export function AlertQueue() {
   const [sort, setSort] = useState<'risk' | 'newest' | 'oldest'>('risk');
   const [mineOnly, setMineOnly] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
+  const isAdmin = (session?.rank ?? 0) >= 3;
+
+  // Admins can assign to any teammate — load the roster once for the picker.
+  const [team, setTeam] = useState<TeamMember[]>([]);
+  useEffect(() => {
+    if (!isAdmin) return;
+    let alive = true;
+    consoleApi.team().then((t) => { if (alive) setTeam(t.filter((m) => !m.disabled)); }).catch(() => {});
+    return () => { alive = false; };
+  }, [isAdmin]);
 
   const { data, loading, error, reload } = useApi<ServerAlert[]>(
     () => consoleApi.alerts(stateFilter === 'Open' ? 'Open' : undefined),
@@ -373,7 +410,7 @@ export function AlertQueue() {
                         >
                           Review
                         </button>
-                        <RowActions al={al} mine={isMine(al)} onAct={act} />
+                        <RowActions al={al} mine={isMine(al)} onAct={act} team={team} myEmail={session?.email} />
                       </div>
                     </div>
                   ))}
