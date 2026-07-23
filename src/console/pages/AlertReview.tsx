@@ -47,11 +47,21 @@ function presentEvent(ev: ServerEvent): TimelineStep {
     case 'PASSIVE_TOUCH_STROKES':
       return { t, event: 'Touch behavior', detail: 'Aggregated touch strokes captured.' };
     case 'PASSIVE_APP_INTEGRITY': {
-      const bad = p.rootLikely || p.hookingFramework || p.emulatorLikely;
+      const sideloaded = 'installerPackage' in p &&
+        ['', 'com.android.packageinstaller', 'com.google.android.packageinstaller']
+          .includes(String(p.installerPackage));
+      const bad = p.rootLikely || p.hookingFramework || p.emulatorLikely || p.debuggable || sideloaded;
       return { t, event: 'Device integrity check',
-        detail: bad ? `Integrity risk: ${p.hookingFramework ? `hooking (${String(p.hookingFramework)})` : p.rootLikely ? 'root indicators' : 'emulator'}.`
+        detail: bad ? `Integrity risk: ${p.hookingFramework ? `hooking (${String(p.hookingFramework)})` : p.rootLikely ? 'root indicators' : p.emulatorLikely ? 'emulator' : p.debuggable ? 'debuggable build' : 'sideloaded install'}.`
                     : 'No integrity issues detected.',
         flag: bad ? 'Critical' : undefined };
+    }
+    case 'PASSIVE_CALL_STATE': {
+      const dur = Number(p.durationMs ?? 0);
+      return p.active
+        ? { t, event: 'Call started', detail: `${String(p.kind ?? '')} call in progress.`, flag: 'Anomaly' }
+        : { t, event: 'Call ended',
+            detail: `${String(p.kind ?? '')} call ended${dur >= 60000 ? ` after ${Math.round(dur / 60000)} min` : ''}.` };
     }
     case 'PASSIVE_SIM_TELEMETRY':
       return { t, event: 'SIM telemetry',
@@ -103,7 +113,11 @@ function fingerprintFacts(d: AlertDetail): { k: string; v: string; ok: boolean }
   }
   const integ = d.timeline.find((e) => e.type === 'PASSIVE_APP_INTEGRITY')?.payload;
   if (integ) {
-    const bad = integ.rootLikely || integ.hookingFramework || integ.emulatorLikely;
+    const sideloaded = 'installerPackage' in integ &&
+      ['', 'com.android.packageinstaller', 'com.google.android.packageinstaller']
+        .includes(String(integ.installerPackage));
+    const bad = integ.rootLikely || integ.hookingFramework || integ.emulatorLikely ||
+      integ.debuggable || sideloaded;
     facts.push({ k: 'Integrity', v: bad ? 'Risk detected' : 'Clean', ok: !bad });
   }
   return facts;

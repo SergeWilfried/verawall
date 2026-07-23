@@ -14,12 +14,16 @@ const threatColor = (t: string) => typeColors[t as ThreatType] || '#7A8593';
 // Short human labels for the behavioral signals the engine fires.
 const signalHint: Record<string, string> = {
   ACTIVE_CALL: 'Coached-scam tell', NEW_DEVICE_FOR_USER: 'Account takeover',
+  RECENT_CALL: 'Coached-scam tell', CALL_HANDS_FREE: 'Coached-scam tell',
+  RUSHED_NEW_PAYEE: 'Coached-scam tell',
   AMOUNT_ABOVE_PROFILE: 'Out of pattern', MOCK_LOCATION: 'Fake GPS',
   IMPOSSIBLE_TRAVEL: 'Geo-velocity', REMOTE_ACCESS: 'On-device fraud',
   HEADLESS_BROWSER: 'Bot / automation', MOUSE_ANOMALY: 'Web behavior',
   TOUCH_ANOMALY: 'Touch behavior', KEYSTROKE_ANOMALY: 'Typing cadence',
+  SIDELOADED_APP: 'Tampered install', DEBUG_BUILD: 'Tampered install',
+  DEV_OPTIONS: 'Device posture',
   RAPID_IN_OUT: 'Mule flow', FAN_OUT_24H: 'Mule dispersion',
-  DORMANT_REACTIVATED: 'Dormant account', SIM_SWAP: 'SIM change',
+  DORMANT_REACTIVATED: 'Dormant account', SIM_CHANGED: 'SIM change',
 };
 
 const threatDesc: Record<string, string> = {
