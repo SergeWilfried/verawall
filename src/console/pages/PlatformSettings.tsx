@@ -276,6 +276,7 @@ function TeamSection() {
 
 const sections = [
   { key: 'general', label: 'General' },
+  { key: 'risk', label: 'Risk thresholds' },
   { key: 'notifications', label: 'Notifications' },
   { key: 'keys', label: 'API Keys' },
   { key: 'modules', label: 'Modules' },
@@ -333,6 +334,11 @@ export function PlatformSettings() {
     setDraft((d) => d && ({ ...d, modules: { ...d.modules, [k]: v } }));
   const setTenant = (k: string, v: string) =>
     setDraft((d) => d && ({ ...d, tenant: { ...d.tenant, [k]: v } }));
+  const setHighAmount = (ccy: string, v: number) =>
+    setDraft((d) => d && ({
+      ...d,
+      risk: { highAmount: { ...(d.risk?.highAmount ?? {}), [ccy]: v } },
+    }));
 
   const save = async () => {
     if (!draft) return;
@@ -341,6 +347,7 @@ export function PlatformSettings() {
     try {
       const updated = await consoleApi.patchSettings({
         tenant: draft.tenant, notifications: draft.notifications, modules: draft.modules,
+        ...(draft.risk ? { risk: draft.risk } : {}),
       });
       setDraft(structuredClone(updated));
       settingsQuery.reload();
@@ -413,6 +420,47 @@ export function PlatformSettings() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {section === 'risk' && draft && (
+            <div style={cardStyle}>
+              <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>High-amount thresholds</div>
+              <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2 }}>
+                Per-currency cutoff for the <b>“high amount, no spending history”</b> signal. Applies only to
+                customers without a learned amount profile; those with history are scored against their own median.
+              </div>
+              {readOnlyNote}
+              {!draft.risk?.highAmount ? (
+                <div style={{ fontSize: '12.5px', color: '#E67E22', marginTop: 12, fontWeight: 600 }}>
+                  This tenant’s collector predates per-currency thresholds — redeploy the ingest server to configure them.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
+                  {Object.keys(draft.risk.highAmount)
+                    .sort((a, b) => (a === 'DEFAULT' ? 1 : b === 'DEFAULT' ? -1 : a.localeCompare(b)))
+                    .map((ccy) => (
+                      <div key={ccy} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
+                        <span style={{ color: '#7A8593', fontFamily: 'Barlow', fontWeight: 700, letterSpacing: '0.04em' }}>
+                          {ccy === 'DEFAULT' ? 'Default (other currencies)' : ccy}
+                        </span>
+                        {isAdmin ? (
+                          <input
+                            type="number"
+                            min={0}
+                            inputMode="numeric"
+                            value={Number(draft.risk!.highAmount[ccy])}
+                            onChange={(e) => setHighAmount(ccy, Math.max(0, Number(e.target.value) || 0))}
+                            aria-label={`High-amount threshold for ${ccy}`}
+                            style={{ fontWeight: 700, textAlign: 'right', fontFamily: 'Open Sans', fontSize: '12.5px', color: '#1E262E', border: '1px solid #E3E7EB', borderRadius: 3, padding: '6px 10px', width: 160 }}
+                          />
+                        ) : (
+                          <span style={{ fontWeight: 700 }}>{Number(draft.risk!.highAmount[ccy]).toLocaleString()}</span>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              )}
             </div>
           )}
 

@@ -251,6 +251,9 @@ export interface TenantSettings {
   notifications: Record<string, boolean>;
   modules: Record<string, boolean>;
   integrations: { name: string; detail: string; status: string; ok: boolean }[];
+  // Per-currency "high amount, no spending history" cutoffs (ISO code -> value,
+  // plus a DEFAULT fallback). Absent when the collector predates the feature.
+  risk?: { highAmount: Record<string, number> };
 }
 
 export interface ApiKey {
