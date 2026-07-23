@@ -337,7 +337,13 @@ export function PlatformSettings() {
   const setHighAmount = (ccy: string, v: number) =>
     setDraft((d) => d && ({
       ...d,
-      risk: { highAmount: { ...(d.risk?.highAmount ?? {}), [ccy]: v } },
+      risk: { ...d.risk!, highAmount: { ...(d.risk?.highAmount ?? {}), [ccy]: v } },
+    }));
+  const VEL_DEFAULTS = { windowMin: 10, threshold: 4, baseWeight: 20, slope: 15 };
+  const setVelocity = (k: string, v: number) =>
+    setDraft((d) => d && ({
+      ...d,
+      risk: { ...d.risk!, velocity: { ...VEL_DEFAULTS, ...d.risk?.velocity, [k]: v } },
     }));
 
   const save = async () => {
@@ -459,6 +465,42 @@ export function PlatformSettings() {
                         )}
                       </div>
                     ))}
+                </div>
+              )}
+
+              {draft.risk?.velocity && (
+                <div style={{ marginTop: 22 }}>
+                  <div style={{ fontFamily: 'Barlow', fontSize: 13.5, fontWeight: 700 }}>Transaction velocity</div>
+                  <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2, lineHeight: 1.5 }}>
+                    Flags rapid repeated transfers (structuring / session drain). The weight escalates as the count
+                    climbs — <b>base + slope × (count − threshold)</b> — so a runaway drain reaches STEP-UP then HOLD on
+                    its own, even to a known payee. Loosen for high-frequency wallets; tighten for retail banking.
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
+                    {([
+                      { k: 'windowMin', label: 'Window (minutes)' },
+                      { k: 'threshold', label: 'Transfers before it fires' },
+                      { k: 'baseWeight', label: 'Base weight at threshold' },
+                      { k: 'slope', label: 'Added weight per extra transfer' },
+                    ] as const).map((f) => (
+                      <div key={f.k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
+                        <span style={{ color: '#7A8593' }}>{f.label}</span>
+                        {isAdmin ? (
+                          <input
+                            type="number"
+                            min={1}
+                            inputMode="numeric"
+                            value={Number(draft.risk!.velocity![f.k])}
+                            onChange={(e) => setVelocity(f.k, Math.max(1, Number(e.target.value) || 1))}
+                            aria-label={f.label}
+                            style={{ fontWeight: 700, textAlign: 'right', fontFamily: 'Open Sans', fontSize: '12.5px', color: '#1E262E', border: '1px solid #E3E7EB', borderRadius: 3, padding: '6px 10px', width: 160 }}
+                          />
+                        ) : (
+                          <span style={{ fontWeight: 700 }}>{Number(draft.risk!.velocity![f.k])}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
