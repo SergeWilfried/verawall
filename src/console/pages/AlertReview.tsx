@@ -56,6 +56,9 @@ function presentEvent(ev: ServerEvent): TimelineStep {
                     : 'No integrity issues detected.',
         flag: bad ? 'Critical' : undefined };
     }
+    case 'PASSIVE_SCREENSHOT':
+      return { t, event: 'Screenshot captured',
+        detail: 'The user captured the screen during the session.', flag: 'Anomaly' };
     case 'PASSIVE_CALL_STATE': {
       const dur = Number(p.durationMs ?? 0);
       return p.active

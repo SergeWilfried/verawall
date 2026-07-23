@@ -21,7 +21,7 @@ const signalHint: Record<string, string> = {
   HEADLESS_BROWSER: 'Bot / automation', MOUSE_ANOMALY: 'Web behavior',
   TOUCH_ANOMALY: 'Touch behavior', KEYSTROKE_ANOMALY: 'Typing cadence',
   SIDELOADED_APP: 'Tampered install', DEBUG_BUILD: 'Tampered install',
-  DEV_OPTIONS: 'Device posture',
+  DEV_OPTIONS: 'Device posture', SCREENSHOT: 'Screen exfiltration',
   RAPID_IN_OUT: 'Mule flow', FAN_OUT_24H: 'Mule dispersion',
   DORMANT_REACTIVATED: 'Dormant account', SIM_CHANGED: 'SIM change',
 };
