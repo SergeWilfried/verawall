@@ -318,6 +318,7 @@ export function PlatformSettings() {
   const [draft, setDraft] = useState<TenantSettings | null>(null);
   const [savedMsg, setSavedMsg] = useState('');
   const [saving, setSaving] = useState(false);
+  const [showAllCcy, setShowAllCcy] = useState(false);
 
   // Seed the editable draft once settings arrive.
   useEffect(() => {
@@ -441,32 +442,84 @@ export function PlatformSettings() {
                 <div style={{ fontSize: '12.5px', color: '#E67E22', marginTop: 12, fontWeight: 600 }}>
                   This tenant’s collector predates per-currency thresholds — redeploy the ingest server to configure them.
                 </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
-                  {Object.keys(draft.risk.highAmount)
-                    .sort((a, b) => (a === 'DEFAULT' ? 1 : b === 'DEFAULT' ? -1 : a.localeCompare(b)))
-                    .map((ccy) => (
-                      <div key={ccy} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
-                        <span style={{ color: '#7A8593', fontFamily: 'Barlow', fontWeight: 700, letterSpacing: '0.04em' }}>
-                          {ccy === 'DEFAULT' ? 'Default (other currencies)' : ccy}
-                        </span>
-                        {isAdmin ? (
-                          <input
-                            type="number"
-                            min={0}
-                            inputMode="numeric"
-                            value={Number(draft.risk!.highAmount[ccy])}
-                            onChange={(e) => setHighAmount(ccy, Math.max(0, Number(e.target.value) || 0))}
-                            aria-label={`High-amount threshold for ${ccy}`}
-                            style={{ fontWeight: 700, textAlign: 'right', fontFamily: 'Open Sans', fontSize: '12.5px', color: '#1E262E', border: '1px solid #E3E7EB', borderRadius: 3, padding: '6px 10px', width: 160 }}
-                          />
-                        ) : (
-                          <span style={{ fontWeight: 700 }}>{Number(draft.risk!.highAmount[ccy]).toLocaleString()}</span>
-                        )}
+              ) : (() => {
+                const highAmount = draft.risk!.highAmount;
+                const codes = Object.keys(highAmount).filter((c) => c !== 'DEFAULT').sort();
+                const primary = (draft.tenant.currency && highAmount[draft.tenant.currency] !== undefined)
+                  ? draft.tenant.currency
+                  : (codes[0] ?? 'DEFAULT');
+                const inputStyle = { fontWeight: 700, textAlign: 'right', fontFamily: 'Open Sans', fontSize: '12.5px', color: '#1E262E', border: '1px solid #E3E7EB', borderRadius: 3, padding: '6px 10px', width: 160 } as const;
+                const row = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' } as const;
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', marginTop: 10 }}>
+                    {/* Single-currency default: one operating currency + one threshold. */}
+                    <div style={row}>
+                      <span style={{ color: '#7A8593' }}>Operating currency</span>
+                      {isAdmin ? (
+                        <select
+                          value={primary}
+                          onChange={(e) => setTenant('currency', e.target.value)}
+                          aria-label="Operating currency"
+                          style={{ ...inputStyle, cursor: 'pointer' }}
+                        >
+                          {(codes.includes(primary) ? codes : [primary, ...codes]).map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span style={{ fontWeight: 700 }}>{primary}</span>
+                      )}
+                    </div>
+                    <div style={row}>
+                      <span style={{ color: '#7A8593' }}>High-amount threshold ({primary})</span>
+                      {isAdmin ? (
+                        <input
+                          type="number" min={0} inputMode="numeric"
+                          value={Number(highAmount[primary] ?? highAmount.DEFAULT ?? 0)}
+                          onChange={(e) => setHighAmount(primary, Math.max(0, Number(e.target.value) || 0))}
+                          aria-label={`High-amount threshold for ${primary}`}
+                          style={inputStyle}
+                        />
+                      ) : (
+                        <span style={{ fontWeight: 700 }}>{Number(highAmount[primary] ?? highAmount.DEFAULT ?? 0).toLocaleString()}</span>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowAllCcy((v) => !v)}
+                      style={{ ...ghostBtn, alignSelf: 'flex-start', marginTop: 10, color: '#2C7BB6', paddingLeft: 0 }}
+                    >
+                      {showAllCcy ? '▾ Hide other currencies' : '▸ Multiple currencies'}
+                    </button>
+
+                    {showAllCcy && (
+                      <div style={{ display: 'flex', flexDirection: 'column', marginTop: 4 }}>
+                        {Object.keys(highAmount)
+                          .sort((a, b) => (a === 'DEFAULT' ? 1 : b === 'DEFAULT' ? -1 : a.localeCompare(b)))
+                          .map((ccy) => (
+                            <div key={ccy} style={row}>
+                              <span style={{ color: '#7A8593', fontFamily: 'Barlow', fontWeight: 700, letterSpacing: '0.04em' }}>
+                                {ccy === 'DEFAULT' ? 'Default (other currencies)' : ccy}
+                              </span>
+                              {isAdmin ? (
+                                <input
+                                  type="number" min={0} inputMode="numeric"
+                                  value={Number(highAmount[ccy])}
+                                  onChange={(e) => setHighAmount(ccy, Math.max(0, Number(e.target.value) || 0))}
+                                  aria-label={`High-amount threshold for ${ccy}`}
+                                  style={inputStyle}
+                                />
+                              ) : (
+                                <span style={{ fontWeight: 700 }}>{Number(highAmount[ccy]).toLocaleString()}</span>
+                              )}
+                            </div>
+                          ))}
                       </div>
-                    ))}
-                </div>
-              )}
+                    )}
+                  </div>
+                );
+              })()}
 
               {draft.risk?.velocity && (
                 <div style={{ marginTop: 22 }}>

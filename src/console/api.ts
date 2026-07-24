@@ -247,6 +247,7 @@ export interface TenantSettings {
     dataRetention: string;
     platformVersion: string;
     sessionIngestion: number;
+    currency?: string; // primary operating currency (single-currency tenants)
   };
   notifications: Record<string, boolean>;
   modules: Record<string, boolean>;
