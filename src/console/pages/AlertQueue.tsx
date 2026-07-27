@@ -179,11 +179,14 @@ export function AlertQueue() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const typeFilter = searchParams.get('type');
+  const subjectFilter = searchParams.get('subject');
 
   const { session } = useAuth();
   const [tab, setTab] = useState<'queue' | 'stats'>('queue');
   const [filter, setFilter] = useState<'All' | 'Scams' | 'ATO' | 'Mules'>('All');
-  const [stateFilter, setStateFilter] = useState<'Open' | 'all'>('Open');
+  // When scoped to a subject (from their profile), show every state — the point
+  // is that subject's full history, not just what's currently open.
+  const [stateFilter, setStateFilter] = useState<'Open' | 'all'>(subjectFilter ? 'all' : 'Open');
   const [sort, setSort] = useState<'risk' | 'newest' | 'oldest'>('risk');
   const [mineOnly, setMineOnly] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
@@ -212,6 +215,7 @@ export function AlertQueue() {
   };
 
   let visible = typeFilter ? alerts.filter((a) => a.threat_type === typeFilter) : alerts;
+  if (subjectFilter) visible = visible.filter((a) => a.user_ref === subjectFilter);
   if (filter !== 'All') visible = visible.filter((a) => a.threat_type && filterMap[filter].includes(a.threat_type));
   if (mineOnly) visible = visible.filter(isMine);
   const mineCount = alerts.filter(isMine).length;
@@ -246,6 +250,20 @@ export function AlertQueue() {
         <TabButton active={tab === 'queue'} onClick={() => setTab('queue')}>Alert queue</TabButton>
         <TabButton active={tab === 'stats'} onClick={() => setTab('stats')}>Threat mix</TabButton>
       </div>
+
+      {subjectFilter && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#FDF3F4', border: '1px solid #F3D2D6', borderRadius: 6 }}>
+          <span style={{ fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#A21622' }}>Scoped to subject</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#1E262E' }} title={subjectFilter}>{subjectLabel(subjectFilter)}</span>
+          <button
+            type="button"
+            onClick={() => navigate('/console/alerts')}
+            style={{ marginLeft: 'auto', padding: '5px 12px', background: '#fff', border: '1px solid #F3D2D6', borderRadius: 3, color: '#A21622', fontFamily: 'Barlow', fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer' }}
+          >
+            Clear ✕
+          </button>
+        </div>
+      )}
 
       {tab === 'queue' ? (
         <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, overflow: 'hidden' }}>

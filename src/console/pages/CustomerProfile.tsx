@@ -53,6 +53,13 @@ export function CustomerProfile() {
   }
 
   const openAlerts = p.alerts.filter((a) => a.state !== 'Resolved').length;
+  // The profile is a summary, not a queue: show the most recent few and hand
+  // off deep paging to the tooling that already does it (the scoped Alert Queue
+  // / the bounded "Recent sessions" view).
+  const ALERTS_SHOWN = 6;
+  const SESSIONS_SHOWN = 6;
+  const shownAlerts = p.alerts.slice(0, ALERTS_SHOWN);
+  const shownSessions = p.recentSessions.slice(0, SESSIONS_SHOWN);
   const alias = subjectName(p.user_ref);
   const initials = alias
     ? alias.split(' ').map((w) => w[0]).slice(0, 2).join('')
@@ -101,7 +108,7 @@ export function CustomerProfile() {
               Alert history
             </div>
             {p.alerts.length ? (
-              p.alerts.map((a) => (
+              shownAlerts.map((a) => (
                 <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 22px', borderBottom: '1px solid #F0F2F5' }}>
                   <ScoreBadge score={a.score} size={40} />
                   <div style={{ flex: 1 }}>
@@ -122,6 +129,15 @@ export function CustomerProfile() {
               ))
             ) : (
               <div style={{ padding: '18px 22px', fontSize: '12.5px', color: '#7A8593' }}>No alerts on record for this subject.</div>
+            )}
+            {p.alerts.length > ALERTS_SHOWN && (
+              <button
+                type="button"
+                onClick={() => navigate(`/console/alerts?subject=${encodeURIComponent(p.user_ref)}`)}
+                style={{ width: '100%', padding: '13px 22px', background: '#FAFBFC', border: 'none', borderTop: '1px solid #F0F2F5', color: '#A21622', fontFamily: 'Barlow', fontSize: 12, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', cursor: 'pointer', textAlign: 'left' }}
+              >
+                View all {p.alerts.length} alerts for this subject →
+              </button>
             )}
           </div>
 
@@ -155,7 +171,7 @@ export function CustomerProfile() {
               Recent sessions
             </div>
             {p.recentSessions.length ? (
-              p.recentSessions.map((s) => (
+              shownSessions.map((s) => (
                 <div key={s.session_id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 22px', borderBottom: '1px solid #F0F2F5', fontSize: '12.5px' }}>
                   <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#3E4753' }}>{shortRef(s.session_id, 8)}</span>
                   <span style={{ flex: 1, color: '#7A8593' }}>{new Date(s.started_at).toLocaleString()} · {s.event_count} events</span>
@@ -164,6 +180,11 @@ export function CustomerProfile() {
               ))
             ) : (
               <div style={{ padding: '18px 22px', fontSize: '12.5px', color: '#7A8593' }}>No sessions recorded.</div>
+            )}
+            {p.recentSessions.length > SESSIONS_SHOWN && (
+              <div style={{ padding: '11px 22px', borderTop: '1px solid #F0F2F5', fontSize: '11.5px', color: '#9AA4AF' }}>
+                Showing {SESSIONS_SHOWN} most recent of {p.recentSessions.length}
+              </div>
             )}
           </div>
         </div>
