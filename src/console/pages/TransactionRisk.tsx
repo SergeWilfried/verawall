@@ -271,7 +271,7 @@ function TxnDetail({ t }: { t: DecisionRow }) {
             </div>
             <LocationMap subject={t.user_ref} height={420} />
           </>
-        ) : (
+        ) : t.threat_type === 'Money Mule' ? (
           <>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <span style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593' }}>
@@ -284,7 +284,7 @@ function TxnDetail({ t }: { t: DecisionRow }) {
             </div>
             <SubjectGraph subject={t.user_ref} width={520} height={420} showLegend={false} />
           </>
-        )
+        ) : null
       ) : (
         <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No bound subject — link analysis needs a user reference.</div>
       )}
