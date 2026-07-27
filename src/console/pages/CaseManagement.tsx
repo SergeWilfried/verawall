@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
 import { statusColors } from '../../data/console/cases';
@@ -6,12 +6,11 @@ import { typeColors } from '../../data/console/alerts';
 import type { ThreatType } from '../../data/console/types';
 import { Chip } from '../components/Chip';
 import { Pagination } from '../components/Pagination';
-import { usePagination } from '../usePagination';
 import { consoleApi, subjectLabel } from '../api';
 import { Skeleton, SkeletonLines, SkeletonRow } from '../components/Skeleton';
 import { EmptyState, SuggestChip } from '../components/EmptyState';
 import { CaseFolderArt } from '../components/emptyArt';
-import type { CaseDetail, ServerCase } from '../api';
+import type { CaseDetail, CasePage } from '../api';
 import { useApi } from '../useApi';
 
 const PAGE_SIZE = 8;
@@ -28,24 +27,32 @@ export function CaseManagement() {
   useConsoleTitle('Case Management');
   const navigate = useNavigate();
   const [filter, setFilter] = useState<(typeof filters)[number]>('All');
+  const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const casesQuery = useApi<ServerCase[]>(
-    () => consoleApi.cases(filter === 'All' ? undefined : filter), [filter]);
-  const cases = useMemo(() => casesQuery.data ?? [], [casesQuery.data]);
+  // Server-side pagination: fetch one page; the server returns the filter total
+  // and the per-status counts (over ALL cases) for the KPI tiles.
+  const casesQuery = useApi<CasePage>(
+    () => consoleApi.cases(filter === 'All' ? undefined : filter, page, PAGE_SIZE), [filter, page]);
+  const cases = useMemo(() => casesQuery.data?.items ?? [], [casesQuery.data]);
+  const totalItems = casesQuery.data?.total ?? 0;
+  const counts = casesQuery.data?.statusCounts ?? {};
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const pageItems = cases;
+
+  useEffect(() => { setPage(1); }, [filter]);
 
   const effectiveId = selectedId ?? cases[0]?.id ?? null;
   const detailQuery = useApi<CaseDetail | null>(
     () => (effectiveId ? consoleApi.caseDetail(effectiveId) : Promise.resolve(null)), [effectiveId]);
   const selected = detailQuery.data;
 
-  const { pageItems, page, setPage, totalPages, totalItems } = usePagination(cases, PAGE_SIZE);
-
+  const sumAll = Object.values(counts).reduce((a, b) => a + b, 0);
   const kpis = [
-    { label: 'Open cases', value: String(cases.filter((c) => c.status !== 'Closed').length) },
-    { label: 'Escalated', value: String(cases.filter((c) => c.status === 'Escalated').length) },
-    { label: 'Investigating', value: String(cases.filter((c) => c.status === 'Investigating').length) },
-    { label: 'Closed', value: String(cases.filter((c) => c.status === 'Closed').length) },
+    { label: 'Open cases', value: String(sumAll - (counts.Closed || 0)) },
+    { label: 'Escalated', value: String(counts.Escalated || 0) },
+    { label: 'Investigating', value: String(counts.Investigating || 0) },
+    { label: 'Closed', value: String(counts.Closed || 0) },
   ];
 
   const changeStatus = async (id: string, status: string) => {

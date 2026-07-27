@@ -186,6 +186,14 @@ export interface CaseDetail extends ServerCase {
   alerts: Pick<ServerAlert, 'id' | 'score' | 'state' | 'signal'>[];
 }
 
+/** One page of cases plus the total for the filter and the per-status counts
+ *  (over ALL cases, for the KPI tiles). */
+export interface CasePage {
+  items: ServerCase[];
+  total: number;
+  statusCounts: Record<string, number>;
+}
+
 export interface OverviewStats {
   openAlerts: number;
   sessionsLast24h: number;
@@ -363,8 +371,13 @@ export const consoleApi = {
   openCase: (id: string, body: { assignee?: string; summary?: string }) =>
     api<{ caseId: string }>(`/v1/console/alerts/${id}/case`, { method: 'POST', body }),
 
-  cases: (status?: string) =>
-    api<ServerCase[]>(`/v1/console/cases${status ? `?status=${encodeURIComponent(status)}` : ''}`),
+  cases: (status?: string, page = 1, pageSize = 8) => {
+    const p = new URLSearchParams();
+    if (status) p.set('status', status);
+    p.set('limit', String(pageSize));
+    p.set('offset', String((page - 1) * pageSize));
+    return api<CasePage>(`/v1/console/cases?${p.toString()}`);
+  },
   caseDetail: (id: string) => api<CaseDetail>(`/v1/console/cases/${id}`),
   patchCase: (id: string, body: { status?: string; assignee?: string; note?: string }) =>
     api<ServerCase>(`/v1/console/cases/${id}`, { method: 'PATCH', body }),
