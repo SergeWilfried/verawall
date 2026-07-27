@@ -15,6 +15,7 @@ export const typeColors: Record<ThreatType, string> = {
   'Money Mule': '#8E44AD',
   Phishing: '#E67E22',
   'New Account Fraud': '#2C7BB6',
+  'Commission Fraud': '#16A085',
 };
 
 // Severity by policy band (55 step-up / 85 hold). Within the hold band the

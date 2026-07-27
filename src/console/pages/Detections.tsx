@@ -11,20 +11,32 @@ import type { ThreatType } from '../../data/console/types';
 
 const threatColor = (t: string) => typeColors[t as ThreatType] || '#7A8593';
 
-// Short human labels for the behavioral signals the engine fires.
+// Short human labels for every signal the engine fires. Kept in sync with the
+// Go scoring signals — an unmapped code falls back to the raw code below.
 const signalHint: Record<string, string> = {
-  ACTIVE_CALL: 'Coached-scam tell', NEW_DEVICE_FOR_USER: 'Account takeover',
-  RECENT_CALL: 'Coached-scam tell', CALL_HANDS_FREE: 'Coached-scam tell',
-  RUSHED_NEW_PAYEE: 'Coached-scam tell',
-  AMOUNT_ABOVE_PROFILE: 'Out of pattern', MOCK_LOCATION: 'Fake GPS',
-  IMPOSSIBLE_TRAVEL: 'Geo-velocity', REMOTE_ACCESS: 'On-device fraud',
+  // Coached scam / APP
+  ACTIVE_CALL: 'Coached-scam tell', RECENT_CALL: 'Coached-scam tell',
+  CALL_HANDS_FREE: 'Coached-scam tell', RUSHED_NEW_PAYEE: 'Coached-scam tell',
+  ESCALATING_PAYEE: 'Rising payments', NEW_PAYEE: 'First-time payee',
+  AMOUNT_ABOVE_PROFILE: 'Out of pattern', HIGH_AMOUNT: 'Out of pattern',
+  // Account takeover / device
+  NEW_DEVICE_FOR_USER: 'New device', NEW_INSTALL: 'New install',
+  REMOTE_ACCESS: 'On-device fraud', ACCESSIBILITY_SERVICES: 'On-device fraud',
+  DEVICE_INTEGRITY: 'Rooted / hooked', EMULATOR: 'Emulator',
+  SIDELOADED_APP: 'Tampered install', DEBUG_BUILD: 'Tampered install',
+  DEV_OPTIONS: 'Device posture', SIM_CHANGED: 'SIM change',
+  MOCK_LOCATION: 'Fake GPS', IMPOSSIBLE_TRAVEL: 'Geo-velocity', GEO_UNUSUAL: 'Unusual location',
   HEADLESS_BROWSER: 'Bot / automation', MOUSE_ANOMALY: 'Web behavior',
   TOUCH_ANOMALY: 'Touch behavior', KEYSTROKE_ANOMALY: 'Typing cadence',
-  SIDELOADED_APP: 'Tampered install', DEBUG_BUILD: 'Tampered install',
-  DEV_OPTIONS: 'Device posture', SCREENSHOT: 'Screen exfiltration',
+  HESITATION: 'Hesitation', PASTE_INPUT: 'Pasted input', RAPID_TO_TXN: 'Rushed session',
+  SCREENSHOT: 'Screen exfiltration', NO_USER_BOUND: 'Unbound session',
   STEP_UP_FAILED: 'Failed challenge', STEP_UP_ABANDONED: 'Abandoned challenge',
-  RAPID_IN_OUT: 'Mule flow', FAN_OUT_24H: 'Mule dispersion',
-  DORMANT_REACTIVATED: 'Dormant account', SIM_CHANGED: 'SIM change',
+  // Mule / account-flow ledger
+  RAPID_IN_OUT: 'Mule flow', FAN_OUT: 'Mule dispersion', OUT_BURST: 'Account drain',
+  QUIET_ACCOUNT: 'Dormant / new account', DORMANT_REACTIVATED: 'Dormant account',
+  FLAGGED_COUNTERPARTY: 'Known-bad counterparty',
+  // Agent commission / structuring
+  SPLIT_TXNS: 'Structuring', MICRO_BURST: 'Structuring', UNIFORM_AMOUNTS: 'Structuring',
 };
 
 const threatDesc: Record<string, string> = {
@@ -32,7 +44,7 @@ const threatDesc: Record<string, string> = {
   'Account Takeover': 'Remote access, session hijacking and SIM swap — flagged by behavioral mismatch.',
   'Money Mule': 'Rapid in-out transfers from the bank-feed ledger.',
   'New Account Fraud': 'Stolen or synthetic identities at onboarding.',
-  'Agent Commission Fraud': 'Deposits split into sub-threshold bursts to farm commissions.',
+  'Commission Fraud': 'Deposits split into sub-threshold bursts to farm commissions.',
   Unclassified: 'Held without a single dominant classification.',
 };
 

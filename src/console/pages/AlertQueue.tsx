@@ -19,7 +19,7 @@ import { useApi } from '../useApi';
 const PAGE_SIZE = 8;
 
 const filterMap: Record<string, string[]> = {
-  Scams: ['APP Scam', 'Phishing', 'Agent Commission Fraud'],
+  Scams: ['APP Scam', 'Phishing', 'Commission Fraud'],
   ATO: ['Account Takeover'],
   Mules: ['Money Mule'],
 };
