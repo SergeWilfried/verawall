@@ -58,8 +58,10 @@ export function CustomerProfile() {
   // / the bounded "Recent sessions" view).
   const ALERTS_SHOWN = 6;
   const SESSIONS_SHOWN = 6;
+  const DEVICES_SHOWN = 5;
   const shownAlerts = p.alerts.slice(0, ALERTS_SHOWN);
   const shownSessions = p.recentSessions.slice(0, SESSIONS_SHOWN);
+  const shownDevices = p.devices.slice(0, DEVICES_SHOWN);
   const alias = subjectName(p.user_ref);
   const initials = alias
     ? alias.split(' ').map((w) => w[0]).slice(0, 2).join('')
@@ -148,7 +150,7 @@ export function CustomerProfile() {
             <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Known devices</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 14 }}>
               {p.devices.length === 0 && <div style={{ fontSize: '12.5px', color: '#7A8593' }}>No devices on record.</div>}
-              {p.devices.map((dv) => {
+              {shownDevices.map((dv) => {
                 const fp = dv.fingerprint;
                 const label = fp ? `${fp.manufacturer ?? ''} ${fp.model ?? ''}`.trim() || shortRef(dv.install_id, 12) : shortRef(dv.install_id, 12);
                 return (
@@ -163,6 +165,11 @@ export function CustomerProfile() {
                   </div>
                 );
               })}
+              {p.devices.length > DEVICES_SHOWN && (
+                <div style={{ fontSize: '11.5px', color: '#9AA4AF' }}>
+                  Showing {DEVICES_SHOWN} of {p.devices.length} devices
+                </div>
+              )}
             </div>
           </div>
 
