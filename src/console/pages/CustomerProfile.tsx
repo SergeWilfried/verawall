@@ -57,8 +57,8 @@ export function CustomerProfile() {
   // off deep paging to the tooling that already does it (the scoped Alert Queue
   // / the bounded "Recent sessions" view).
   const ALERTS_SHOWN = 5;
-  const SESSIONS_SHOWN = 5;
-  const DEVICES_SHOWN = 5;
+  const SESSIONS_SHOWN = 3;
+  const DEVICES_SHOWN = 2;
   const shownAlerts = p.alerts.slice(0, ALERTS_SHOWN);
   const shownSessions = p.recentSessions.slice(0, SESSIONS_SHOWN);
   const shownDevices = p.devices.slice(0, DEVICES_SHOWN);

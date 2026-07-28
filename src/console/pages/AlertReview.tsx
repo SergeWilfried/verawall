@@ -331,6 +331,59 @@ export function AlertReview() {
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 20, alignItems: 'start' }}>
         {/* LEFT */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                   {/* TRANSACTION UNDER REVIEW */}
+                   {heldTxn && (
+            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+              <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Transaction under review</div>
+              <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 18, padding: '16px 18px', background: '#FBF1F2', border: '1px solid #F2D9DB', borderRadius: 4, flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>Txn {txn?.txnRef}</div>
+                  <div style={{ fontSize: '12.5px', color: '#5A6976', marginTop: 3 }}>Held pending analyst decision</div>
+                </div>
+                {txn?.amount != null && <div style={{ fontFamily: 'Barlow', fontWeight: 800, fontSize: 22, color: '#1D1D1B' }}>{Number(txn.amount).toLocaleString()} {txn.currency || ''}</div>}
+                <Chip color={txnDecision === 'Held' ? '#D71A28' : txnDecision === 'Released' ? '#2FBF71' : '#B8121F'}>{txnDecision}</Chip>
+              </div>
+              {txnDecision === 'Held' && (
+                <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+                  {actBtn('Release payment', () => runAction('RELEASE_PAYMENT', 'Analyst released the held payment', '✓ Payment released'), false)}
+                  {actBtn('Block payment', () => runAction('BLOCK_PAYMENT', 'Analyst blocked the held payment', '✕ Payment blocked'), true)}
+                </div>
+              )}
+            </div>
+          )}
+
+             {/* SESSION REPLAY */}
+          {timeline.length > 0 && (
+            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Session replay</div>
+                <div style={{ fontSize: 12, color: '#7A8593' }}>step {step + 1} of {n}</div>
+                <button type="button" onClick={toggleReplay}
+                  style={{ marginLeft: 'auto', padding: '8px 16px', background: '#D71A28', color: '#fff', border: 'none', borderRadius: 3, fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                  {replayPlaying ? '❚❚ Pause' : '▶ Play'}
+                </button>
+              </div>
+              <div style={{ marginTop: 16, background: '#1D1D1B', borderRadius: 4, padding: '26px 28px', minHeight: 130, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#8A8F94' }}>{cur.t}</span>
+                  {cur.flag && (
+                    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: 'Barlow', letterSpacing: '0.06em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: 3, color: '#fff', background: flagColors[cur.flag] }}>{cur.flag}</span>
+                  )}
+                </div>
+                <div style={{ fontFamily: 'Barlow', fontSize: 19, fontWeight: 700, color: '#fff', marginTop: 8 }}>{cur.event}</div>
+                <div style={{ fontSize: 13, color: '#B9BDC1', marginTop: 6, lineHeight: 1.6 }}>{cur.detail}</div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 16, padding: '0 6px' }}>
+                {timeline.map((ev, j) => (
+                  <button key={j} type="button" title={ev.event} onClick={() => goToStep(j)}
+                    style={{ flex: 1, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', position: 'relative', borderTop: `2px solid ${j <= step ? '#D71A28' : '#E9EDF1'}` }}>
+                    <span style={{ width: j === step ? 14 : 10, height: j === step ? 14 : 10, borderRadius: '50%', marginTop: -16, border: '2px solid #fff', boxShadow: '0 0 0 1px #E3E7EB', background: ev.flag ? flagColors[ev.flag] : j <= step ? '#D71A28' : '#C9CED4', transition: 'all .2s' }} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* SESSION TIMELINE */}
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
@@ -366,59 +419,6 @@ export function AlertReview() {
               </div>
             )}
           </div>
-
-          {/* SESSION REPLAY */}
-          {timeline.length > 0 && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Session replay</div>
-                <div style={{ fontSize: 12, color: '#7A8593' }}>step {step + 1} of {n}</div>
-                <button type="button" onClick={toggleReplay}
-                  style={{ marginLeft: 'auto', padding: '8px 16px', background: '#D71A28', color: '#fff', border: 'none', borderRadius: 3, fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                  {replayPlaying ? '❚❚ Pause' : '▶ Play'}
-                </button>
-              </div>
-              <div style={{ marginTop: 16, background: '#1D1D1B', borderRadius: 4, padding: '26px 28px', minHeight: 130, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#8A8F94' }}>{cur.t}</span>
-                  {cur.flag && (
-                    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: 'Barlow', letterSpacing: '0.06em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: 3, color: '#fff', background: flagColors[cur.flag] }}>{cur.flag}</span>
-                  )}
-                </div>
-                <div style={{ fontFamily: 'Barlow', fontSize: 19, fontWeight: 700, color: '#fff', marginTop: 8 }}>{cur.event}</div>
-                <div style={{ fontSize: 13, color: '#B9BDC1', marginTop: 6, lineHeight: 1.6 }}>{cur.detail}</div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 16, padding: '0 6px' }}>
-                {timeline.map((ev, j) => (
-                  <button key={j} type="button" title={ev.event} onClick={() => goToStep(j)}
-                    style={{ flex: 1, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', position: 'relative', borderTop: `2px solid ${j <= step ? '#D71A28' : '#E9EDF1'}` }}>
-                    <span style={{ width: j === step ? 14 : 10, height: j === step ? 14 : 10, borderRadius: '50%', marginTop: -16, border: '2px solid #fff', boxShadow: '0 0 0 1px #E3E7EB', background: ev.flag ? flagColors[ev.flag] : j <= step ? '#D71A28' : '#C9CED4', transition: 'all .2s' }} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* TRANSACTION UNDER REVIEW */}
-          {heldTxn && (
-            <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
-              <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Transaction under review</div>
-              <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 18, padding: '16px 18px', background: '#FBF1F2', border: '1px solid #F2D9DB', borderRadius: 4, flexWrap: 'wrap' }}>
-                <div style={{ flex: 1, minWidth: 200 }}>
-                  <div style={{ fontWeight: 700, fontSize: 14 }}>Txn {txn?.txnRef}</div>
-                  <div style={{ fontSize: '12.5px', color: '#5A6976', marginTop: 3 }}>Held pending analyst decision</div>
-                </div>
-                {txn?.amount != null && <div style={{ fontFamily: 'Barlow', fontWeight: 800, fontSize: 22, color: '#1D1D1B' }}>{Number(txn.amount).toLocaleString()} {txn.currency || ''}</div>}
-                <Chip color={txnDecision === 'Held' ? '#D71A28' : txnDecision === 'Released' ? '#2FBF71' : '#B8121F'}>{txnDecision}</Chip>
-              </div>
-              {txnDecision === 'Held' && (
-                <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
-                  {actBtn('Release payment', () => runAction('RELEASE_PAYMENT', 'Analyst released the held payment', '✓ Payment released'), false)}
-                  {actBtn('Block payment', () => runAction('BLOCK_PAYMENT', 'Analyst blocked the held payment', '✕ Payment blocked'), true)}
-                </div>
-              )}
-            </div>
-          )}
 
           {/* ANALYST DISPOSITION */}
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
