@@ -67,6 +67,8 @@ export const dict: Record<string, string> = {
   Partners: 'Partenaires',
   'Contact Us': 'Nous contacter',
   Whitepaper: 'Livre blanc',
+  'Disrupting Fraud at Scale:': 'Perturber la fraude à grande échelle :',
+  'A New Paradigm for Fraud Prevention': 'Un nouveau paradigme pour la prévention de la fraude',
   "Why banks need an integrated approach to outpace today's fast-moving fraud threats.":
     'Pourquoi les banques ont besoin d’une approche intégrée pour devancer les menaces de fraude actuelles.',
   'Download Now →': 'Télécharger →',
