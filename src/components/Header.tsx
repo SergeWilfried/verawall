@@ -2,12 +2,15 @@ import { useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { solutionsMenu, platformTiles } from '../data/nav';
+import { useIsMobile } from '../useMediaQuery';
 
 type MenuName = 'solutions' | 'platform' | null;
 
 export function Header() {
   const { t, lang, setLang } = useLanguage();
+  const isMobile = useIsMobile();
   const [openMenu, setOpenMenu] = useState<MenuName>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const close = () => setOpenMenu(null);
 
@@ -57,6 +60,7 @@ export function Header() {
           </span>
         </Link>
 
+        {!isMobile && (
         <nav
           onMouseLeave={close}
           onKeyDown={onKeyDown}
@@ -241,7 +245,86 @@ export function Header() {
             </div>
           </div>
         </nav>
+        )}
+
+        {isMobile && (
+          <button
+            type="button"
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((o) => !o)}
+            style={{
+              marginLeft: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 5,
+              width: 44, height: 44, padding: 10, background: 'none', border: '1px solid #E0E5EA', borderRadius: 4, cursor: 'pointer',
+            }}
+          >
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                style={{
+                  display: 'block', height: 2, borderRadius: 2, background: '#1E262E',
+                  transition: 'transform .2s, opacity .2s',
+                  transform: mobileOpen ? (i === 0 ? 'translateY(7px) rotate(45deg)' : i === 2 ? 'translateY(-7px) rotate(-45deg)' : 'none') : 'none',
+                  opacity: mobileOpen && i === 1 ? 0 : 1,
+                }}
+              />
+            ))}
+          </button>
+        )}
       </div>
+
+      {isMobile && mobileOpen && (
+        <div
+          style={{
+            borderTop: '1px solid #E9EDF1', background: '#fff', padding: '10px 15px 22px',
+            maxHeight: 'calc(100vh - 84px)', overflowY: 'auto',
+          }}
+        >
+          <Link to="/#why" className="mobile-nav-item" onClick={() => setMobileOpen(false)}>
+            {t('Why VeraWall')}
+          </Link>
+
+          <div className="mobile-nav-heading">{t('Solutions')}</div>
+          {solutionsMenu.flat().map((group) => (
+            <div key={group.title}>
+              {group.to ? (
+                <Link to={group.to} className="mobile-nav-item" onClick={() => setMobileOpen(false)}>{t(group.title)}</Link>
+              ) : (
+                <div className="mobile-nav-item" style={{ color: '#7A8593' }}>{t(group.title)}</div>
+              )}
+              {group.links?.map((link) =>
+                link.to ? (
+                  <Link key={link.title} to={link.to} className="mobile-nav-item mobile-nav-sub" onClick={() => setMobileOpen(false)}>
+                    {t(link.title)}
+                  </Link>
+                ) : (
+                  <div key={link.title} className="mobile-nav-item mobile-nav-sub" style={{ color: '#9AA4AF' }}>{t(link.title)}</div>
+                ),
+              )}
+            </div>
+          ))}
+
+          <div className="mobile-nav-heading">{t('VeraWall Platform')}</div>
+          {platformTiles.map((tile) => (
+            <div key={tile.title} className="mobile-nav-item" style={{ color: '#5A6976' }}>{t(tile.title)}</div>
+          ))}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 20 }}>
+            <div style={{ display: 'flex', border: '1px solid #E0E5EA', borderRadius: 3, overflow: 'hidden' }}>
+              <button type="button" className="lang-btn" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>EN</button>
+              <button type="button" className="lang-btn" aria-pressed={lang === 'fr'} onClick={() => setLang('fr')}>FR</button>
+            </div>
+            <Link
+              to="/#contact"
+              className="btn-primary"
+              style={{ flex: 1, justifyContent: 'center', padding: '13px 14px', fontSize: '11.5px' }}
+              onClick={() => setMobileOpen(false)}
+            >
+              {t('Talk to a fraud fighter')}
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

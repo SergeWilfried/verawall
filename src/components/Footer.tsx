@@ -1,25 +1,27 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useIsMobile } from '../useMediaQuery';
 
 export function Footer() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const year = new Date().getFullYear();
 
   return (
     <div id="contact" style={{ background: '#1D1D1B', color: '#EAEAEA', marginTop: 40 }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '110px 15px 0' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '56px 15px 0' : '110px 15px 0' }}>
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
-            gap: 72,
+            gridTemplateColumns: isMobile ? '1fr' : '1.1fr 0.9fr',
+            gap: isMobile ? 40 : 72,
             alignItems: 'start',
-            paddingBottom: 90,
+            paddingBottom: isMobile ? 48 : 90,
             borderBottom: '1px solid rgba(255,255,255,0.16)',
           }}
         >
           <div>
-            <h2 style={{ fontSize: 58, lineHeight: 1.05, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28' }}>
+            <h2 style={{ fontSize: isMobile ? 34 : 58, lineHeight: 1.05, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28' }}>
               {t("Let's win the war against fraud")}
             </h2>
             <p style={{ fontSize: 19, color: '#EAEAEA', marginTop: 28, maxWidth: 560, lineHeight: 1.65 }}>
@@ -53,7 +55,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: 48, padding: '72px 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1.2fr 1fr 1fr 1fr', gap: isMobile ? 32 : 48, padding: isMobile ? '48px 0' : '72px 0' }}>
           <div style={{ fontSize: 15 }}>
             <div style={{ display: 'grid', gap: 28 }}>
               <div>

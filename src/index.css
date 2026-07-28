@@ -76,6 +76,36 @@ button {
   gap: 5px;
 }
 
+/* Mobile nav (hamburger) menu items */
+.mobile-nav-item {
+  display: block;
+  padding: 12px 6px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e262e;
+  text-decoration: none;
+  border-bottom: 1px solid #f0f2f5;
+}
+.mobile-nav-item:hover {
+  color: #d71a28;
+}
+.mobile-nav-sub {
+  padding-left: 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #5a6976;
+}
+.mobile-nav-heading {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #d71a28;
+  padding: 20px 6px 6px;
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;

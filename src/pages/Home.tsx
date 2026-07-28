@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { services, features, testimonials, heroSlides } from '../data/home';
 import { Seo } from '../components/Seo';
+import { useIsMobile } from '../useMediaQuery';
 
 const HERO_COUNT = heroSlides.length + 1; // + the static "win the war" slide
 
@@ -21,6 +22,7 @@ function slideStyle(active: boolean): React.CSSProperties {
 
 export function Home() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const [hero, setHero] = useState(HERO_COUNT - 1);
   const [testimonial, setTestimonial] = useState(0);
 
@@ -69,7 +71,7 @@ export function Home() {
           <div style={{ position: 'relative', width: '100%', minHeight: 520 }}>
             {heroSlides.map((slide, i) => (
               <div key={slide.title} style={slideStyle(hero === i)}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 48, alignItems: 'center', width: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.05fr 0.95fr', gap: isMobile ? 28 : 48, alignItems: 'center', width: '100%' }}>
                   <div>
                     <div
                       style={{
@@ -88,10 +90,10 @@ export function Home() {
                     >
                       {t(slide.kicker)}
                     </div>
-                    <h1 style={{ fontSize: 54, lineHeight: 1.06, fontWeight: 800 }}>
+                    <h1 style={{ fontSize: isMobile ? 38 : 54, lineHeight: 1.06, fontWeight: 800 }}>
                       {t(slide.title)} <span style={{ color: '#D71A28' }}>{t(slide.titleAccent)}</span>
                     </h1>
-                    <p style={{ fontSize: 19, color: '#5A6976', marginTop: 22, maxWidth: 520, lineHeight: 1.6 }}>{t(slide.body)}</p>
+                    <p style={{ fontSize: isMobile ? 16 : 19, color: '#5A6976', marginTop: 22, maxWidth: 520, lineHeight: 1.6 }}>{t(slide.body)}</p>
                     <a
                       href="#"
                       className="btn-primary"
@@ -101,7 +103,7 @@ export function Home() {
                       {t(slide.cta)}
                     </a>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ display: isMobile ? 'none' : 'flex', justifyContent: 'center' }}>
                     <img
                       src={slide.image}
                       alt=""
@@ -114,10 +116,10 @@ export function Home() {
 
             <div key="static" style={slideStyle(hero === HERO_COUNT - 1)}>
               <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center' }}>
-                <h1 style={{ fontSize: 76, lineHeight: 1.02, fontWeight: 800, textTransform: 'uppercase' }}>
+                <h1 style={{ fontSize: isMobile ? 46 : 76, lineHeight: 1.02, fontWeight: 800, textTransform: 'uppercase' }}>
                   {t('Win the war')} <span style={{ color: '#D71A28' }}>{t('against fraud')}</span>
                 </h1>
-                <p style={{ fontSize: 21, color: '#5A6976', marginTop: 26, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
+                <p style={{ fontSize: isMobile ? 17 : 21, color: '#5A6976', marginTop: 26, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>
                   {t(
                     "Protecting people and their transactions, one touch at a time. Let's fight this battle together: disrupt the fraud, win the war.",
                   )}
@@ -164,8 +166,8 @@ export function Home() {
               mixBlendMode: 'multiply',
             }}
           />
-          <div style={{ position: 'relative', maxWidth: 900, margin: '0 auto', padding: '100px 48px', textAlign: 'center' }}>
-            <h2 style={{ fontSize: 44, lineHeight: 1.15, fontWeight: 700, color: '#fff' }}>
+          <div style={{ position: 'relative', maxWidth: 900, margin: '0 auto', padding: isMobile ? '56px 24px' : '100px 48px', textAlign: 'center' }}>
+            <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.15, fontWeight: 700, color: '#fff' }}>
               {t("Traditional fraud detection tools aren't cutting it.")}
             </h2>
             <p style={{ fontSize: 19, color: 'rgba(255,255,255,0.94)', marginTop: 28, lineHeight: 1.7 }}>
@@ -183,14 +185,14 @@ export function Home() {
       {/* FRAUD TYPE CARDS */}
       <section style={{ maxWidth: 1080, margin: '0 auto', padding: '80px 15px 60px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto 56px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 40, lineHeight: 1.15, fontWeight: 700 }}>{t('From scams to mules, VeraWall can help.')}</h2>
+          <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.15, fontWeight: 700 }}>{t('From scams to mules, VeraWall can help.')}</h2>
           <p style={{ fontSize: 18, color: '#5A6976', marginTop: 24, lineHeight: 1.7 }}>
             {t(
               "In this world of constantly increasing fraud threats, we've reimagined protection. We've created the means of disrupting the fraudsters' infrastructure — a platform that not only mitigates scams, phishing and unauthorized access, it interrupts fraud operations across all stages of the attack. We help stop fraud before it happens.",
             )}
           </p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 24 }}>
           {services.map((svc) => (
             <a key={svc.title} href="#" className="card-link" onClick={(e) => e.preventDefault()}>
               <div style={{ width: 56, height: 56, marginBottom: 26 }}>
@@ -207,20 +209,20 @@ export function Home() {
       </section>
 
       {/* SCAMS SPLIT */}
-      <section style={{ maxWidth: 1050, aspectRatio: '1050 / 462', margin: '0 auto', padding: '60px 32px' }}>
+      <section style={{ maxWidth: 1050, aspectRatio: isMobile ? undefined : '1050 / 462', margin: '0 auto', padding: isMobile ? '32px 16px' : '60px 32px' }}>
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 56,
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: isMobile ? 28 : 56,
             alignItems: 'center',
             background: '#F7F8FA',
             borderRadius: 6,
-            padding: 56,
+            padding: isMobile ? 28 : 56,
           }}
         >
           <div>
-            <h2 style={{ fontSize: 34, lineHeight: 1.18, fontWeight: 700 }}>
+            <h2 style={{ fontSize: isMobile ? 26 : 34, lineHeight: 1.18, fontWeight: 700 }}>
               {t('Winning the war against scams and social engineering.')}
             </h2>
             <p style={{ fontSize: '16.5px', color: '#5A6976', marginTop: 22, lineHeight: 1.7 }}>
@@ -239,27 +241,27 @@ export function Home() {
       </section>
 
       {/* PHISHING SPLIT */}
-      <section style={{ maxWidth: 1050, aspectRatio: '1050 / 462', margin: '0 auto', padding: '0 32px 60px' }}>
+      <section style={{ maxWidth: 1050, aspectRatio: isMobile ? undefined : '1050 / 462', margin: '0 auto', padding: isMobile ? '0 16px 32px' : '0 32px 60px' }}>
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 56,
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: isMobile ? 28 : 56,
             alignItems: 'center',
             background: '#F7F8FA',
             borderRadius: 6,
-            padding: 56,
+            padding: isMobile ? 28 : 56,
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'center', order: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', order: isMobile ? 2 : 1 }}>
             <img
               src="https://www.threatmark.com/wp-content/uploads/2025/01/image-3.webp"
               alt=""
               style={{ maxWidth: '100%', borderRadius: 6 }}
             />
           </div>
-          <div style={{ order: 2 }}>
-            <h2 style={{ fontSize: 34, lineHeight: 1.18, fontWeight: 700 }}>{t('Enhance your defenses against phishing.')}</h2>
+          <div style={{ order: isMobile ? 1 : 2 }}>
+            <h2 style={{ fontSize: isMobile ? 26 : 34, lineHeight: 1.18, fontWeight: 700 }}>{t('Enhance your defenses against phishing.')}</h2>
             <p style={{ fontSize: '16.5px', color: '#5A6976', marginTop: 22, lineHeight: 1.7 }}>
               {t('Phishing is the primary catalyst for over')} <span style={{ color: '#D71A28', fontWeight: 700 }}>90%</span>{' '}
               {t('of cyber attacks. Real-time detection and mitigation is crucial to limiting fraudsters\' opportunity to harvest sensitive data, safeguarding digital interactions and preventing the misuse of stolen credentials.')}
@@ -285,7 +287,7 @@ export function Home() {
             border: '1px solid #E3E7EB',
             borderRadius: 6,
             boxShadow: '0 16px 44px rgba(30,40,50,0.07)',
-            padding: '56px 64px',
+            padding: isMobile ? '36px 24px 64px' : '56px 64px',
             minHeight: 300,
             display: 'flex',
             flexDirection: 'column',
@@ -293,7 +295,7 @@ export function Home() {
           }}
         >
           <div style={{ fontSize: 72, lineHeight: 0.5, color: '#D71A28', fontFamily: 'Barlow', fontWeight: 800, marginBottom: 8 }}>"</div>
-          <blockquote style={{ fontFamily: 'Barlow', fontSize: 26, lineHeight: 1.4, fontWeight: 600, color: '#3E4753' }}>
+          <blockquote style={{ fontFamily: 'Barlow', fontSize: isMobile ? 20 : 26, lineHeight: 1.4, fontWeight: 600, color: '#3E4753' }}>
             {current.quote}
           </blockquote>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginTop: 34 }}>
@@ -331,13 +333,13 @@ export function Home() {
       <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px' }}>
         <div style={{ height: 1, background: '#E9EDF1' }} />
       </div>
-      <section style={{ position: 'relative', padding: '90px 15px', overflow: 'hidden' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: 56, alignItems: 'center' }}>
+      <section style={{ position: 'relative', padding: isMobile ? '56px 15px' : '90px 15px', overflow: 'hidden' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.15fr 0.85fr', gap: isMobile ? 28 : 56, alignItems: 'center' }}>
           <div style={{ position: 'relative' }}>
             <img src="https://www.threatmark.com/wp-content/uploads/2025/01/Map-2024.webp" alt="Global coverage" style={{ width: '100%' }} />
           </div>
           <div>
-            <h2 style={{ fontSize: 40, lineHeight: 1.12, fontWeight: 700 }}>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, fontWeight: 700 }}>
               <span style={{ color: '#D71A28' }}>40+ million</span> {t('online users protected.')}
             </h2>
             <p style={{ fontSize: 17, color: '#5A6976', marginTop: 22, lineHeight: 1.7 }}>
@@ -358,7 +360,7 @@ export function Home() {
       </div>
       <section style={{ maxWidth: 1080, margin: '0 auto', padding: '90px 15px 80px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto 56px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 40, lineHeight: 1.15, fontWeight: 700 }}>{t('Revolutionizing fraud prevention.')}</h2>
+          <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.15, fontWeight: 700 }}>{t('Revolutionizing fraud prevention.')}</h2>
           <p style={{ fontSize: 18, color: '#5A6976', marginTop: 22, lineHeight: 1.7 }}>
             {t(
               "The world's first full-stack fraud prevention platform built on behavior intelligence. It combines transaction risk analysis, threat detection and user behavior profiling in one integrated platform.",
@@ -368,7 +370,7 @@ export function Home() {
             {t('Learn More')}
           </a>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4,1fr)', gap: 24 }}>
           {features.map((f) => (
             <div key={f.n} style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: '34px 28px' }}>
               <div
@@ -411,7 +413,7 @@ export function Home() {
         >
           {t('Newsroom')}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 24 }}>
           <a href="#" className="news-card" onClick={(e) => e.preventDefault()}>
             <img src="https://www.threatmark.com/wp-content/uploads/2025/09/ScamFlag-Promo-1-548x200.png" alt="" style={{ width: '100%', display: 'block' }} />
             <div style={{ padding: '30px 32px' }}>
