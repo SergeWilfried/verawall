@@ -1,0 +1,93 @@
+{
+  "login": {
+    "titleSignin": "Connexion à la console BIP",
+    "titleMfa": "Authentification à deux facteurs",
+    "subtitleDefault": "Accès analyste · Espace Demo Bank · UE (Francfort)",
+    "mfaSubject": "Connexion en tant que",
+    "mfaHint": "saisissez le code de votre application d'authentification.",
+    "errorEmailRequired": "Saisissez votre e-mail analyste pour vous connecter.",
+    "fieldEmail": "E-mail analyste",
+    "fieldPassword": "Mot de passe",
+    "fieldCode": "Code à 6 chiffres",
+    "submitSignin": "Se connecter",
+    "submitSigningIn": "Connexion…",
+    "submitVerify": "Vérifier et se connecter",
+    "differentAccount": "← Utiliser un autre compte",
+    "ssoNote": "L'authentification unique (SAML) et l'application des clés matérielles sont configurées par espace dans les Paramètres de la plateforme.",
+    "footerBootstrap": "Amorçage espace démo :",
+    "footerMonitoring": "Les sessions sont protégées par la surveillance comportementale VeraWall."
+  },
+  "nav": {
+    "groups": {
+      "monitoring": "Surveillance",
+      "investigation": "Investigation",
+      "intelligence": "Renseignement",
+      "administration": "Administration"
+    },
+    "items": {
+      "overview": "Vue d'ensemble",
+      "alerts": "File d'alertes",
+      "detections": "Détections",
+      "transactionRisk": "Risque transactionnel",
+      "cases": "Gestion des dossiers",
+      "scamflag": "ScamFlag",
+      "fraudintel": "FraudIntel",
+      "riskPolicies": "Politiques de risque",
+      "reporting": "Rapports",
+      "settings": "Paramètres de la plateforme"
+    }
+  },
+  "sidebar": {
+    "fusionCenter": "Centre de fusion cyberfraude",
+    "monitoring": "En direct — surveillance 24/7"
+  },
+  "topbar": {
+    "tenantLabel": "Espace",
+    "searchPlaceholder": "Rechercher un ID d'alerte, un utilisateur, un compte…"
+  },
+  "search": {
+    "alerts": "Alertes",
+    "subjects": "Sujets",
+    "noMatches": "Aucun résultat pour « {{q}} ».",
+    "unclassified": "Non classé",
+    "alertCount_one": "{{count}} alerte",
+    "alertCount_other": "{{count}} alertes"
+  },
+  "userMenu": {
+    "signOut": "Se déconnecter",
+    "twoFA": "2FA activée",
+    "language": "Langue"
+  },
+  "overview": {
+    "kpiOpenAlerts": "Alertes ouvertes",
+    "kpiOpenAlertsSub": "en attente de revue analyste",
+    "kpiSessions24h": "Sessions — 24 h",
+    "kpiSessions24hSub": "sessions comportementales ingérées",
+    "kpiHeld30d": "Bloquées — 30 jours",
+    "kpiHeld30dSub": "paiements orientés vers la revue",
+    "kpiKnownUsers": "Utilisateurs connus",
+    "kpiKnownUsersSub": "profils pseudonymisés",
+    "chartTitle": "Pertes de fraude évitées — 8 semaines",
+    "demoData": "données démo",
+    "latestActivity": "Activité récente",
+    "noActivity": "Aucune activité récente — les alertes, actions analystes et dossiers s'afficheront ici.",
+    "platformModules": "Modules de la plateforme",
+    "topThreats": "Principales menaces",
+    "noDetections": "Aucune détection pour l'instant — les types de menaces se classeront ici dès que des alertes se déclencheront.",
+    "openTotal": "{{open}} ouvertes · {{count}} au total",
+    "allDetections": "Toutes les détections",
+    "activityAlertRaised": "Alerte {{id}} déclenchée",
+    "activityCaseOpened": "Dossier {{id}} ouvert",
+    "activityAction": "Action {{id}}",
+    "relJustNow": "à l'instant",
+    "relMinAgo": "il y a {{m}} min",
+    "relHAgo": "il y a {{h}} h",
+    "relDAgo": "il y a {{d}} j"
+  },
+  "settingsLanguage": {
+    "title": "Langue",
+    "desc": "Langue par défaut de la console pour cet espace. Les analystes peuvent la remplacer individuellement.",
+    "en": "English",
+    "fr": "Français"
+  }
+}

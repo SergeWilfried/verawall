@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useConsoleTitle } from '../TitleContext';
 import { weekData, moduleDefs } from '../../data/console/overview';
 import { consoleApi } from '../api';
@@ -8,32 +10,36 @@ import { Skeleton } from '../components/Skeleton';
 import { EmptyInline } from '../components/EmptyState';
 import { PulseArt } from '../components/emptyArt';
 
-const DemoTag = () => (
-  <span style={{ fontFamily: 'Barlow', fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.08em',
-    textTransform: 'uppercase', color: '#9DA2A7', background: '#F0F2F5', borderRadius: 3, padding: '2px 6px' }}>
-    demo data
-  </span>
-);
+const DemoTag = () => {
+  const { t } = useTranslation();
+  return (
+    <span style={{ fontFamily: 'Barlow', fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.08em',
+      textTransform: 'uppercase', color: '#9DA2A7', background: '#F0F2F5', borderRadius: 3, padding: '2px 6px' }}>
+      {t('overview.demoData')}
+    </span>
+  );
+};
 
 const activityColor: Record<string, string> = { alert: '#D71A28', action: '#E67E22', case: '#2C7BB6' };
 
-function presentActivity(a: ActivityItem): { what: string; detail: string } {
-  if (a.kind === 'alert') return { what: `Alert ${a.id} raised`, detail: a.threat_type ? `— ${a.threat_type}: ${a.detail}` : `— ${a.detail}` };
-  if (a.kind === 'case') return { what: `Case ${a.id} opened`, detail: a.detail ? `— ${a.detail}` : '' };
+function presentActivity(a: ActivityItem, t: TFunction): { what: string; detail: string } {
+  if (a.kind === 'alert') return { what: t('overview.activityAlertRaised', { id: a.id }), detail: a.threat_type ? `— ${a.threat_type}: ${a.detail}` : `— ${a.detail}` };
+  if (a.kind === 'case') return { what: t('overview.activityCaseOpened', { id: a.id }), detail: a.detail ? `— ${a.detail}` : '' };
   const kind = a.detail.replace(/_/g, ' ').toLowerCase();
-  return { what: `Action ${a.id}`, detail: `— ${kind}` };
+  return { what: t('overview.activityAction', { id: a.id }), detail: `— ${kind}` };
 }
 
-const relTime = (iso: string) => {
+const relTime = (iso: string, t: TFunction) => {
   const m = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m} min ago`;
+  if (m < 1) return t('overview.relJustNow');
+  if (m < 60) return t('overview.relMinAgo', { m });
   const h = Math.round(m / 60);
-  return h < 24 ? `${h}h ago` : `${Math.round(h / 24)}d ago`;
+  return h < 24 ? t('overview.relHAgo', { h }) : t('overview.relDAgo', { d: Math.round(h / 24) });
 };
 
 export function Overview() {
-  useConsoleTitle('Overview');
+  const { t } = useTranslation();
+  useConsoleTitle(t('nav.items.overview'));
   const navigate = useNavigate();
   const maxWeek = Math.max(...weekData.map((w) => w.v));
 
@@ -44,10 +50,10 @@ export function Overview() {
 
   const dash = (v: number | undefined) => (v === undefined ? '—' : String(v));
   const kpis = [
-    { label: 'Open alerts', value: dash(stats?.openAlerts), sub: 'awaiting analyst review' },
-    { label: 'Sessions — 24h', value: dash(stats?.sessionsLast24h), sub: 'ingested behavioral sessions' },
-    { label: 'Held — 30 days', value: dash(stats?.decisionsLast30d?.held), sub: 'payments routed to review' },
-    { label: 'Known users', value: dash(stats?.knownUsers), sub: 'pseudonymous profiles' },
+    { label: t('overview.kpiOpenAlerts'), value: dash(stats?.openAlerts), sub: t('overview.kpiOpenAlertsSub') },
+    { label: t('overview.kpiSessions24h'), value: dash(stats?.sessionsLast24h), sub: t('overview.kpiSessions24hSub') },
+    { label: t('overview.kpiHeld30d'), value: dash(stats?.decisionsLast30d?.held), sub: t('overview.kpiHeld30dSub') },
+    { label: t('overview.kpiKnownUsers'), value: dash(stats?.knownUsers), sub: t('overview.kpiKnownUsersSub') },
   ];
 
   return (
@@ -75,7 +81,7 @@ export function Overview() {
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Fraud losses prevented — 8 weeks</div>
+                <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>{t('overview.chartTitle')}</div>
                 <DemoTag />
               </div>
               <div style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, color: '#D71A28' }}>Σ 9.6M Kč</div>
@@ -103,7 +109,7 @@ export function Overview() {
 
           {/* ACTIVITY FEED — live from GET /v1/console/activity */}
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
-            <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Latest activity</div>
+            <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>{t('overview.latestActivity')}</div>
             <div style={{ display: 'flex', flexDirection: 'column', marginTop: 14 }}>
               {!activity && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -122,12 +128,12 @@ export function Overview() {
                 <EmptyInline message={
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ color: '#C9CED4', display: 'flex' }}><PulseArt size={22} /></span>
-                    No recent activity — alerts, analyst actions and cases will stream in here.
+                    {t('overview.noActivity')}
                   </span>
                 } />
               )}
               {(activity ?? []).map((ac, i) => {
-                const p = presentActivity(ac);
+                const p = presentActivity(ac, t);
                 const to = ac.kind === 'alert' ? `/console/alerts/${ac.id}` : ac.kind === 'case' ? '/console/cases' : null;
                 return (
                   <div
@@ -140,7 +146,7 @@ export function Overview() {
                       <span style={{ fontWeight: 700 }}>{p.what}</span>{' '}
                       <span style={{ color: '#5A6976' }}>{p.detail}</span>
                     </div>
-                    <div style={{ fontSize: '11.5px', color: '#7A8593', whiteSpace: 'nowrap' }}>{relTime(ac.at)}</div>
+                    <div style={{ fontSize: '11.5px', color: '#7A8593', whiteSpace: 'nowrap' }}>{relTime(ac.at, t)}</div>
                   </div>
                 );
               })}
@@ -151,7 +157,7 @@ export function Overview() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* MODULE HEALTH */}
           <div style={{ background: '#1D1D1B', color: '#EAEAEA', borderRadius: 6, padding: 22 }}>
-            <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700, color: '#fff' }}>Platform modules</div>
+            <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700, color: '#fff' }}>{t('overview.platformModules')}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
               {moduleDefs.map((m) => (
                 <div key={m.name} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -165,9 +171,9 @@ export function Overview() {
 
           {/* TOP THREATS — live from GET /v1/console/detections */}
           <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, padding: 22 }}>
-            <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Top threats</div>
+            <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>{t('overview.topThreats')}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
-              {topThreats.length === 0 && <EmptyInline message="No detections yet — threat types rank here once alerts fire." />}
+              {topThreats.length === 0 && <EmptyInline message={t('overview.noDetections')} />}
               {topThreats.map((d) => (
                 <button
                   key={d.threat_type}
@@ -181,7 +187,7 @@ export function Overview() {
                 >
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: 13, fontWeight: 700 }}>{d.threat_type}</div>
-                    <div style={{ fontSize: '11.5px', color: '#7A8593' }}>{d.open} open · {d.count} total</div>
+                    <div style={{ fontSize: '11.5px', color: '#7A8593' }}>{t('overview.openTotal', { open: d.open, count: d.count })}</div>
                   </div>
                   <div style={{ fontFamily: 'Barlow', fontWeight: 800, fontSize: 18, color: '#D71A28' }}>{d.count}</div>
                 </button>
@@ -196,7 +202,7 @@ export function Overview() {
                 letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer',
               }}
             >
-              All detections
+              {t('overview.allDetections')}
             </button>
           </div>
         </div>

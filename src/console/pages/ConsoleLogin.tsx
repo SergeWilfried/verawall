@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth';
 import { AuthError, AuthField, AuthShell, AuthSubmit } from '../components/AuthShell';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 
 export function ConsoleLogin() {
+  const { t } = useTranslation();
   const { session, signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +26,7 @@ export function ConsoleLogin() {
     e.preventDefault();
     setError('');
     if (!email.trim()) {
-      setError('Enter your analyst email to sign in.');
+      setError(t('login.errorEmailRequired'));
       return;
     }
     setBusy(true);
@@ -44,7 +47,7 @@ export function ConsoleLogin() {
     <AuthShell
       footer={
         <>
-          Demo tenant bootstrap:&nbsp;
+          {t('login.footerBootstrap')}&nbsp;
           <button
             type="button"
             onClick={() => { setEmail('admin@demobank.cz'); setPassword('admin-dev-password'); setError(''); }}
@@ -55,17 +58,20 @@ export function ConsoleLogin() {
           >
             admin@demobank.cz / admin-dev-password
           </button>
-          <div style={{ marginTop: 10 }}>Sessions are protected by VeraWall behavioral monitoring.</div>
+          <div style={{ marginTop: 10 }}>{t('login.footerMonitoring')}</div>
+          <div style={{ marginTop: 14, display: 'flex', justifyContent: 'center' }}>
+            <LanguageSwitch variant="dark" />
+          </div>
         </>
       }
     >
       <h1 style={{ fontFamily: 'Barlow', fontSize: 20, fontWeight: 700, color: '#1E262E', margin: 0 }}>
-        {mfaStep ? 'Two-factor authentication' : 'Sign in to the BIP Console'}
+        {mfaStep ? t('login.titleMfa') : t('login.titleSignin')}
       </h1>
       <div style={{ fontSize: '12.5px', color: '#7A8593', marginTop: 4, marginBottom: 18 }}>
         {mfaStep
-          ? <>Signing in as <strong>{email.trim()}</strong> — enter the code from your authenticator app.</>
-          : 'Analyst access · Demo Bank tenant · EU (Frankfurt)'}
+          ? <>{t('login.mfaSubject')} <strong>{email.trim()}</strong> — {t('login.mfaHint')}</>
+          : t('login.subtitleDefault')}
       </div>
 
       <form onSubmit={submit} noValidate>
@@ -73,7 +79,7 @@ export function ConsoleLogin() {
         {!mfaStep && (
           <>
             <AuthField
-              label="Analyst email"
+              label={t('login.fieldEmail')}
               type="email"
               value={email}
               onChange={(v) => { setEmail(v); setError(''); }}
@@ -82,7 +88,7 @@ export function ConsoleLogin() {
               autoFocus
             />
             <AuthField
-              label="Password"
+              label={t('login.fieldPassword')}
               type="password"
               value={password}
               onChange={(v) => { setPassword(v); setError(''); }}
@@ -93,7 +99,7 @@ export function ConsoleLogin() {
         )}
         {mfaStep && (
           <AuthField
-            label="6-digit code"
+            label={t('login.fieldCode')}
             value={code}
             onChange={(v) => { setCode(v.replace(/[^\d]/g, '')); setError(''); }}
             placeholder="000000"
@@ -106,7 +112,7 @@ export function ConsoleLogin() {
         )}
         <div style={{ marginTop: 18 }}>
           <AuthSubmit busy={busy}>
-            {busy ? 'Signing in…' : mfaStep ? 'Verify & sign in' : 'Sign in'}
+            {busy ? t('login.submitSigningIn') : mfaStep ? t('login.submitVerify') : t('login.submitSignin')}
           </AuthSubmit>
         </div>
         {mfaStep && (
@@ -118,14 +124,14 @@ export function ConsoleLogin() {
               color: '#7A8593', fontSize: '12px', fontWeight: 600,
             }}
           >
-            ← Use a different account
+            {t('login.differentAccount')}
           </button>
         )}
       </form>
 
       {!mfaStep && (
         <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #EEF1F4', fontSize: '11.5px', color: '#7A8593' }}>
-          Single sign-on (SAML) and hardware-key enforcement are configured per tenant in Platform Settings.
+          {t('login.ssoNote')}
         </div>
       )}
     </AuthShell>

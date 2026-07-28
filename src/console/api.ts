@@ -257,6 +257,9 @@ export interface TenantSettings {
     sessionIngestion: number;
     currency?: string; // primary operating currency (single-currency tenants)
   };
+  // Default console language for this tenant ('en' | 'fr'); analysts can
+  // override it for themselves. Absent when the collector predates the feature.
+  language?: string;
   notifications: Record<string, boolean>;
   modules: Record<string, boolean>;
   integrations: { name: string; detail: string; status: string; ok: boolean }[];

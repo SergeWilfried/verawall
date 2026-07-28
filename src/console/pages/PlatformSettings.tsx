@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useConsoleTitle } from '../TitleContext';
 import { Skeleton, SkeletonLines } from '../components/Skeleton';
 import { EmptyState } from '../components/EmptyState';
@@ -309,6 +310,7 @@ const tenantFields: { key: keyof TenantSettings['tenant']; label: string; editab
 ];
 
 export function PlatformSettings() {
+  const { t } = useTranslation();
   useConsoleTitle('Platform Settings');
   const { session } = useAuth();
   const isAdmin = session?.role === 'Admin';
@@ -335,6 +337,7 @@ export function PlatformSettings() {
     setDraft((d) => d && ({ ...d, modules: { ...d.modules, [k]: v } }));
   const setTenant = (k: string, v: string) =>
     setDraft((d) => d && ({ ...d, tenant: { ...d.tenant, [k]: v } }));
+  const setLanguage = (v: string) => setDraft((d) => d && ({ ...d, language: v }));
   const setHighAmount = (ccy: string, v: number) =>
     setDraft((d) => d && ({
       ...d,
@@ -354,6 +357,7 @@ export function PlatformSettings() {
     try {
       const updated = await consoleApi.patchSettings({
         tenant: draft.tenant, notifications: draft.notifications, modules: draft.modules,
+        ...(draft.language ? { language: draft.language } : {}),
         ...(draft.risk ? { risk: draft.risk } : {}),
       });
       setDraft(structuredClone(updated));
@@ -426,7 +430,26 @@ export function PlatformSettings() {
                     )}
                   </div>
                 ))}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '10px 0', fontSize: '12.5px' }}>
+                  <span style={{ color: '#7A8593', whiteSpace: 'nowrap' }}>{t('settingsLanguage.title')}</span>
+                  {isAdmin ? (
+                    <select
+                      value={draft.language ?? 'en'}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      aria-label={t('settingsLanguage.title')}
+                      style={{ fontWeight: 700, textAlign: 'right', fontFamily: 'Open Sans', fontSize: '12.5px', color: '#1E262E', border: '1px solid #E3E7EB', borderRadius: 3, padding: '6px 10px', minWidth: 180, background: '#fff' }}
+                    >
+                      <option value="en">{t('settingsLanguage.en')}</option>
+                      <option value="fr">{t('settingsLanguage.fr')}</option>
+                    </select>
+                  ) : (
+                    <span style={{ fontWeight: 700, textAlign: 'right' }}>
+                      {draft.language === 'fr' ? t('settingsLanguage.fr') : t('settingsLanguage.en')}
+                    </span>
+                  )}
+                </div>
               </div>
+              <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 10 }}>{t('settingsLanguage.desc')}</div>
             </div>
           )}
 

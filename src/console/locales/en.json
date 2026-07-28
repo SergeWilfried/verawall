@@ -1,0 +1,93 @@
+{
+  "login": {
+    "titleSignin": "Sign in to the BIP Console",
+    "titleMfa": "Two-factor authentication",
+    "subtitleDefault": "Analyst access · Demo Bank tenant · EU (Frankfurt)",
+    "mfaSubject": "Signing in as",
+    "mfaHint": "enter the code from your authenticator app.",
+    "errorEmailRequired": "Enter your analyst email to sign in.",
+    "fieldEmail": "Analyst email",
+    "fieldPassword": "Password",
+    "fieldCode": "6-digit code",
+    "submitSignin": "Sign in",
+    "submitSigningIn": "Signing in…",
+    "submitVerify": "Verify & sign in",
+    "differentAccount": "← Use a different account",
+    "ssoNote": "Single sign-on (SAML) and hardware-key enforcement are configured per tenant in Platform Settings.",
+    "footerBootstrap": "Demo tenant bootstrap:",
+    "footerMonitoring": "Sessions are protected by VeraWall behavioral monitoring."
+  },
+  "nav": {
+    "groups": {
+      "monitoring": "Monitoring",
+      "investigation": "Investigation",
+      "intelligence": "Intelligence",
+      "administration": "Administration"
+    },
+    "items": {
+      "overview": "Overview",
+      "alerts": "Alert Queue",
+      "detections": "Detections",
+      "transactionRisk": "Transaction Risk",
+      "cases": "Case Management",
+      "scamflag": "ScamFlag",
+      "fraudintel": "FraudIntel",
+      "riskPolicies": "Risk Policies",
+      "reporting": "Reporting",
+      "settings": "Platform Settings"
+    }
+  },
+  "sidebar": {
+    "fusionCenter": "Cyber Fraud Fusion Center",
+    "monitoring": "Live — 24/7 monitoring"
+  },
+  "topbar": {
+    "tenantLabel": "Tenant",
+    "searchPlaceholder": "Search alert id, user, account…"
+  },
+  "search": {
+    "alerts": "Alerts",
+    "subjects": "Subjects",
+    "noMatches": "No matches for “{{q}}”.",
+    "unclassified": "Unclassified",
+    "alertCount_one": "{{count}} alert",
+    "alertCount_other": "{{count}} alerts"
+  },
+  "userMenu": {
+    "signOut": "Sign out",
+    "twoFA": "2FA on",
+    "language": "Language"
+  },
+  "overview": {
+    "kpiOpenAlerts": "Open alerts",
+    "kpiOpenAlertsSub": "awaiting analyst review",
+    "kpiSessions24h": "Sessions — 24h",
+    "kpiSessions24hSub": "ingested behavioral sessions",
+    "kpiHeld30d": "Held — 30 days",
+    "kpiHeld30dSub": "payments routed to review",
+    "kpiKnownUsers": "Known users",
+    "kpiKnownUsersSub": "pseudonymous profiles",
+    "chartTitle": "Fraud losses prevented — 8 weeks",
+    "demoData": "demo data",
+    "latestActivity": "Latest activity",
+    "noActivity": "No recent activity — alerts, analyst actions and cases will stream in here.",
+    "platformModules": "Platform modules",
+    "topThreats": "Top threats",
+    "noDetections": "No detections yet — threat types rank here once alerts fire.",
+    "openTotal": "{{open}} open · {{count}} total",
+    "allDetections": "All detections",
+    "activityAlertRaised": "Alert {{id}} raised",
+    "activityCaseOpened": "Case {{id}} opened",
+    "activityAction": "Action {{id}}",
+    "relJustNow": "just now",
+    "relMinAgo": "{{m}} min ago",
+    "relHAgo": "{{h}}h ago",
+    "relDAgo": "{{d}}d ago"
+  },
+  "settingsLanguage": {
+    "title": "Language",
+    "desc": "Default console language for this tenant. Analysts can override it for themselves.",
+    "en": "English",
+    "fr": "Français"
+  }
+}

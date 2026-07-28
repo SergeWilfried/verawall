@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { navGroups } from '../data/console/nav';
 import { roleColors } from '../data/console/settings';
 import { ConsoleTitleProvider, useConsoleTitleValue } from './TitleContext';
@@ -9,8 +10,11 @@ import type { SearchResults } from './api';
 import { scoreColor } from '../data/console/alerts';
 import { useApi } from './useApi';
 import { Chip } from './components/Chip';
+import { LanguageSwitch } from './components/LanguageSwitch';
+import { applyTenantDefault } from './i18n';
 
 function Sidebar() {
+  const { t } = useTranslation();
   // Live open-alert count overrides the static "Alert Queue" badge.
   const { data: stats } = useApi(() => consoleApi.overview(), []);
   const liveBadge = (to?: string) =>
@@ -30,7 +34,7 @@ function Sidebar() {
 
       <nav style={{ display: 'flex', flexDirection: 'column', padding: '4px 12px 12px', gap: 2, overflowY: 'auto' }}>
         {navGroups.map((group) => (
-          <div key={group.title}>
+          <div key={group.id}>
             <div
               style={{
                 padding: '16px 8px 6px',
@@ -42,12 +46,12 @@ function Sidebar() {
                 color: '#8A8F94',
               }}
             >
-              {group.title}
+              {t(`nav.groups.${group.id}`)}
             </div>
             {group.items.map((item) =>
               item.to ? (
                 <NavLink
-                  key={item.label}
+                  key={item.id}
                   to={item.to}
                   style={({ isActive }) => ({
                     display: 'flex',
@@ -71,7 +75,7 @@ function Sidebar() {
                     const badge = liveBadge(item.to) ?? item.badge;
                     return (
                       <>
-                        {item.label}
+                        {t(`nav.items.${item.id}`)}
                         {badge && (
                           <span
                             style={{
@@ -92,7 +96,7 @@ function Sidebar() {
                 </NavLink>
               ) : (
                 <span
-                  key={item.label}
+                  key={item.id}
                   title="Not included in this preview"
                   style={{
                     display: 'flex',
@@ -109,7 +113,7 @@ function Sidebar() {
                     cursor: 'default',
                   }}
                 >
-                  {item.label}
+                  {t(`nav.items.${item.id}`)}
                   {item.badge && (
                     <span
                       style={{
@@ -132,10 +136,10 @@ function Sidebar() {
       </nav>
 
       <div style={{ marginTop: 'auto', padding: '18px 20px', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-        <div style={{ fontSize: 12, color: '#8A8F94' }}>Cyber Fraud Fusion Center</div>
+        <div style={{ fontSize: 12, color: '#8A8F94' }}>{t('sidebar.fusionCenter')}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#2FBF71', display: 'inline-block' }} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#EAEAEA' }}>Live — 24/7 monitoring</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#EAEAEA' }}>{t('sidebar.monitoring')}</span>
         </div>
       </div>
     </aside>
@@ -146,6 +150,7 @@ function Sidebar() {
 // Debounced; the dropdown groups alerts and subjects, Enter opens the first
 // hit, Escape/click-outside closes.
 function GlobalSearch() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [q, setQ] = useState('');
   const [res, setRes] = useState<SearchResults | null>(null);
@@ -197,35 +202,35 @@ function GlobalSearch() {
           onChange={(e) => setQ(e.target.value)}
           onFocus={() => { if (res) setOpen(true); }}
           onKeyDown={(e) => { if (e.key === 'Enter') first(); if (e.key === 'Escape') setOpen(false); }}
-          placeholder="Search alert id, user, account…"
-          aria-label="Search alerts and subjects"
+          placeholder={t('topbar.searchPlaceholder')}
+          aria-label={t('topbar.searchPlaceholder')}
           style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', padding: '9px 0', fontSize: 13, color: '#1E262E' }}
         />
       </div>
 
       {open && (alerts.length > 0 || subjects.length > 0 || empty) && (
         <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, width: 340, background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6, boxShadow: '0 6px 16px rgba(30,38,46,0.12)', zIndex: 50, overflow: 'hidden', maxHeight: 420, overflowY: 'auto' }}>
-          {empty && <div style={{ padding: '16px 14px', fontSize: '12.5px', color: '#7A8593' }}>No matches for “{q.trim()}”.</div>}
+          {empty && <div style={{ padding: '16px 14px', fontSize: '12.5px', color: '#7A8593' }}>{t('search.noMatches', { q: q.trim() })}</div>}
           {alerts.length > 0 && (
             <>
-              <div style={groupLabel}>Alerts</div>
+              <div style={groupLabel}>{t('search.alerts')}</div>
               {alerts.map((a) => (
                 <button key={a.id} type="button" style={itemStyle} onClick={() => go(`/console/alerts/${a.id}`)}>
                   <span style={{ display: 'inline-flex', width: 34, height: 22, borderRadius: 3, background: scoreColor(a.score), color: '#fff', fontFamily: 'Barlow', fontWeight: 800, fontSize: 11, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{a.score}</span>
                   <span style={{ fontFamily: 'Barlow', fontWeight: 700 }}>{a.id}</span>
-                  <span style={{ color: '#7A8593', fontSize: 11.5, marginLeft: 'auto' }}>{a.threat_type || 'Unclassified'} · {a.state}</span>
+                  <span style={{ color: '#7A8593', fontSize: 11.5, marginLeft: 'auto' }}>{a.threat_type || t('search.unclassified')} · {a.state}</span>
                 </button>
               ))}
             </>
           )}
           {subjects.length > 0 && (
             <>
-              <div style={groupLabel}>Subjects</div>
+              <div style={groupLabel}>{t('search.subjects')}</div>
               {subjects.map((s) => (
                 <button key={s.user_ref} type="button" style={itemStyle} onClick={() => go(`/console/customers/${s.user_ref}`)}>
                   <span style={{ fontWeight: 700 }}>{subjectLabel(s.user_ref)}</span>
                   <span style={{ fontFamily: 'monospace', color: '#9AA4AF', fontSize: 11 }}>{shortRef(s.user_ref, 10)}</span>
-                  <span style={{ color: '#7A8593', fontSize: 11.5, marginLeft: 'auto' }}>{s.alerts} alert{s.alerts === 1 ? '' : 's'}</span>
+                  <span style={{ color: '#7A8593', fontSize: 11.5, marginLeft: 'auto' }}>{t('search.alertCount', { count: s.alerts })}</span>
                 </button>
               ))}
             </>
@@ -237,6 +242,7 @@ function GlobalSearch() {
 }
 
 function Topbar() {
+  const { t } = useTranslation();
   const title = useConsoleTitleValue();
   return (
     <div style={{ height: 64, background: '#fff', borderBottom: '1px solid #E3E7EB', display: 'flex', alignItems: 'center', gap: 16, padding: '0 28px' }}>
@@ -256,7 +262,7 @@ function Topbar() {
             borderRadius: 3,
           }}
         >
-          Tenant: Demo Bank
+          {t('topbar.tenantLabel')}: Demo Bank
         </div>
         <UserMenu />
       </div>
@@ -265,6 +271,7 @@ function Topbar() {
 }
 
 function UserMenu() {
+  const { t } = useTranslation();
   const { session, signOut } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -321,8 +328,12 @@ function UserMenu() {
             <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2, overflowWrap: 'anywhere' }}>{session.email}</div>
             <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               <Chip color={roleColors[session.role] || '#7A8593'}>{session.role}</Chip>
-              {session.mfaEnrolled && <Chip color="#2FBF71">2FA on</Chip>}
+              {session.mfaEnrolled && <Chip color="#2FBF71">{t('userMenu.twoFA')}</Chip>}
             </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '12px 16px', borderBottom: '1px solid #F0F2F5' }}>
+            <span style={{ fontFamily: 'Barlow', fontSize: '12.5px', fontWeight: 700, color: '#5A6976' }}>{t('userMenu.language')}</span>
+            <LanguageSwitch />
           </div>
           <button
             type="button"
@@ -335,7 +346,7 @@ function UserMenu() {
               color: '#D71A28',
             }}
           >
-            Sign out
+            {t('userMenu.signOut')}
           </button>
         </div>
       )}
@@ -344,6 +355,12 @@ function UserMenu() {
 }
 
 export function ConsoleLayout() {
+  // Apply the tenant's default language once authenticated — but never over an
+  // analyst's own explicit choice (applyTenantDefault guards that).
+  useEffect(() => {
+    consoleApi.settings().then((s) => applyTenantDefault(s.language)).catch(() => {});
+  }, []);
+
   return (
     <ConsoleTitleProvider>
       <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F6F8', fontFamily: 'Open Sans, sans-serif', color: '#3E4753' }}>
