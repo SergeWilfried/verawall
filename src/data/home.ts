@@ -122,7 +122,7 @@ export const features = [
   {
     n: '03',
     icon: 'shield' as IconKey,
-    title: 'Intervene in the moment',
+    title: 'Instant Action',
     desc:
       "ALLOW, STEP_UP or HOLD. A coached victim gets an anti-scam warning instead of an OTP they would pass; an imposter gets an identity challenge; high risk is held for review.",
   },
