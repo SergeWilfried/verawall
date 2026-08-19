@@ -434,6 +434,46 @@ export const solutionPages: Record<string, SolutionPage> = {
       },
     ],
   },
+  'agent-fraud': {
+    slug: 'agent-fraud',
+    category: 'Agent Commission Fraud',
+    isSub: false,
+    title: 'Agent Commission Fraud',
+    artTitle: 'What commission farming looks like on the ledger.',
+    sub: 'Agents manipulate transactions to farm commissions they were never owed.',
+    intro:
+      'In agent-assisted mobile money the human agent sits between the customer and the ledger — and a dishonest one can split, structure and route transactions to inflate the commissions they earn. It looks like ordinary volume, so rule-based monitoring waves it through.',
+    statsTitle: 'The impact of agent fraud.',
+    stats: [
+      { value: '56%', label: 'of mobile-money providers cite agent commission fraud as a prevalent scheme (GSMA, 2024).' },
+      { value: '84%', label: 'of agent-fraud cases are commission (arbitrage) fraud — the top agent scheme (GSMA, 2024).' },
+      { value: 'Feed', label: 'scored straight from your transaction feed — no SDK, no change to the customer app.' },
+    ],
+    spotTitle: 'Read the ledger, not the app.',
+    paras: [
+      'Commission fraud has a shape on the ledger: a burst of small transactions routed through a single counterparty, placed just under commission or reporting thresholds, concentrated on one agent account within a short window.',
+      'VeraWall scores this directly from your transaction feed — the same feed that powers mule detection — so agent fraud is caught with no SDK and no change to the customer app.',
+      'Confirmed cases feed the follow-the-money graph and, where proceeds moved, open a linked AML file — the same two-files doctrine as every other typology.',
+    ],
+    cardsTitle: 'Understanding agent fraud.',
+    cards: [
+      {
+        icon: 'mule',
+        title: 'Split Transaction Pattern',
+        desc: 'A single agent account cycling many small transactions through one counterparty is the commission-farming signature — scored on a rolling 24-hour window.',
+      },
+      {
+        icon: 'tra',
+        title: 'Threshold Structuring',
+        desc: 'Amounts placed just under commission or reporting thresholds, repeated across a session, reveal deliberate structuring rather than genuine trade.',
+      },
+      {
+        icon: 'ato',
+        title: 'Collusion Mapping',
+        desc: 'Shared counterparties and devices link a fraudulent agent to the accounts moving the proceeds — one detection exposes the ring.',
+      },
+    ],
+  },
 };
 
 export const solutionOrder = [
@@ -445,6 +485,7 @@ export const solutionOrder = [
   'credential-theft',
   'account-takeover',
   'money-mules',
+  'agent-fraud',
   'new-account-fraud',
   'transaction-risk',
 ];

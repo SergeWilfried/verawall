@@ -93,6 +93,7 @@ export const services: ServiceCard[] = [
     title: 'Agent Commission Fraud',
     desc:
       'Split transactions routed through one counterparty to farm commissions — a mobile-money typology scored directly from your transaction feed, no app integration required.',
+    to: '/solutions/agent-fraud',
   },
   {
     icon: 'tra',

@@ -206,11 +206,13 @@ export function Home() {
                 </div>
                 <h3 style={{ fontSize: 22, fontWeight: 700 }}>{t(svc.title)}</h3>
                 <p style={{ fontSize: 15, color: '#5A6976', marginTop: 14, lineHeight: 1.65 }}>{t(svc.desc)}</p>
-                {svc.to && (
-                  <div className="btn-primary" style={{ display: 'inline-block', marginTop: 24, padding: '13px 24px', fontSize: 12 }}>
+                {/* CTA pinned to the card bottom so it aligns across the row
+                    regardless of title/body length (esp. the longer FR copy). */}
+                <div style={{ marginTop: 'auto', paddingTop: 24 }}>
+                  <span className="btn-primary" style={{ display: 'inline-block', padding: '13px 24px', fontSize: 12 }}>
                     {t('Learn More')}
-                  </div>
-                )}
+                  </span>
+                </div>
               </>
             );
             return svc.to ? (

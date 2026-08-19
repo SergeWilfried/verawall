@@ -156,7 +156,8 @@ button {
 }
 
 .card-link {
-  display: block;
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border: 1px solid #e3e7eb;
   border-radius: 6px;

@@ -372,6 +372,7 @@ export type ArtKind = 'ato' | 'scam' | 'mule' | 'sim' | 'naf' | 'tra';
 export function artKindForSlug(slug: string): ArtKind {
   if (slug === 'account-takeover') return 'ato';
   if (slug === 'money-mules') return 'mule';
+  if (slug === 'agent-fraud') return 'mule';
   if (slug === 'credential-theft') return 'sim';
   if (slug === 'new-account-fraud') return 'naf';
   if (slug === 'transaction-risk') return 'tra';
