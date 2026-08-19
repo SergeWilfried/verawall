@@ -110,7 +110,7 @@ export const features = [
     icon: 'sdk' as IconKey,
     title: 'Capture on the device',
     desc:
-      'Native SDKs for Android, iOS / React Native and web collect touch and typing dynamics, call state, screen-share and remote-access tells, device integrity and location — timing and geometry only, never content.',
+      'Native SDKs for Android, iOS / React Native and web collect touch and typing dynamics, call state, screen-share and remote-access tells, device integrity and location — timing and geometry only.',
   },
   {
     n: '02',
@@ -122,7 +122,7 @@ export const features = [
   {
     n: '03',
     icon: 'shield' as IconKey,
-    title: 'Instant Action',
+    title: 'Intervene in the moment',
     desc:
       "ALLOW, STEP_UP or HOLD. A coached victim gets an anti-scam warning instead of an OTP they would pass; an imposter gets an identity challenge; high risk is held for review.",
   },
