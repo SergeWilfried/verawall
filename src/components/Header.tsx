@@ -120,7 +120,7 @@ export function Header() {
             className="btn-primary"
             style={{ marginLeft: 8, padding: '12px 14px', fontSize: '11.5px', flexShrink: 0 }}
           >
-            {t('Talk to a fraud fighter')}
+            {t('Request a demo')}
           </Link>
 
           {/* Mega dropdown */}
@@ -232,11 +232,11 @@ export function Header() {
                   </div>
                   <div style={{ background: '#FBF1F2', border: '1px solid #F2D9DB', borderRadius: 6, padding: 24 }}>
                     <div style={{ fontFamily: 'Barlow', fontWeight: 700, fontSize: 18, color: '#3E4753', marginBottom: 10 }}>
-                      {t('Modern fraud demands a modern solution.')}
+                      {t('From the device to the decision.')}
                     </div>
                     <div style={{ fontSize: 13, color: '#7A8593', lineHeight: 1.6 }}>
                       {t(
-                        'Transaction risk analysis, threat detection and user behavior profiling in one integrated platform.',
+                        'Behavioral SDKs, real-time scoring, in-app interventions and an analyst console — one integrated platform built for mobile-first banking.',
                       )}
                     </div>
                   </div>
@@ -320,7 +320,7 @@ export function Header() {
               style={{ flex: 1, justifyContent: 'center', padding: '13px 14px', fontSize: '11.5px' }}
               onClick={() => setMobileOpen(false)}
             >
-              {t('Talk to a fraud fighter')}
+              {t('Request a demo')}
             </Link>
           </div>
         </div>

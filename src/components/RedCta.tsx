@@ -17,20 +17,20 @@ export function RedCta() {
           style={{
             position: 'absolute',
             inset: 0,
-            background: "url('https://www.threatmark.com/wp-content/uploads/2023/09/background-4.jpg') center/cover",
-            opacity: 0.25,
-            mixBlendMode: 'multiply',
+            backgroundImage: 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1.2px)',
+            backgroundSize: '22px 22px',
+            opacity: 0.12,
           }}
         />
         <div style={{ position: 'relative', maxWidth: 860, margin: '0 auto', padding: '92px 48px', textAlign: 'center' }}>
           <h2 style={{ fontSize: 42, lineHeight: 1.15, fontWeight: 700, color: '#fff' }}>
-            {t('Want to learn more about ?')}
+            {t('See it on your own traffic.')}
           </h2>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.94)', marginTop: 24, lineHeight: 1.7 }}>
-            {t("Complete our form to discover more about 's comprehensive approach to fraud disruption.")}
+            {t('A 30-minute walkthrough of the demo bank, the scoring signals and the analyst console — then a pilot on a replay of your own transaction feed.')}
           </p>
           <a href="#contact" className="btn-primary-inverse" style={{ marginTop: 34 }}>
-            {t('Talk to a fraud fighter')}
+            {t('Request a demo')}
           </a>
         </div>
       </div>

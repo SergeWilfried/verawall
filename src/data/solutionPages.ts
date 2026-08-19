@@ -1,4 +1,4 @@
-import { icons, type IconKey } from './icons';
+import type { IconKey } from './icons';
 
 export interface Stat {
   value: string;
@@ -45,7 +45,7 @@ export const solutionPages: Record<string, SolutionPage> = {
     paras: [
       'In an APP scam the right person logs in on the right device — so the fraud only becomes visible in how they behave. Behavioral intelligence detects the hallmarks of a coached session: hesitation on amount fields, unusual navigation, dictation-paced typing and an active phone call during the payment.',
       'By scoring the payment in the context of the whole session, the platform holds only the transfers that genuinely look coerced, while legitimate first-time payments proceed without friction.',
-      'When a scam is confirmed, the payee account, device fingerprints and infrastructure are shared through FraudIntel, protecting every other institution in the network from the same campaign.',
+      'When a scam is confirmed, the payee account, the device and the outbound flow are traced in the follow-the-money graph, so the next payment to the same mule — from any of your customers — is caught on the first attempt.',
     ],
     cardsTitle: 'Understanding APP fraud.',
     cards: [
@@ -85,7 +85,7 @@ export const solutionPages: Record<string, SolutionPage> = {
     paras: [
       "Investment scams follow a recognizable payment trajectory: a small first transfer to a new payee, followed by escalating amounts to the same destination or linked accounts. Behavioral intelligence flags this progression as it forms.",
       "Destination analysis is decisive — payments to crypto exchanges and payment processors that are unusual for the customer's profile, combined with scam-typical session behavior, trigger a hold before funds leave the bank.",
-      "ScamFlag adds a second line of defense: customers can submit the 'investment opportunity' messages they receive, and GenAI analysis identifies the scam before the first payment is ever made.",
+      'The cross-session pattern carries the signal: two consecutive rising payments to the same payee — the romance and investment-scam signature — raise ESCALATING_PAYEE even when no call is in progress, and the customer is shown the anti-scam warning instead of an identity challenge they would pass.',
     ],
     cardsTitle: 'Understanding investment fraud.',
     cards: [
@@ -97,12 +97,12 @@ export const solutionPages: Record<string, SolutionPage> = {
       {
         icon: 'scam',
         title: 'Scam Message Analysis',
-        desc: 'Guaranteed returns, mentor personas and scarcity framing are linguistic fingerprints. ScamFlag lets customers verify suspicious messages inside the banking app.',
+        desc: 'Coached sessions are measurable: an active call or a shared screen during the transfer, dictation-paced typing, and a payee added minutes before paying. Each raises the score; together they classify the session as an APP scam.',
       },
       {
         icon: 'mule',
         title: 'Exchange & Wallet Intelligence',
-        desc: "Wallet addresses and payout accounts tied to prior scam reports are shared across the FraudIntel network, so one bank's confirmed scam protects all.",
+        desc: "Payout accounts confirmed in one case are classified as intel in the follow-the-money graph, so the same destination lights up red the next time any customer pays it.",
       },
     ],
   },
@@ -205,7 +205,7 @@ export const solutionPages: Record<string, SolutionPage> = {
     paras: [
       "Purchase scams share a payment fingerprint: an instant transfer to a new personal account, for an amount typical of goods, often demanded with time pressure ('I'll take the listing down today'). Behavioral intelligence scores this combination in real time.",
       'Receiving-account intelligence is decisive — scam sellers reuse accounts across dozens of victims, so a payee flagged once protects everyone who tries to pay it after.',
-      'ScamFlag closes the loop before payment: customers can submit the seller conversation, and GenAI analysis flags pressure tactics and known-fraudulent payment instructions.',
+      'At the moment of payment the session tells the story: a brand-new payee, an amount out of profile, a live chat or call — scored together, they trigger the in-app anti-scam warning before the transfer is released.',
     ],
     cardsTitle: 'Understanding purchase fraud.',
     cards: [
@@ -222,7 +222,7 @@ export const solutionPages: Record<string, SolutionPage> = {
       {
         icon: 'scam',
         title: 'Conversation Analysis',
-        desc: 'Urgency framing and off-platform payment requests are classic markers. ScamFlag verifies seller conversations before money moves.',
+        desc: 'A payee added and paid within minutes, while a call is active or a screen is shared, is the purchase-scam tell the session exposes — and the trigger for an anti-scam warning.',
       },
     ],
   },
@@ -245,14 +245,14 @@ export const solutionPages: Record<string, SolutionPage> = {
     paras: [
       'A stolen password passes every knowledge check — but the person typing it cannot fake the owner’s behavioral profile. Typing cadence, navigation habits and device handling expose the imposter within seconds of login.',
       'Infrastructure intelligence compounds the signal: logins from IPs, devices and automation frameworks tied to known phishing campaigns are flagged before any behavioral evidence is even needed.',
-      'The Cyber Fraud Fusion Center actively hunts the phishing kits targeting your brand, extracting compromised credential lists so accounts can be protected before the first misuse.',
+      'Device novelty compounds it: a first-ever install, a SIM changed since the last session, a headless browser or automation framework — each is scored at login, so the stolen credential is stopped at its first use, not its first transfer.',
     ],
     cardsTitle: 'Understanding credential theft.',
     cards: [
       {
         icon: 'phishing',
         title: 'Phishing Infrastructure Tracking',
-        desc: 'Live monitoring of phishing kits, lookalike domains and harvesting pages targeting your customers — with credentials recovered before misuse.',
+        desc: 'Headless and automated browsers, emulators and automation frameworks are fingerprinted at session start — the infrastructure credential-stuffing runs on, flagged before a single login succeeds.',
       },
       {
         icon: 'ato',
@@ -325,7 +325,7 @@ export const solutionPages: Record<string, SolutionPage> = {
     paras: [
       'Mule accounts betray themselves through velocity: dormant accounts that suddenly receive and immediately forward funds, splitting amounts across counterparties within minutes. Behavioral intelligence detects the in-out pattern as it happens.',
       'Account-link analysis maps the network — shared devices, matching behavioral fingerprints and common counterparties connect one detected mule to the whole ring.',
-      'Findings feed compliance directly: restricted transfers, SAR-ready evidence trails and FraudIntel sharing that lets partner banks block the same network.',
+      'Findings feed compliance directly: a confirmed fraud automatically opens its AML case with the post-compromise outbound-flow trace attached — the two-files doctrine, so the fraud file and the laundering file are never out of step.',
     ],
     cardsTitle: 'Understanding mule activity.',
     cards: [
@@ -365,7 +365,7 @@ export const solutionPages: Record<string, SolutionPage> = {
     paras: [
       'Behavioral biometrics evaluate the application session itself: how personal data is entered reveals whether the applicant owns it. Genuine users type their own birthdate fluently; imposters copy-paste, hesitate and correct.',
       "Declared identity is cross-checked against behavioral age and device history — a 61-year-old identity typed at a 20-year-old's cadence, on a device seen across other applications, scores immediately.",
-      'Bot and emulator detection filters industrialized attacks, while flagged identities are shared through FraudIntel so the same synthetic identity cannot try the next bank.',
+      'Bot and emulator detection filters industrialized attacks, and device history links one flagged application to the next attempt from the same install.',
     ],
     cardsTitle: 'Understanding new account fraud.',
     cards: [
@@ -397,9 +397,9 @@ export const solutionPages: Record<string, SolutionPage> = {
       'Blanket step-up authentication frustrates customers and still misses coerced payments. Adaptive transaction risk analysis evaluates every payment in full session context, approving the safe ones invisibly and challenging only genuine risk.',
     statsTitle: 'The impact of adaptive risk analysis.',
     stats: [
-      { value: '86%', label: 'of payments approved with zero customer friction via behavioral profile match.' },
-      { value: '0.8%', label: 'false positive rate with Smart Insights tuning.' },
-      { value: 'PSD2', label: 'compliant transaction risk analysis enabling SCA exemptions.' },
+      { value: '55%', label: 'of mobile-money providers rate their current fraud system “not so effective” (GSMA, 2024).' },
+      { value: '10%', label: 'of providers use AI or machine learning in fraud management — the rest run on rules (GSMA, 2024).' },
+      { value: '0–100', label: 'risk score per payment, with ALLOW / STEP_UP / HOLD bands tuned per tenant and per currency.' },
     ],
     spotTitle: 'Security and UX are not a trade-off.',
     paras: [
@@ -440,7 +440,3 @@ export const solutionOrder = [
   'new-account-fraud',
   'transaction-risk',
 ];
-
-export function resolveIcon(key: IconKey) {
-  return icons[key];
-}

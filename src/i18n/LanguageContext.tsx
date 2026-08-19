@@ -12,7 +12,25 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>('en');
+  // Persist the choice so a reload or an in-app navigation keeps the language.
+  const [lang, setLangState] = useState<Lang>(() => {
+    try {
+      const saved = localStorage.getItem('vw_lang');
+      if (saved === 'fr' || saved === 'en') return saved;
+      if (typeof navigator !== 'undefined' && /^fr\b/i.test(navigator.language)) return 'fr';
+    } catch {
+      /* storage unavailable */
+    }
+    return 'en';
+  });
+  const setLang = (l: Lang) => {
+    setLangState(l);
+    try {
+      localStorage.setItem('vw_lang', l);
+    } catch {
+      /* ignore */
+    }
+  };
 
   const value = useMemo<LanguageContextValue>(
     () => ({

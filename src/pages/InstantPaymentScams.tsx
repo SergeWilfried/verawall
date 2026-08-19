@@ -33,8 +33,11 @@ export function InstantPaymentScams() {
             right: -120,
             width: 640,
             height: 640,
-            background: "url('https://www.threatmark.com/wp-content/uploads/2023/09/background-3.webp') center/cover",
-            opacity: 0.18,
+            backgroundImage: 'radial-gradient(#D71A28 1px, transparent 1.2px)',
+            backgroundSize: '22px 22px',
+            opacity: 0.1,
+            maskImage: 'radial-gradient(circle at 60% 40%, rgba(0,0,0,0.9), transparent 70%)',
+            WebkitMaskImage: 'radial-gradient(circle at 60% 40%, rgba(0,0,0,0.9), transparent 70%)',
           }}
         />
         <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: '96px 15px 110px' }}>
@@ -50,7 +53,7 @@ export function InstantPaymentScams() {
             )}
           </p>
           <a href="#contact" className="btn-primary" style={{ marginTop: 34 }}>
-            {t('Talk to a fraud fighter')}
+            {t('Request a demo')}
           </a>
         </div>
       </section>

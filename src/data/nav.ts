@@ -74,9 +74,9 @@ export const solutionsMenu: MegaGroup[][] = [
 ];
 
 export const platformTiles = [
-  { title: 'Behavioral Intelligence Platform', desc: 'Constant monitoring of the now.' },
-  { title: 'ScamFlag', desc: 'GenAI scam detection in your app.' },
-  { title: 'Smart Insights', desc: 'Fewer false positives.' },
-  { title: 'Cyber Fraud Fusion Center', desc: 'At the forefront of cyber threats.' },
-  { title: 'FraudIntel', desc: 'Cross-border schemes in real time.' },
+  { title: 'Behavioral SDKs', desc: 'Android, iOS / React Native and web.' },
+  { title: 'Real-time scoring', desc: 'One call, a decision in milliseconds.' },
+  { title: 'Anti-scam interventions', desc: 'Warnings, step-ups and holds, in-app.' },
+  { title: 'Analyst console', desc: 'Alerts, cases, follow-the-money.' },
+  { title: 'Action channel', desc: 'Webhooks to core banking, on-device kill switch.' },
 ];
