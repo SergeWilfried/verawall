@@ -229,4 +229,12 @@ export const dict: Record<string, string> = {
   "Thresholds": "Seuils",
   "Per tenant & currency": "Par tenant et par devise",
   "Invisible authentication": "Authentification invisible",
+  "One mule account rarely acts alone. VeraWall traces the flow from the victim payment through the cash-out network — the same graph an analyst opens on a confirmed alert.": "Un compte mule agit rarement seul. VeraWall retrace le flux, du paiement de la victime jusqu'au réseau de retrait — le graphe même qu'un analyste ouvre sur une alerte confirmée.",
+  "Victim payment": "Paiement de la victime",
+  "Mule account": "Compte mule",
+  "Cash-out mules": "Mules de retrait",
+  "Next hop": "Saut suivant",
+  "Shared device": "Appareil partagé",
+  "Drag to rotate": "Glisser pour pivoter",
+  "Follow the money.": "Suivre l'argent.",
 };

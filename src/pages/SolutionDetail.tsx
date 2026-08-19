@@ -9,6 +9,7 @@ import { CardsGrid } from '../components/CardsGrid';
 import { RedCta } from '../components/RedCta';
 import { Seo } from '../components/Seo';
 import { SolutionArt, artKindForSlug } from '../components/SolutionArt';
+import { MoneyGraph3D } from '../components/MoneyGraph3D';
 
 export function SolutionDetail() {
   const { slug = '' } = useParams();
@@ -65,8 +66,14 @@ export function SolutionDetail() {
 
       <StatsGrid title={page.statsTitle} stats={page.stats} />
 
-      {/* HOW IT SHOWS UP — VeraWall-built illustration band (no external images) */}
-      <SolutionArt kind={artKindForSlug(slug)} title={page.artTitle ?? 'How it shows up in the session.'} />
+      {/* HOW IT SHOWS UP — VeraWall-built illustration band (no external images).
+          Money mules gets the interactive 3D follow-the-money graph; the rest
+          get the 2D composition. */}
+      {slug === 'money-mules' ? (
+        <MoneyGraph3D title={page.artTitle ?? 'Follow the money.'} />
+      ) : (
+        <SolutionArt kind={artKindForSlug(slug)} title={page.artTitle ?? 'How it shows up in the session.'} />
+      )}
 
       {/* SPOT IN REAL-TIME */}
       <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px 100px' }}>
