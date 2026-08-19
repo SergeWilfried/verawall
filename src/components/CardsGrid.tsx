@@ -1,9 +1,11 @@
 import type { Card } from '../data/solutionPages';
 import { Icon } from './Icons';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useIsMobile } from '../useMediaQuery';
 
 export function CardsGrid({ title, cards }: { title: string; cards: Card[] }) {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   return (
     <section
@@ -20,8 +22,8 @@ export function CardsGrid({ title, cards }: { title: string; cards: Card[] }) {
           position: 'absolute',
           top: -60,
           left: -140,
-          width: 560,
-          height: 560,
+          width: isMobile ? 320 : 560,
+          height: isMobile ? 320 : 560,
           backgroundImage: 'radial-gradient(#D71A28 1px, transparent 1.2px)',
           backgroundSize: '22px 22px',
           opacity: 0.08,
@@ -30,8 +32,8 @@ export function CardsGrid({ title, cards }: { title: string; cards: Card[] }) {
         }}
       />
       <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: '90px 15px 100px' }}>
-        <h2 style={{ fontSize: 40, fontWeight: 700, textAlign: 'center', color: '#5A6976' }}>{t(title)}</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28, marginTop: 56 }}>
+        <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, textAlign: 'center', color: '#5A6976', textWrap: 'balance' }}>{t(title)}</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 28, marginTop: 56 }}>
           {cards.map((cd) => (
             <div key={cd.title} style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 8, padding: '48px 38px' }}>
               <Icon name={cd.icon} size={64} style={{ marginBottom: 30 }} />

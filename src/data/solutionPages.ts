@@ -24,11 +24,14 @@ export interface SolutionPage {
   paras: string[];
   cardsTitle: string;
   cards: Card[];
+  /** Heading over the illustration band; defaults if unset. */
+  artTitle?: string;
 }
 
 export const solutionPages: Record<string, SolutionPage> = {
   'app-scams': {
     slug: 'app-scams',
+    artTitle: 'What a coached session looks like.',
     category: 'Scams & Social Engineering',
     isSub: true,
     title: 'Authorized Push Payment Scams',
@@ -229,6 +232,7 @@ export const solutionPages: Record<string, SolutionPage> = {
 
   'credential-theft': {
     slug: 'credential-theft',
+    artTitle: 'Valid credentials, invalid behavior.',
     category: 'Phishing Detection & Mitigation',
     isSub: true,
     title: 'Credential Theft',
@@ -269,6 +273,7 @@ export const solutionPages: Record<string, SolutionPage> = {
 
   'account-takeover': {
     slug: 'account-takeover',
+    artTitle: 'The owner and the imposter behave differently.',
     category: 'Account Takeover',
     isSub: false,
     title: 'Account Takeover',
@@ -309,6 +314,7 @@ export const solutionPages: Record<string, SolutionPage> = {
 
   'money-mules': {
     slug: 'money-mules',
+    artTitle: 'The money betrays the mule.',
     category: 'Money Mules',
     isSub: false,
     title: 'Money Mules',
@@ -349,6 +355,7 @@ export const solutionPages: Record<string, SolutionPage> = {
 
   'new-account-fraud': {
     slug: 'new-account-fraud',
+    artTitle: 'The imposter shows at the door.',
     category: 'New Account Fraud',
     isSub: false,
     title: 'New Account Fraud',
@@ -389,6 +396,7 @@ export const solutionPages: Record<string, SolutionPage> = {
 
   'transaction-risk': {
     slug: 'transaction-risk',
+    artTitle: 'One score, three proportionate outcomes.',
     category: 'Transaction Risk Analysis',
     isSub: false,
     title: 'Transaction Risk Analysis',

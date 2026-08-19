@@ -1,16 +1,19 @@
 import { useParams } from 'react-router-dom';
 import { Link, Navigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useIsMobile } from '../useMediaQuery';
 import { solutionPages, solutionOrder } from '../data/solutionPages';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { StatsGrid } from '../components/StatsGrid';
 import { CardsGrid } from '../components/CardsGrid';
 import { RedCta } from '../components/RedCta';
 import { Seo } from '../components/Seo';
+import { SolutionArt, artKindForSlug } from '../components/SolutionArt';
 
 export function SolutionDetail() {
   const { slug = '' } = useParams();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   const page = solutionPages[slug];
   if (!page) return <Navigate to="/solutions/app-scams" replace />;
@@ -48,11 +51,11 @@ export function SolutionDetail() {
             WebkitMaskImage: 'radial-gradient(circle at 60% 40%, rgba(0,0,0,0.9), transparent 70%)',
           }}
         />
-        <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: '96px 15px 110px' }}>
-          <h1 style={{ fontSize: 64, lineHeight: 1.04, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28', maxWidth: 860 }}>
+        <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: isMobile ? '56px 15px 64px' : '96px 15px 110px' }}>
+          <h1 style={{ fontSize: isMobile ? 40 : 64, lineHeight: 1.04, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28', maxWidth: 860, textWrap: 'balance' }}>
             {t(page.title)}
           </h1>
-          <h2 style={{ fontSize: 27, lineHeight: 1.35, fontWeight: 700, marginTop: 26, maxWidth: 760 }}>{t(page.sub)}</h2>
+          <h2 style={{ fontSize: isMobile ? 21 : 27, lineHeight: 1.35, fontWeight: 700, marginTop: 26, maxWidth: 760 }}>{t(page.sub)}</h2>
           <p style={{ fontSize: 17, color: '#5A6976', marginTop: 20, maxWidth: 760, lineHeight: 1.75 }}>{t(page.intro)}</p>
           <a href="#contact" className="btn-primary" style={{ marginTop: 34 }}>
             {t('Request a demo')}
@@ -62,10 +65,13 @@ export function SolutionDetail() {
 
       <StatsGrid title={page.statsTitle} stats={page.stats} />
 
+      {/* HOW IT SHOWS UP — VeraWall-built illustration band (no external images) */}
+      <SolutionArt kind={artKindForSlug(slug)} title={page.artTitle ?? 'How it shows up in the session.'} />
+
       {/* SPOT IN REAL-TIME */}
       <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px 100px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '0.85fr 1.15fr', gap: 64, alignItems: 'start' }}>
-          <h2 style={{ fontSize: 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: 'sticky', top: 110 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '0.85fr 1.15fr', gap: isMobile ? 24 : 64, alignItems: 'start' }}>
+          <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: isMobile ? 'static' : 'sticky', top: 110, textWrap: 'balance' }}>
             {t(page.spotTitle)}
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 22, fontSize: '16.5px', color: '#3E4753', lineHeight: 1.75 }}>
