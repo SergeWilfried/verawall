@@ -34,6 +34,10 @@ export interface LayoutEdge {
   ly: number;
   amount: string;
   labelFill: string;
+  /** Flow direction along the edge (money movement), for the flow pulse. */
+  dir: 'in' | 'out';
+  /** Colour of the flow pulse — red for flagged counterparties, else muted. */
+  flowColor: string;
 }
 
 export interface BuildGraphConfig {
@@ -119,6 +123,7 @@ export function buildGraph(subjectKey: string, def: GraphSubject, cfg: BuildGrap
       dash: n.dir === 'in' ? '6 4' : '',
       lx: from.x + (to.x - from.x) * 0.55, ly: from.y + (to.y - from.y) * 0.55 - 6,
       amount: n.amount, labelFill: flagged ? '#D71A28' : '#7A8593',
+      dir: n.dir, flowColor: flagged ? '#D71A28' : '#9AA4AF',
     });
   });
 
