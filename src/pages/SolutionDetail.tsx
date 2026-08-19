@@ -9,7 +9,7 @@ import { CardsGrid } from '../components/CardsGrid';
 import { RedCta } from '../components/RedCta';
 import { Seo } from '../components/Seo';
 import { SolutionArt, artKindForSlug } from '../components/SolutionArt';
-import { MoneyGraph3D } from '../components/MoneyGraph3D';
+import { MoneyFlowGraph } from '../components/MoneyFlowGraph';
 
 export function SolutionDetail() {
   const { slug = '' } = useParams();
@@ -70,7 +70,7 @@ export function SolutionDetail() {
           Money mules gets the interactive 3D follow-the-money graph; the rest
           get the 2D composition. */}
       {slug === 'money-mules' ? (
-        <MoneyGraph3D title={page.artTitle ?? 'Follow the money.'} />
+        <MoneyFlowGraph title={page.artTitle ?? 'Follow the money.'} />
       ) : (
         <SolutionArt kind={artKindForSlug(slug)} title={page.artTitle ?? 'How it shows up in the session.'} />
       )}

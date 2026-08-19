@@ -304,3 +304,18 @@ button {
     animation: none;
   }
 }
+
+/* ---- money-flow graph: hub ring pulse (paused under reduced motion) ---- */
+@keyframes vw-ring-pulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.vw-ring-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: vw-ring-pulse 2.4s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-ring-pulse { animation: none; opacity: 0.4; }
+}

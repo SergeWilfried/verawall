@@ -235,6 +235,9 @@ export const dict: Record<string, string> = {
   "Cash-out mules": "Mules de retrait",
   "Next hop": "Saut suivant",
   "Shared device": "Appareil partagé",
-  "Drag to rotate": "Glisser pour pivoter",
   "Follow the money.": "Suivre l'argent.",
+  "Victim": "Victime",
+  "Cash-out": "Retrait",
+  "Rapid in-out · 11 min · fan-out to 5 accounts": "Entrée-sortie rapide · 11 min · dispersion vers 5 comptes",
+  "Follow-the-money graph: a 90,000 victim payment into a mule account, split across cash-out mules and forwarded to exchanges and cards. Two mules share a device.": "Graphe « suivre l'argent » : un paiement de victime de 90 000 vers un compte mule, réparti entre des mules de retrait puis transféré vers des plateformes et des cartes. Deux mules partagent un appareil.",
 };
