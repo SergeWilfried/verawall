@@ -2,13 +2,17 @@ import { useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { solutionsMenu, platformTiles } from '../data/nav';
-import { useIsMobile } from '../useMediaQuery';
+import { useMediaQuery } from '../useMediaQuery';
 
 type MenuName = 'solutions' | 'platform' | null;
 
 export function Header() {
   const { t, lang, setLang } = useLanguage();
-  const isMobile = useIsMobile();
+  // Header switches to the hamburger below 960px, not the 768px content
+  // breakpoint: the French desktop nav (POURQUOI VERAWALL · PLATEFORME
+  // VERAWALL · DEMANDER UNE DÉMO) needs the extra room, and clipped past
+  // ~900px otherwise.
+  const isMobile = useMediaQuery('(max-width: 960px)');
   const [openMenu, setOpenMenu] = useState<MenuName>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -123,15 +127,19 @@ export function Header() {
             {t('Request a demo')}
           </Link>
 
-          {/* Mega dropdown */}
+          {/* Mega dropdown. Fixed + centered on the VIEWPORT (not the
+              right-aligned nav, which pushed the panel off the right edge at
+              narrow desktop widths — worse in French). Matches the page's
+              1080 content column. */}
           <div
             style={{
-              position: 'absolute',
-              top: '100%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '100vw',
+              position: 'fixed',
+              top: 85,
+              left: 0,
+              right: 0,
+              margin: '0 auto',
               maxWidth: 1080,
+              zIndex: 99,
               background: '#FFFFFF',
               border: '1px solid #E9EDF1',
               borderRadius: '0 0 6px 6px',
