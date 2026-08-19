@@ -76,7 +76,7 @@ export function SolutionDetail() {
       )}
 
       {/* SPOT IN REAL-TIME */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px 100px' }}>
+      <section style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '48px 15px 72px' : '72px 15px 100px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '0.85fr 1.15fr', gap: isMobile ? 24 : 64, alignItems: 'start' }}>
           <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: isMobile ? 'static' : 'sticky', top: 110, textWrap: 'balance' }}>
             {t(page.spotTitle)}

@@ -66,7 +66,7 @@ export function InstantPaymentScams() {
       <SolutionArt kind="scam" title="How it shows up in the session." />
 
       {/* SPOT IN REAL-TIME */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px 100px' }}>
+      <section style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '48px 15px 72px' : '72px 15px 100px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '0.85fr 1.15fr', gap: isMobile ? 24 : 64, alignItems: 'start' }}>
           <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: isMobile ? 'static' : 'sticky', top: 110, textWrap: 'balance' }}>
             {t('Spot instant payment scams in real-time.')}
@@ -74,17 +74,17 @@ export function InstantPaymentScams() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 22, fontSize: '16.5px', color: '#3E4753', lineHeight: 1.75 }}>
             <p>
               {t(
-                'Behavioral intelligence is vital in combating instant payment scams by analyzing transaction patterns to detect anomalies. This technology enables real-time monitoring, flagging suspicious activities like unusual transaction amounts or frequencies.',
+                "Behavioral intelligence scores each transaction against the customer's own patterns in real time — flagging unusual amounts, frequencies or timing the moment they appear.",
               )}
             </p>
             <p>
               {t(
-                'By understanding typical customer behaviors, such as login times and transaction types, the system can spot deviations that may indicate coercion or fraud. This approach relies on predictive analysis, uncovering potential new scam trends and methods, which is impossible with traditional transaction monitoring.',
+                'Because it learns typical behavior (login times, transaction types), it catches the deviations that signal coercion — and new scam methods that rule-based monitoring never sees.',
               )}
             </p>
             <p>
               {t(
-                'The VeraWall Behavioral Intelligence Platform evaluates every payment in the context of the full user session — the device, the network, the behavior and the transaction itself — so stringent measures are applied only where risk demands it, and legitimate customers pay without friction.',
+                'VeraWall scores every payment in the context of the full session — device, network, behavior and the transaction itself — so friction lands only where risk demands it, and legitimate customers pay uninterrupted.',
               )}
             </p>
           </div>
