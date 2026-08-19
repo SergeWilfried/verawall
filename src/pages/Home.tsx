@@ -105,8 +105,11 @@ export function Home() {
                     >
                       {t(slide.kicker)}
                     </div>
-                    <h1 style={{ fontSize: isMobile ? 38 : 54, lineHeight: 1.06, fontWeight: 800, textWrap: 'balance' }}>
-                      {t(slide.title)} <span style={{ color: '#D71A28' }}>{t(slide.titleAccent)}</span>
+                    {/* Two deliberate lines: the plain half, then the red half. Copy is
+                        sized (EN and FR) to fit the column at 54px so the break is exact. */}
+                    <h1 style={{ fontSize: isMobile ? 38 : 54, lineHeight: 1.06, fontWeight: 800 }}>
+                      <span style={{ display: 'block' }}>{t(slide.title)}</span>
+                      <span style={{ display: 'block', color: '#D71A28' }}>{t(slide.titleAccent)}</span>
                     </h1>
                     <p style={{ fontSize: isMobile ? 16 : 19, color: '#5A6976', marginTop: 22, maxWidth: 520, lineHeight: 1.6 }}>{t(slide.body)}</p>
                     {slide.href ? (

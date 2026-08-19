@@ -23,7 +23,7 @@ export const heroSlides: HeroSlide[] = [
   {
     kicker: 'Behavioral intelligence',
     title: 'Stop coached scams',
-    titleAccent: 'before the money moves.',
+    titleAccent: 'before the transfer.',
     body:
       'The right customer, on the right phone, making the wrong payment. VeraWall reads the session — an active call, a screen being shared, a payee added seconds ago — and scores each payment in real time.',
     cta: 'See how it works →',
@@ -43,7 +43,7 @@ export const heroSlides: HeroSlide[] = [
   {
     kicker: 'Whitepaper',
     title: 'Stopping fraud',
-    titleAccent: 'before the money moves',
+    titleAccent: 'before money moves',
     body:
       'Why SIM-swap takeovers, coached transfers and agent fraud defeat rule-based controls — and what a session-native defense looks like.',
     cta: 'Download the whitepaper (FR) →',
