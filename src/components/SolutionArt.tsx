@@ -41,7 +41,7 @@ function Chip({ sev, children }: { sev: Sev; children: ReactNode }) {
 
 function Panel({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
-    <div style={{ background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, boxShadow: '0 20px 50px rgba(20,30,40,0.10)', padding: 20, ...style }}>
+    <div style={{ background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, boxShadow: '0 20px 50px rgba(20,30,40,0.10)', padding: 20, display: 'flex', flexDirection: 'column', ...style }}>
       {children}
     </div>
   );
@@ -177,7 +177,7 @@ function Cadence() {
 function Split({ left, right }: { left: ReactNode; right: ReactNode }) {
   const isMobile = useIsMobile();
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, alignItems: 'center', maxWidth: 860, margin: '0 auto' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, alignItems: 'stretch', maxWidth: 860, margin: '0 auto' }}>
       {left}
       {right}
     </div>
@@ -197,7 +197,7 @@ function AtoArt() {
             <Row k={t('Known device')} v={t('First seen this session')} danger />
             <Row k={t('SIM')} v={t('Changed 2 h ago')} danger />
           </div>
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 16 }}>
             <Chip sev="HIGH">{t('Untrusted device')}</Chip>
           </div>
         </Panel>
@@ -206,7 +206,7 @@ function AtoArt() {
         <Panel style={{ padding: 18 }}>
           <div style={{ fontSize: 14, color: FAINT, marginBottom: 6 }}>{t('Behavior biometrics')}</div>
           <Spark />
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 12 }}>
             <Chip sev="HIGH">{t('Behavior biometrics risk')}</Chip>
           </div>
         </Panel>
@@ -219,7 +219,7 @@ function ScamArt() {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'auto 1fr', gap: 24, alignItems: 'center', maxWidth: 760, margin: '0 auto', justifyContent: 'center' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'auto auto', gap: 40, alignItems: 'center', width: 'fit-content', maxWidth: 760, margin: '0 auto', justifyContent: 'center' }}>
       <div style={{ width: 210, background: '#0F1418', borderRadius: 26, padding: 10, margin: isMobile ? '0 auto' : 0, boxShadow: '0 24px 50px rgba(20,30,40,0.22)' }}>
         <div style={{ background: '#12463F', borderRadius: 18, overflow: 'hidden', textAlign: 'center', color: '#fff', fontFamily: 'Barlow' }}>
           <div style={{ padding: '22px 0 8px', fontSize: 20, fontWeight: 700 }}>Bank24</div>
@@ -253,7 +253,7 @@ function MuleArt() {
         <Panel style={{ padding: 18 }}>
           <div style={{ fontSize: 14, color: FAINT, marginBottom: 6 }}>{t('Follow the money')}</div>
           <MoneyGraph />
-          <div style={{ marginTop: 8 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 8 }}>
             <Chip sev="HIGH">{t('Rapid in-out · 11 min')}</Chip>
           </div>
         </Panel>
@@ -267,7 +267,7 @@ function MuleArt() {
             <Row k={t('Beneficiary trust')} v={t('Low')} danger />
             <Row k={t('Prior inactivity')} v="+6 M" />
           </div>
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 16 }}>
             <Chip sev="MED">{t('Unusual account activity')}</Chip>
           </div>
         </Panel>
@@ -286,7 +286,7 @@ function SimArt() {
           <Row k={t('SIM')} v={t('Changed 2 h ago')} danger />
           <Row k={t('Install age')} v={t('First seen this session')} danger />
           <Row k={t('Location')} v={t('Impossible travel')} danger />
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 16 }}>
             <Chip sev="HIGH">{t('SIM swap suspected')}</Chip>
           </div>
         </Panel>
@@ -295,7 +295,7 @@ function SimArt() {
         <Panel style={{ padding: 18 }}>
           <div style={{ fontSize: 14, color: FAINT, marginBottom: 12 }}>{t('Keystroke cadence')}</div>
           <Cadence />
-          <div style={{ marginTop: 14 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 14 }}>
             <Chip sev="MED">{t('Credential pasted, not typed')}</Chip>
           </div>
         </Panel>
@@ -314,7 +314,7 @@ function NafArt() {
           <Row k={t('Install age')} v="0 min" danger />
           <Row k={t('Device')} v={t('Emulator')} danger />
           <Row k={t('Identity entry')} v={t('Pasted')} danger />
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 16 }}>
             <Chip sev="HIGH">{t('Synthetic identity risk')}</Chip>
           </div>
         </Panel>
@@ -323,7 +323,7 @@ function NafArt() {
         <Panel style={{ padding: 18 }}>
           <div style={{ fontSize: 14, color: FAINT, marginBottom: 6 }}>{t('Behavior biometrics')}</div>
           <Spark />
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 12 }}>
             <Chip sev="MED">{t('Bot / automated signup')}</Chip>
           </div>
         </Panel>
@@ -337,7 +337,7 @@ function TraArt() {
   return (
     <Split
       left={
-        <Panel style={{ textAlign: 'center' }}>
+        <Panel style={{ textAlign: 'center', justifyContent: 'center' }}>
           <div style={{ fontSize: 15, color: FAINT, marginBottom: 6 }}>{t('Transaction risk score')}</div>
           <Gauge score={72} />
           <div style={{ display: 'flex', justifyContent: 'center', gap: 16, fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, marginTop: 4 }}>
@@ -356,7 +356,7 @@ function TraArt() {
           <div style={{ marginTop: 14, borderTop: `1px solid ${LINE}`, paddingTop: 8 }}>
             <Row k={t('Thresholds')} v={t('Per tenant & currency')} />
           </div>
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 'auto', paddingTop: 16 }}>
             <Chip sev="MED">{t('Invisible authentication')}</Chip>
           </div>
         </Panel>
