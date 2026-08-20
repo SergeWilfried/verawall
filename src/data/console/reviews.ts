@@ -22,7 +22,7 @@ export const reviewDefs: ReviewDetail[] = [
       { t: '09:04', event: 'Incoming phone call detected', detail: 'Device on active call for the remainder of the session — a strong coaching indicator.', flag: 'Anomaly' },
       { t: '09:07', event: 'Navigation anomaly', detail: 'User taken directly to new-payee flow, skipping usual balance check pattern.', flag: 'Anomaly' },
       { t: '09:10', event: 'Hesitation pattern', detail: 'Typing pauses 4–9s on amount field; three corrections. Consistent with dictated instructions.', flag: 'Anomaly' },
-      { t: '09:13', event: 'New payee added', detail: 'CZ55 •• 0930 — no prior relationship; IBAN matches FraudIntel mule list.', flag: 'Critical' },
+      { t: '09:13', event: 'New payee added', detail: 'CZ55 •• 0930 — no prior relationship; IBAN matches a confirmed-fraud destination (payee intel).', flag: 'Critical' },
       { t: '09:14', event: 'Payment attempt 240,000 Kč', detail: 'Risk score 94 — payment held automatically, alert raised to queue.', flag: 'Critical' },
     ],
     txn: { payee: 'CZ55 •• 0930 (new payee)', amount: '240,000 Kč', context: 'First-time payee · instant transfer · initiated during active phone call', decision: 'Held' },
@@ -184,7 +184,7 @@ export const reviewDefs: ReviewDetail[] = [
     history: [
       { kind: 'ok', what: '1 prior alert — false positive', when: 'Feb 2026' },
       { kind: 'ok', what: 'Stable behavioral profile', when: '3 yrs' },
-      { kind: 'ok', what: 'No FraudIntel matches', when: '' },
+      { kind: 'ok', what: 'No payee-intel matches', when: '' },
     ],
   },
 ];

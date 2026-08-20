@@ -30,16 +30,15 @@
       "detections": "Detections",
       "transactionRisk": "Transaction Risk",
       "cases": "Case Management",
-      "scamflag": "ScamFlag",
-      "fraudintel": "FraudIntel",
+      "payeeIntel": "Payee Intel",
       "riskPolicies": "Risk Policies",
       "reporting": "Reporting",
       "settings": "Platform Settings"
     }
   },
   "sidebar": {
-    "fusionCenter": "Cyber Fraud Fusion Center",
-    "monitoring": "Live — 24/7 monitoring"
+    "fusionCenter": "Action channel",
+    "monitoring": "Live — webhooks & kill switch"
   },
   "topbar": {
     "tenantLabel": "Tenant",

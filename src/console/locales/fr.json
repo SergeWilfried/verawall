@@ -30,16 +30,15 @@
       "detections": "Détections",
       "transactionRisk": "Risque transactionnel",
       "cases": "Gestion des dossiers",
-      "scamflag": "ScamFlag",
-      "fraudintel": "FraudIntel",
+      "payeeIntel": "Intel bénéficiaires",
       "riskPolicies": "Politiques de risque",
       "reporting": "Rapports",
       "settings": "Paramètres de la plateforme"
     }
   },
   "sidebar": {
-    "fusionCenter": "Centre de fusion cyberfraude",
-    "monitoring": "En direct — surveillance 24/7"
+    "fusionCenter": "Canal d'action",
+    "monitoring": "En direct — webhooks et coupe-circuit"
   },
   "topbar": {
     "tenantLabel": "Espace",

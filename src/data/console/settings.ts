@@ -9,10 +9,10 @@ export const tenantInfo = [
 
 export const moduleToggleDefs = [
   { key: 'bip', name: 'Behavioral Intelligence', desc: 'Session profiling & anomaly detection — 48k sessions/day' },
-  { key: 'scamflag', name: 'ScamFlag', desc: 'GenAI scam analysis of customer submissions' },
-  { key: 'insights', name: 'Smart Insights', desc: 'False-positive tuning & model feedback' },
-  { key: 'fraudintel', name: 'FraudIntel sharing', desc: 'Contribute & consume network intelligence' },
-  { key: 'cffc', name: 'CFFC monitoring', desc: '24/7 Fusion Center escalation channel' },
+  { key: 'payeeIntel', name: 'Payee intelligence', desc: 'Score-time payee reputation — confirmed destinations warn later payers' },
+  { key: 'tuning', name: 'Threshold tuning', desc: 'Per-tenant, per-currency risk bands and velocity knobs' },
+  { key: 'actionChannel', name: 'Action channel', desc: 'Core-banking webhooks + on-device kill switch' },
+  { key: 'amlTwoFiles', name: 'AML two-files', desc: 'Confirmed fraud auto-opens the linked AML case' },
 ];
 
 export const notifDefs = [
@@ -34,7 +34,7 @@ export const teamDefs = [
   { name: 'P. Hruba', email: 'p.hruba@demobank.cz', role: 'Senior analyst' },
   { name: 'T. Marek', email: 't.marek@demobank.cz', role: 'Analyst' },
   { name: 'J. Sikora', email: 'j.sikora@demobank.cz', role: 'Analyst' },
-  { name: 'CFFC service', email: 'cffc@verawall.com', role: 'Read-only' },
+  { name: 'Core banking service', email: 'core-api@verawall.com', role: 'Read-only' },
 ];
 
 export const roleColors: Record<string, string> = {

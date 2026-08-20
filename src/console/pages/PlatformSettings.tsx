@@ -295,10 +295,10 @@ const notifLabels: Record<string, { name: string; desc: string }> = {
 };
 const moduleLabels: Record<string, { name: string; desc: string }> = {
   bip: { name: 'Behavioral Intelligence', desc: 'Session profiling & anomaly detection' },
-  scamflag: { name: 'ScamFlag', desc: 'GenAI scam analysis of customer submissions' },
-  insights: { name: 'Smart Insights', desc: 'False-positive tuning & model feedback' },
-  fraudintel: { name: 'FraudIntel sharing', desc: 'Contribute & consume network intelligence' },
-  cffc: { name: 'CFFC monitoring', desc: '24/7 Fusion Center escalation channel' },
+  payeeIntel: { name: 'Payee intelligence', desc: 'Score-time payee reputation — confirmed destinations warn later payers' },
+  tuning: { name: 'Threshold tuning', desc: 'Per-tenant, per-currency risk bands and velocity knobs' },
+  actionChannel: { name: 'Action channel', desc: 'Core-banking webhooks + on-device kill switch' },
+  amlTwoFiles: { name: 'AML two-files', desc: 'Confirmed fraud auto-opens the linked AML case' },
 };
 const tenantFields: { key: keyof TenantSettings['tenant']; label: string; editable: boolean }[] = [
   { key: 'name', label: 'Tenant', editable: true },

@@ -19,7 +19,7 @@ import { TransactionRisk } from './console/pages/TransactionRisk';
 import { CaseManagement } from './console/pages/CaseManagement';
 import { TransactionGraph } from './console/pages/TransactionGraph';
 import { PlatformSettings } from './console/pages/PlatformSettings';
-import { FraudIntel } from './console/pages/FraudIntel';
+import { PayeeIntel } from './console/pages/PayeeIntel';
 
 function MarketingLayout() {
   return (
@@ -56,7 +56,7 @@ function App() {
             <Route path="cases" element={<CaseManagement />} />
             <Route path="graph" element={<TransactionGraph />} />
             <Route path="settings" element={<PlatformSettings />} />
-            <Route path="fraud-intel" element={<FraudIntel />} />
+            <Route path="payee-intel" element={<PayeeIntel />} />
           </Route>
         </Routes>
         </AuthProvider>

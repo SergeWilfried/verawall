@@ -32,7 +32,7 @@ export const navGroups: ConsoleNavGroup[] = [
   {
     id: 'intelligence',
     title: 'Intelligence',
-    items: [{ id: 'scamflag', label: 'ScamFlag', badge: '5' }, { id: 'fraudintel', label: 'FraudIntel', to: '/console/fraud-intel' }],
+    items: [{ id: 'payeeIntel', label: 'Payee Intel', to: '/console/payee-intel' }],
   },
   {
     id: 'administration',

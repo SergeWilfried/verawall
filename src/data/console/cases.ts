@@ -26,13 +26,13 @@ export const caseDefs: CaseRecord[] = [
     ],
   },
   {
-    id: 'C-1041', user: 'K. Svoboda', account: 'CZ12 •• 8830', type: 'Account Takeover', status: 'Escalated', assignee: 'CFFC', age: '5h',
-    summary: 'Remote access tool detected on a new device. Session terminated, credentials reset. Escalated to CFFC for infrastructure attribution.',
+    id: 'C-1041', user: 'K. Svoboda', account: 'CZ12 •• 8830', type: 'Account Takeover', status: 'Escalated', assignee: 'Senior review', age: '5h',
+    summary: 'Remote access tool detected on a new device. Session terminated, credentials reset. Escalated to senior review for infrastructure attribution.',
     timeline: [
       { event: 'Remote access signature match', when: 'Today 06:02' },
       { event: 'Session terminated automatically', when: 'Today 06:02' },
       { event: 'Credentials reset, customer notified', when: 'Today 06:40' },
-      { event: 'Escalated to Fusion Center', when: 'Today 07:15' },
+      { event: 'Escalated to senior review', when: 'Today 07:15' },
     ],
   },
   {
@@ -56,7 +56,7 @@ export const caseDefs: CaseRecord[] = [
   },
   {
     id: 'C-1031', user: 'L. Cerny', account: 'CZ03 •• 7742', type: 'New Account Fraud', status: 'Closed', assignee: 'P. Hruba', age: '3d',
-    summary: 'Onboarding biometrics inconsistent with declared identity. Account rejected at KYC review; identity flagged in FraudIntel.',
+    summary: 'Onboarding biometrics inconsistent with declared identity. Account rejected at KYC review; identity recorded in payee intel.',
     timeline: [
       { event: 'Biometric mismatch at onboarding', when: 'Mon 10:20' },
       { event: 'KYC manual review', when: 'Mon 13:00' },
