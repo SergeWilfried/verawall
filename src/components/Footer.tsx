@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useIsMobile } from '../useMediaQuery';
-import { trustPoints } from '../data/home';
-import { Icon } from './Icons';
 
 // The footer doubles as the contact block (#contact). Requests go to the
 // address published on the whitepaper and pitch deck.
@@ -20,7 +18,7 @@ export function Footer() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : '1.1fr 0.9fr',
+            gridTemplateColumns: '1fr',
             gap: isMobile ? 40 : 72,
             alignItems: 'start',
             paddingBottom: isMobile ? 48 : 90,
@@ -41,20 +39,6 @@ export function Footer() {
             </a>
             <div style={{ marginTop: 18, fontSize: 14, color: '#B9BDC1' }}>
               <a href={`mailto:${CONTACT_EMAIL}`} className="footer-link" style={{ color: '#EAEAEA' }}>{CONTACT_EMAIL}</a>
-            </div>
-          </div>
-          <div>
-            <h4 style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>{t('Security and privacy by design')}</h4>
-            <div style={{ display: 'grid', gap: 18, marginTop: 22 }}>
-              {trustPoints.map((p) => (
-                <div key={p.title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                  <Icon name={p.icon} size={26} style={{ flexShrink: 0, marginTop: 2 }} />
-                  <div>
-                    <div style={{ fontFamily: 'Barlow', fontWeight: 700, fontSize: 15, color: '#fff' }}>{t(p.title)}</div>
-                    <div style={{ fontSize: 14, color: '#B9BDC1', marginTop: 3, lineHeight: 1.6 }}>{t(p.desc)}</div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>

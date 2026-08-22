@@ -5,6 +5,7 @@ import { services, features, heroSlides, marketStats, marketStatsSource, scoreEx
 import { Seo } from '../components/Seo';
 import { Icon } from '../components/Icons';
 import { ScamWarningPhone, VerdictCard, WhitepaperCover, ConsoleMock } from '../components/Mockups';
+import { TrustBento } from '../components/TrustBento';
 import { useIsMobile } from '../useMediaQuery';
 
 const HERO_COUNT = heroSlides.length + 1; // + the static closing slide
@@ -380,6 +381,9 @@ export function Home() {
           </pre>
         </div>
       </section>
+
+      {/* SECURITY & PRIVACY BENTO */}
+      <TrustBento />
 
       {/* RESOURCES */}
       <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '20px 15px 100px' }}>
