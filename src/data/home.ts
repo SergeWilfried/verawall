@@ -150,6 +150,7 @@ export const trustPoints: { icon: IconKey; title: string; desc: string }[] = [
   { icon: 'lock', title: 'Timing, never content', desc: 'Keystroke and touch capture record cadence and geometry — no characters, no screen content.' },
   { icon: 'key', title: 'Keys encrypted at rest', desc: 'Per-tenant signing keys are versioned, envelope-encrypted and rotate without downtime.' },
   { icon: 'shield', title: 'Your tenant, your data', desc: 'Every record is scoped to your tenant; analysts authenticate with roles, MFA and revocable sessions.' },
+  { icon: 'sdk', title: 'Least-privilege by design', desc: 'No restricted permissions and no installed-app inventory — VeraWall never asks your app to carry a Play declaration that puts your listing at risk.' },
 ];
 
 export const scoreExample = `POST /v1/score

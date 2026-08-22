@@ -173,6 +173,8 @@ export const dict: Record<string, string> = {
   "Per-tenant signing keys are versioned, envelope-encrypted and rotate without downtime.": "Les clés de signature par tenant sont versionnées, chiffrées par enveloppe et tournent sans interruption.",
   "Your tenant, your data": "Votre tenant, vos données",
   "Every record is scoped to your tenant; analysts authenticate with roles, MFA and revocable sessions.": "Chaque enregistrement est cloisonné à votre tenant ; les analystes s'authentifient avec des rôles, une MFA et des sessions révocables.",
+  "Least-privilege by design": "Moindre privilège dès la conception",
+  "No restricted permissions and no installed-app inventory — VeraWall never asks your app to carry a Play declaration that puts your listing at risk.": "Aucune permission sensible, aucun inventaire des applications installées — VeraWall n'impose jamais à votre application une déclaration Play qui met en risque sa présence sur le store.",
   "Android, iOS / React Native and web.": "Android, iOS / React Native et web.",
   "One call, a decision in milliseconds.": "Un appel, une décision en millisecondes.",
   "Warnings, step-ups and holds, in-app.": "Avertissements, renforcements et suspensions, dans l'application.",
