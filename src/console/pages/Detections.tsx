@@ -25,6 +25,8 @@ const signalHint: Record<string, string> = {
   DEVICE_INTEGRITY: 'Rooted / hooked', EMULATOR: 'Emulator',
   SIDELOADED_APP: 'Tampered install', DEBUG_BUILD: 'Tampered install',
   DEV_OPTIONS: 'Device posture', SIM_CHANGED: 'SIM change',
+  VPN_ACTIVE: 'Tunnelled transport', PROXY_CONFIGURED: 'Traffic inspection',
+  MITM_CA_INSTALLED: 'Interception CA', CLONE_CONTAINER: 'Cloned app',
   MOCK_LOCATION: 'Fake GPS', IMPOSSIBLE_TRAVEL: 'Geo-velocity', GEO_UNUSUAL: 'Unusual location',
   HEADLESS_BROWSER: 'Bot / automation', MOUSE_ANOMALY: 'Web behavior',
   TOUCH_ANOMALY: 'Touch behavior', KEYSTROKE_ANOMALY: 'Typing cadence',
@@ -35,6 +37,8 @@ const signalHint: Record<string, string> = {
   RAPID_IN_OUT: 'Mule flow', FAN_OUT: 'Mule dispersion', OUT_BURST: 'Account drain',
   QUIET_ACCOUNT: 'Dormant / new account', DORMANT_REACTIVATED: 'Dormant account',
   FLAGGED_COUNTERPARTY: 'Known-bad counterparty',
+  KNOWN_MULE_PAYEE: 'Known-bad payee', PAYEE_UNDER_INVESTIGATION: 'Payee under review',
+  TXN_VELOCITY: 'Rapid transfers',
   // Agent commission / structuring
   SPLIT_TXNS: 'Structuring', MICRO_BURST: 'Structuring', UNIFORM_AMOUNTS: 'Structuring',
 };
