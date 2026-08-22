@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# The analyst console is an authenticated app, not content.
+Disallow: /console
+
+Sitemap: https://verawall.com/sitemap.xml
