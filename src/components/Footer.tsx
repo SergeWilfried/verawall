@@ -8,10 +8,9 @@ import { CONTACT_EMAIL } from './contact';
 export { CONTACT_EMAIL } from './contact';
 
 export function Footer() {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const isMobile = useIsMobile();
   const year = new Date().getFullYear();
-  const subject = encodeURIComponent(lang === 'fr' ? 'Démo VeraWall (30 min)' : 'VeraWall demo (30 min)');
 
   return (
     <div id="contact" style={{ background: '#1D1D1B', color: '#EAEAEA', marginTop: 40 }}>

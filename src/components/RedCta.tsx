@@ -1,5 +1,4 @@
 import { useLanguage } from '../i18n/LanguageContext';
-import { CONTACT_EMAIL } from './contact';
 import { DemoRequestForm } from './DemoRequestForm';
 
 export function RedCta() {
