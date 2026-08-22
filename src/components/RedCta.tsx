@@ -31,12 +31,6 @@ export function RedCta() {
             {t('A 30-minute walkthrough of the demo bank, the scoring signals and the analyst console — then a pilot on a replay of your own transaction feed.')}
           </p>
           <DemoRequestForm />
-          <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.94)', marginTop: 16 }}>
-            {t('Opens your mail client with the details pre-filled — or write to us directly:')}{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: '#fff', textDecoration: 'underline' }}>
-              {CONTACT_EMAIL}
-            </a>
-          </p>
         </div>
       </div>
     </section>

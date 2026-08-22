@@ -33,10 +33,6 @@ export function Footer() {
           </div>
           <div>
             <h4 style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>{t('Plan your demo')}</h4>
-            <p style={{ fontSize: 14, color: '#B9BDC1', marginTop: 12, lineHeight: 1.6 }}>
-              {t('Opens your mail client with the details pre-filled — or write to us directly:')}{' '}
-              <a href={`mailto:${CONTACT_EMAIL}?subject=${subject}`} className="footer-link" style={{ color: '#EAEAEA' }}>{CONTACT_EMAIL}</a>
-            </p>
             <DemoRequestForm dark />
           </div>
         </div>
