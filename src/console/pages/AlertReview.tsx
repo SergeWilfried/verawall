@@ -377,7 +377,7 @@ export function AlertReview() {
                 {timeline.map((ev, j) => (
                   <button key={j} type="button" title={ev.event} onClick={() => goToStep(j)}
                     style={{ flex: 1, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', position: 'relative', borderTop: `2px solid ${j <= step ? '#D71A28' : '#E9EDF1'}` }}>
-                    <span style={{ width: j === step ? 14 : 10, height: j === step ? 14 : 10, borderRadius: '50%', marginTop: -16, border: '2px solid #fff', boxShadow: '0 0 0 1px #E3E7EB', background: ev.flag ? flagColors[ev.flag] : j <= step ? '#D71A28' : '#C9CED4', transition: 'all .2s' }} />
+                    <span style={{ width: j === step ? 14 : 10, height: j === step ? 14 : 10, borderRadius: '50%', marginTop: -16, border: '2px solid #fff', boxShadow: '0 0 0 1px #E3E7EB', background: ev.flag ? flagColors[ev.flag] : j <= step ? '#D71A28' : '#C9CED4', transition: 'width .2s, height .2s, background-color .2s' }} />
                   </button>
                 ))}
               </div>

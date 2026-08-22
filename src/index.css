@@ -55,6 +55,29 @@ button {
 
 /* ---- reusable interactive classes (replace the old style-hover attribute) ---- */
 
+/* Tactile press feedback. 0.96 exactly — smaller reads as exaggerated. The
+   transform transition itself lives in each element's inline transition list
+   (inline shorthand would override a class-side one). */
+.press-scale:active {
+  transform: scale(0.96);
+}
+
+/* Extend a visually small control to a 40px-tall hit target without moving
+   layout. Horizontal bleed stays at 2px so adjacent controls (pagination
+   numbers sit 4px apart) never overlap hit areas. */
+.hit-40 {
+  position: relative;
+}
+.hit-40::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 40px;
+  transform: translateY(-50%);
+}
+
 .link-hover:hover {
   color: #d71a28;
 }

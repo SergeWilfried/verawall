@@ -390,6 +390,7 @@ export function PlatformSettings() {
                 fontFamily: 'Barlow', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.02em',
                 background: section === s.key ? '#FBF1F2' : 'transparent',
                 color: section === s.key ? '#D71A28' : '#5A6976',
+                transition: 'background-color .15s, color .15s',
               }}
             >
               {s.label}

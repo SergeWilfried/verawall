@@ -16,6 +16,7 @@ export function ScoreBadge({ score, size = 44 }: { score: number; size?: number 
         color: '#fff',
         flexShrink: 0,
         background: scoreColor(score),
+        fontVariantNumeric: 'tabular-nums',
       }}
     >
       {score}
