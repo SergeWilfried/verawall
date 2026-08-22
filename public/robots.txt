@@ -3,4 +3,4 @@ Allow: /
 # The analyst console is an authenticated app, not content.
 Disallow: /console
 
-Sitemap: https://verawall.com/sitemap.xml
+Sitemap: https://verawall.tech/sitemap.xml

@@ -22,7 +22,7 @@ export function Seo({ title, description }: { title: string; description: string
       canon.rel = 'canonical';
       document.head.appendChild(canon);
     }
-    canon.href = 'https://verawall.com' + window.location.pathname;
+    canon.href = 'https://verawall.tech' + window.location.pathname;
   }, [title, description]);
 
   return null;
