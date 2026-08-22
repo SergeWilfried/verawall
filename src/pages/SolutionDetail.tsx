@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { Link, Navigate } from 'react-router-dom';
+import { LocalizedLink as Link } from '../components/LocalizedLink';
+import { Navigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useIsMobile } from '../useMediaQuery';
 import { solutionPages, solutionOrder } from '../data/solutionPages';
@@ -26,7 +27,7 @@ export function SolutionDetail() {
 
   return (
     <>
-      <Seo title={page.title} description={page.intro} />
+      <Seo title={t(page.title)} description={t(page.intro)} />
 
       <Breadcrumb
         items={[

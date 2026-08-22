@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { dict } from './dict';
 
 type Lang = 'en' | 'fr';
@@ -12,9 +12,12 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Persist the choice so a reload or an in-app navigation keeps the language.
+  // The URL is the source of truth (/fr/... serves French — that is what
+  // makes the French content indexable); the stored choice only decides the
+  // first-load redirect for visitors landing on an unprefixed URL.
   const [lang, setLangState] = useState<Lang>(() => {
     try {
+      if (typeof window !== 'undefined' && /^\/fr(\/|$)/.test(window.location.pathname)) return 'fr';
       const saved = localStorage.getItem('vw_lang');
       if (saved === 'fr' || saved === 'en') return saved;
       if (typeof navigator !== 'undefined' && /^fr\b/i.test(navigator.language)) return 'fr';
@@ -31,6 +34,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
   };
+
+  // Mirror onto <html lang> — screen readers pick pronunciation from it and
+  // crawlers read it as the page language.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const value = useMemo<LanguageContextValue>(
     () => ({

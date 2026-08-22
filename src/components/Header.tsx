@@ -1,5 +1,6 @@
 import { useState, type KeyboardEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { LocalizedLink as Link } from './LocalizedLink';
 import { useLanguage } from '../i18n/LanguageContext';
 import { solutionsMenu, platformTiles } from '../data/nav';
 import { useMediaQuery } from '../useMediaQuery';
@@ -8,6 +9,16 @@ type MenuName = 'solutions' | 'platform' | null;
 
 export function Header() {
   const { t, lang, setLang } = useLanguage();
+  const location = useLocation();
+  const navigate = useNavigate();
+  // The language lives in the URL now — switching means navigating to the
+  // same page on the other tree, so the address always matches the content.
+  function switchLang(l: 'en' | 'fr') {
+    if (l === lang) return;
+    setLang(l);
+    const bare = location.pathname.replace(/^\/fr(?=\/|$)/, '') || '/';
+    navigate((l === 'fr' ? (bare === '/' ? '/fr' : '/fr' + bare) : bare) + location.hash, { replace: true });
+  }
   // Header switches to the hamburger below 960px, not the 768px content
   // breakpoint: the French desktop nav (POURQUOI VERAWALL · PLATEFORME
   // VERAWALL · DEMANDER UNE DÉMO) needs the extra room, and clipped past
@@ -111,10 +122,10 @@ export function Header() {
               flexShrink: 0,
             }}
           >
-            <button type="button" className="lang-btn" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>
+            <button type="button" className="lang-btn" aria-pressed={lang === 'en'} onClick={() => switchLang('en')}>
               EN
             </button>
-            <button type="button" className="lang-btn" aria-pressed={lang === 'fr'} onClick={() => setLang('fr')}>
+            <button type="button" className="lang-btn" aria-pressed={lang === 'fr'} onClick={() => switchLang('fr')}>
               FR
             </button>
           </div>
@@ -319,8 +330,8 @@ export function Header() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 20 }}>
             <div style={{ display: 'flex', border: '1px solid #E0E5EA', borderRadius: 3, overflow: 'hidden' }}>
-              <button type="button" className="lang-btn" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>EN</button>
-              <button type="button" className="lang-btn" aria-pressed={lang === 'fr'} onClick={() => setLang('fr')}>FR</button>
+              <button type="button" className="lang-btn" aria-pressed={lang === 'en'} onClick={() => switchLang('en')}>EN</button>
+              <button type="button" className="lang-btn" aria-pressed={lang === 'fr'} onClick={() => switchLang('fr')}>FR</button>
             </div>
             <Link
               to="/#contact"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '../components/LocalizedLink';
 import { useLanguage } from '../i18n/LanguageContext';
 import { services, features, heroSlides, marketStats, marketStatsSource, scoreExample } from '../data/home';
 import { Seo } from '../components/Seo';

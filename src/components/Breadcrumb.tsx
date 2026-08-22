@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from './LocalizedLink';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export interface BreadcrumbItem {

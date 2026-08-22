@@ -1,15 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://verawall.tech/</loc></url>
-  <url><loc>https://verawall.tech/solutions/app-scams</loc></url>
-  <url><loc>https://verawall.tech/solutions/investment-scams</loc></url>
-  <url><loc>https://verawall.tech/solutions/romance-scams</loc></url>
-  <url><loc>https://verawall.tech/solutions/purchase-scams</loc></url>
-  <url><loc>https://verawall.tech/solutions/credential-theft</loc></url>
-  <url><loc>https://verawall.tech/solutions/account-takeover</loc></url>
-  <url><loc>https://verawall.tech/solutions/money-mules</loc></url>
-  <url><loc>https://verawall.tech/solutions/new-account-fraud</loc></url>
-  <url><loc>https://verawall.tech/solutions/transaction-risk</loc></url>
-  <url><loc>https://verawall.tech/solutions/agent-fraud</loc></url>
-  <url><loc>https://verawall.tech/instant-payment-scams</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://verawall.tech/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/app-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/app-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/app-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/app-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/app-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/app-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/app-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/app-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/investment-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/investment-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/investment-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/investment-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/investment-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/investment-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/investment-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/investment-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/romance-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/romance-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/romance-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/romance-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/romance-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/romance-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/romance-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/romance-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/purchase-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/purchase-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/purchase-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/purchase-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/purchase-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/purchase-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/purchase-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/purchase-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/credential-theft</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/credential-theft"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/credential-theft"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/credential-theft"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/credential-theft</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/credential-theft"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/credential-theft"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/credential-theft"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/account-takeover</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/account-takeover"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/account-takeover"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/account-takeover"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/account-takeover</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/account-takeover"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/account-takeover"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/account-takeover"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/money-mules</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/money-mules"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/money-mules"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/money-mules"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/money-mules</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/money-mules"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/money-mules"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/money-mules"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/new-account-fraud</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/new-account-fraud"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/new-account-fraud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/new-account-fraud"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/new-account-fraud</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/new-account-fraud"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/new-account-fraud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/new-account-fraud"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/transaction-risk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/transaction-risk"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/transaction-risk"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/transaction-risk"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/transaction-risk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/transaction-risk"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/transaction-risk"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/transaction-risk"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/solutions/agent-fraud</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/agent-fraud"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/agent-fraud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/agent-fraud"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/solutions/agent-fraud</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/solutions/agent-fraud"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/solutions/agent-fraud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/solutions/agent-fraud"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/instant-payment-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/instant-payment-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/instant-payment-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/instant-payment-scams"/>
+  </url>
+  <url>
+    <loc>https://verawall.tech/fr/instant-payment-scams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://verawall.tech/instant-payment-scams"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://verawall.tech/fr/instant-payment-scams"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://verawall.tech/instant-payment-scams"/>
+  </url>
 </urlset>
