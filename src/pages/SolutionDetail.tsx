@@ -52,7 +52,7 @@ export function SolutionDetail() {
             WebkitMaskImage: 'radial-gradient(circle at 60% 40%, rgba(0,0,0,0.9), transparent 70%)',
           }}
         />
-        <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: isMobile ? '56px 15px 64px' : '96px 15px 110px' }}>
+        <div style={{ position: 'relative', maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '56px 15px 64px' : '96px 15px 110px' }}>
           <h1 style={{ fontSize: isMobile ? 40 : 64, lineHeight: 1.04, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28', maxWidth: 860, textWrap: 'balance' }}>
             {t(page.title)}
           </h1>
@@ -76,7 +76,7 @@ export function SolutionDetail() {
       )}
 
       {/* SPOT IN REAL-TIME */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '48px 15px 72px' : '72px 15px 100px' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '48px 15px 72px' : '72px 15px 100px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '0.85fr 1.15fr', gap: isMobile ? 24 : 64, alignItems: 'start' }}>
           <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: isMobile ? 'static' : 'sticky', top: 110, textWrap: 'balance' }}>
             {t(page.spotTitle)}
@@ -92,7 +92,7 @@ export function SolutionDetail() {
       <CardsGrid title={page.cardsTitle} cards={page.cards} />
 
       {/* RELATED PAGES */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '70px 15px 0' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '70px 15px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           <span style={{ fontFamily: 'Barlow', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#7A8593' }}>
             More solutions:

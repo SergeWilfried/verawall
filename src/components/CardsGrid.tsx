@@ -31,7 +31,7 @@ export function CardsGrid({ title, cards }: { title: string; cards: Card[] }) {
           WebkitMaskImage: 'radial-gradient(circle at 30% 30%, rgba(0,0,0,0.9), transparent 70%)',
         }}
       />
-      <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: '90px 15px 100px' }}>
+      <div style={{ position: 'relative', maxWidth: 'var(--page-width)', margin: '0 auto', padding: '90px 15px 100px' }}>
         <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, textAlign: 'center', color: '#5A6976', textWrap: 'balance' }}>{t(title)}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 28, marginTop: 56 }}>
           {cards.map((cd) => (

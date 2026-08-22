@@ -119,7 +119,7 @@ export function MoneyFlowGraph({ title }: { title: string }) {
 
   return (
     <section style={{ background: '#FBFBFC', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}` }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '48px 15px' : '72px 15px' }}>
+      <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '48px 15px' : '72px 15px' }}>
         <h2 style={{ fontSize: isMobile ? 26 : 34, fontWeight: 700, textAlign: 'center', textWrap: 'balance' }}>{t(title)}</h2>
         <p style={{ fontSize: 17, color: MUTED, textAlign: 'center', maxWidth: 640, margin: '18px auto 0', lineHeight: 1.7 }}>
           {t('One mule account rarely acts alone. VeraWall traces the flow from the victim payment through the cash-out network — the same graph an analyst opens on a confirmed alert.')}

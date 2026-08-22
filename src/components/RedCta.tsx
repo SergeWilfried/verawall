@@ -4,7 +4,7 @@ export function RedCta() {
   const { t } = useLanguage();
 
   return (
-    <section style={{ maxWidth: 1080, margin: '0 auto', padding: '70px 15px' }}>
+    <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '70px 15px' }}>
       <div
         style={{
           position: 'relative',

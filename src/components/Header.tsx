@@ -35,7 +35,7 @@ export function Header() {
     >
       <div
         style={{
-          maxWidth: 1080,
+          maxWidth: 'var(--page-width)',
           margin: '0 auto',
           padding: '0 15px',
           height: 84,
@@ -138,7 +138,7 @@ export function Header() {
               left: 0,
               right: 0,
               margin: '0 auto',
-              maxWidth: 1080,
+              maxWidth: 'var(--page-width)',
               zIndex: 99,
               background: '#FFFFFF',
               border: '1px solid #E9EDF1',
@@ -150,7 +150,7 @@ export function Header() {
               marginTop: 1,
             }}
           >
-            <div style={{ maxWidth: 1080, margin: '0 auto', padding: '28px 15px' }}>
+            <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '28px 15px' }}>
               <div style={{ display: openMenu === 'solutions' ? 'block' : 'none' }}>
                 <div
                   style={{

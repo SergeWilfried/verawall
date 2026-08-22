@@ -10,6 +10,13 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  /* The one place the marketing site's content width is decided. Every
+     page-level container references this; prose measures (760/860/640…)
+     stay hard-coded on purpose — they are reading measures, not layout. */
+  --page-width: 1140px;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   background: #ffffff;

@@ -43,7 +43,7 @@ export function InstantPaymentScams() {
             WebkitMaskImage: 'radial-gradient(circle at 60% 40%, rgba(0,0,0,0.9), transparent 70%)',
           }}
         />
-        <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', padding: isMobile ? '56px 15px 64px' : '96px 15px 110px' }}>
+        <div style={{ position: 'relative', maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '56px 15px 64px' : '96px 15px 110px' }}>
           <h1 style={{ fontSize: isMobile ? 40 : 64, lineHeight: 1.04, fontWeight: 800, textTransform: 'uppercase', color: '#D71A28', maxWidth: 820, textWrap: 'balance' }}>
             {t('Instant Payment Scams')}
           </h1>
@@ -66,7 +66,7 @@ export function InstantPaymentScams() {
       <SolutionArt kind="scam" title="How it shows up in the session." />
 
       {/* SPOT IN REAL-TIME */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '48px 15px 72px' : '72px 15px 100px' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '48px 15px 72px' : '72px 15px 100px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '0.85fr 1.15fr', gap: isMobile ? 24 : 64, alignItems: 'start' }}>
           <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.18, fontWeight: 700, color: '#5A6976', position: isMobile ? 'static' : 'sticky', top: 110, textWrap: 'balance' }}>
             {t('Spot instant payment scams in real-time.')}

@@ -75,7 +75,7 @@ export function Home() {
         <div
           style={{
             position: 'relative',
-            maxWidth: 1080,
+            maxWidth: 'var(--page-width)',
             margin: '0 auto',
             padding: '0 15px',
             minHeight: 'calc(100vh - 84px)',
@@ -161,7 +161,7 @@ export function Home() {
       </section>
 
       {/* INTRO / WHY */}
-      <section id="why" style={{ maxWidth: 1080, margin: '0 auto', padding: '60px 15px' }}>
+      <section id="why" style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '60px 15px' }}>
         <div
           style={{
             position: 'relative',
@@ -188,7 +188,7 @@ export function Home() {
       </section>
 
       {/* FRAUD TYPE CARDS */}
-      <section id="solutions" style={{ maxWidth: 1080, margin: '0 auto', padding: '80px 15px 60px' }}>
+      <section id="solutions" style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '80px 15px 60px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto 56px', textAlign: 'center' }}>
           <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.15, fontWeight: 700, textWrap: 'balance' }}>{t('From coached transfers to agent fraud.')}</h2>
           <p style={{ fontSize: 18, color: '#5A6976', marginTop: 24, lineHeight: 1.7 }}>
@@ -225,7 +225,7 @@ export function Home() {
       </section>
 
       {/* SCAMS SPLIT */}
-      <section style={{ maxWidth: 1050, margin: '0 auto', padding: isMobile ? '32px 16px' : '60px 32px' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '32px 16px' : '60px 32px' }}>
         <div style={split}>
           <div>
             <h2 style={{ fontSize: isMobile ? 26 : 34, lineHeight: 1.18, fontWeight: 700, textWrap: 'balance' }}>
@@ -248,7 +248,7 @@ export function Home() {
       </section>
 
       {/* ATO SPLIT */}
-      <section style={{ maxWidth: 1050, margin: '0 auto', padding: isMobile ? '0 16px 32px' : '0 32px 60px' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '0 16px 32px' : '0 32px 60px' }}>
         <div style={split}>
           <div style={{ display: 'flex', justifyContent: 'center', order: isMobile ? 2 : 1 }}>
             <VerdictCard compact />
@@ -269,7 +269,7 @@ export function Home() {
       </section>
 
       {/* MARKET STATS */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '80px 15px' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '80px 15px' }}>
         <div style={{ textAlign: 'center', marginBottom: 44 }}>
           <div style={{ fontFamily: 'Barlow', fontSize: 13, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#D71A28' }}>
             {t('Mobile money, by the numbers')}
@@ -288,11 +288,11 @@ export function Home() {
       </section>
 
       {/* CONSOLE */}
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px' }}>
+      <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '0 15px' }}>
         <div style={{ height: 1, background: '#E9EDF1' }} />
       </div>
       <section style={{ position: 'relative', padding: isMobile ? '56px 15px' : '90px 15px', overflow: 'hidden' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.15fr 0.85fr', gap: isMobile ? 28 : 56, alignItems: 'center' }}>
+        <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.15fr 0.85fr', gap: isMobile ? 28 : 56, alignItems: 'center' }}>
           <div style={{ position: 'relative', order: isMobile ? 2 : 1 }}>
             <ConsoleMock />
           </div>
@@ -313,10 +313,10 @@ export function Home() {
       </section>
 
       {/* PLATFORM */}
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 15px' }}>
+      <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '0 15px' }}>
         <div style={{ height: 1, background: '#E9EDF1' }} />
       </div>
-      <section id="platform" style={{ maxWidth: 1080, margin: '0 auto', padding: '90px 15px 80px' }}>
+      <section id="platform" style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '90px 15px 80px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto 56px', textAlign: 'center' }}>
           <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.15, fontWeight: 700, textWrap: 'balance' }}>{t('One SDK. One call. One console.')}</h2>
           <p style={{ fontSize: 18, color: '#5A6976', marginTop: 22, lineHeight: 1.7 }}>
@@ -382,7 +382,7 @@ export function Home() {
       </section>
 
       {/* RESOURCES */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '20px 15px 100px' }}>
+      <section style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '20px 15px 100px' }}>
         <div
           style={{
             fontFamily: 'Barlow',

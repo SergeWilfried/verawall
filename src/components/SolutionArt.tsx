@@ -396,7 +396,7 @@ export function SolutionArt({ kind, title }: { kind: ArtKind; title: string }) {
   const Art = ART[kind];
   return (
     <section style={{ background: '#FBFBFC', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}` }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '48px 15px' : '72px 15px' }}>
+      <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '48px 15px' : '72px 15px' }}>
         <h2 style={{ fontSize: isMobile ? 26 : 34, fontWeight: 700, textAlign: 'center', marginBottom: isMobile ? 32 : 48, textWrap: 'balance' }}>{t(title)}</h2>
         <Art />
       </div>

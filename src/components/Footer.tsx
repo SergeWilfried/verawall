@@ -16,7 +16,7 @@ export function Footer() {
 
   return (
     <div id="contact" style={{ background: '#1D1D1B', color: '#EAEAEA', marginTop: 40 }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '56px 15px 0' : '110px 15px 0' }}>
+      <div style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: isMobile ? '56px 15px 0' : '110px 15px 0' }}>
         <div
           style={{
             display: 'grid',

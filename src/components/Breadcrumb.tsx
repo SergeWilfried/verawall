@@ -12,7 +12,7 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   return (
     <nav
       aria-label="Breadcrumb"
-      style={{ maxWidth: 1080, margin: '0 auto', padding: '26px 15px 0', display: 'flex', alignItems: 'center', gap: 12, fontSize: 15, color: '#5A6976' }}
+      style={{ maxWidth: 'var(--page-width)', margin: '0 auto', padding: '26px 15px 0', display: 'flex', alignItems: 'center', gap: 12, fontSize: 15, color: '#5A6976' }}
     >
       {items.map((item, i) => {
         const isLast = i === items.length - 1;
