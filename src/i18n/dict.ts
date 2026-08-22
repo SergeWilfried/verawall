@@ -176,6 +176,7 @@ export const dict: Record<string, string> = {
   "Least-privilege by design": "Moindre privilège dès la conception",
   "The five guarantees your security review will ask about — settled before the pilot starts.": "Les cinq garanties que votre revue de sécurité exigera — réglées avant le début du pilote.",
   "Your phone number": "Votre numéro de téléphone",
+  "Plan your demo": "Planifiez votre démo",
   "Opens your mail client with the details pre-filled — or write to us directly:": "Ouvre votre messagerie avec les détails pré-remplis — ou écrivez-nous directement :",
   "No restricted permissions and no installed-app inventory — VeraWall never asks your app to carry a Play declaration that puts your listing at risk.": "Aucune permission sensible, aucun inventaire des applications installées — VeraWall n'impose jamais à votre application une déclaration Play qui met en risque sa présence sur le store.",
   "Android, iOS / React Native and web.": "Android, iOS / React Native et web.",
