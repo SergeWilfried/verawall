@@ -60,6 +60,19 @@ button {
   }
 }
 
+/* Console modal dialogs (native <dialog>). */
+.vw-dialog {
+  border: none;
+  border-radius: 6px;
+  padding: 0;
+  width: min(760px, calc(100vw - 48px));
+  max-height: calc(100vh - 64px);
+  box-shadow: 0 8px 24px rgba(20, 24, 28, 0.18);
+}
+.vw-dialog::backdrop {
+  background: rgba(20, 24, 28, 0.45);
+}
+
 /* ---- reusable interactive classes (replace the old style-hover attribute) ---- */
 
 /* Tactile press feedback. 0.96 exactly — smaller reads as exaggerated. The

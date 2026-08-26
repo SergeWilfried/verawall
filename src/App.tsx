@@ -23,6 +23,7 @@ import { TransactionGraph } from './console/pages/TransactionGraph';
 import { PlatformSettings } from './console/pages/PlatformSettings';
 import { PayeeIntel } from './console/pages/PayeeIntel';
 import { AuditLog } from './console/pages/AuditLog';
+import { RiskPolicies } from './console/pages/RiskPolicies';
 
 // Pins the context language to the route tree: /fr/* renders French, the
 // unprefixed tree renders English. The URL is what crawlers index, so it —
@@ -99,6 +100,7 @@ function App() {
             <Route path="settings" element={<PlatformSettings />} />
             <Route path="payee-intel" element={<PayeeIntel />} />
             <Route path="audit" element={<AuditLog />} />
+            <Route path="risk-policies" element={<RiskPolicies />} />
           </Route>
         </Routes>
         </AuthProvider>

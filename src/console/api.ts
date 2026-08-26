@@ -266,7 +266,12 @@ export interface TenantSettings {
   // Per-currency "high amount, no spending history" cutoffs (ISO code -> value,
   // plus a DEFAULT fallback), and TXN_VELOCITY tuning. Absent when the
   // collector predates the feature.
+  // Applied risk-policy profile (vertical x appetite), written by the Risk
+  // Policies wizard; custom=true once any knob is hand-edited afterwards.
+  riskProfile?: { vertical: string; appetite: string; appliedAt: string; custom?: boolean };
   risk?: {
+    // Policy band cutoffs: score >= hold holds, >= stepUp steps up.
+    bands?: { stepUp: number; hold: number };
     highAmount: Record<string, number>;
     velocity?: { windowMin: number; threshold: number; baseWeight: number; slope: number };
   };
