@@ -33,7 +33,8 @@
       "payeeIntel": "Intel bénéficiaires",
       "riskPolicies": "Politiques de risque",
       "reporting": "Rapports",
-      "settings": "Paramètres de la plateforme"
+      "settings": "Paramètres de la plateforme",
+      "auditLog": "Journal d'audit"
     }
   },
   "sidebar": {

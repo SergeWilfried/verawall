@@ -33,7 +33,8 @@
       "payeeIntel": "Payee Intel",
       "riskPolicies": "Risk Policies",
       "reporting": "Reporting",
-      "settings": "Platform Settings"
+      "settings": "Platform Settings",
+      "auditLog": "Audit Log"
     }
   },
   "sidebar": {

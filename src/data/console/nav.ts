@@ -37,6 +37,6 @@ export const navGroups: ConsoleNavGroup[] = [
   {
     id: 'administration',
     title: 'Administration',
-    items: [{ id: 'riskPolicies', label: 'Risk Policies' }, { id: 'reporting', label: 'Reporting' }, { id: 'settings', label: 'Platform Settings', to: '/console/settings' }],
+    items: [{ id: 'riskPolicies', label: 'Risk Policies' }, { id: 'reporting', label: 'Reporting' }, { id: 'auditLog', label: 'Audit Log', to: '/console/audit' }, { id: 'settings', label: 'Platform Settings', to: '/console/settings' }],
   },
 ];

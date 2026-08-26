@@ -352,6 +352,23 @@ export interface LocationFix {
 
 // ---------- endpoint helpers ----------
 
+export interface AuditEntry {
+  id: number;
+  at: string;
+  actor: string;
+  actor_name: string;
+  actor_role: string;
+  action: string;
+  target: string;
+  status: number;
+  detail: Record<string, unknown>;
+}
+
+export interface AuditPage {
+  entries: AuditEntry[];
+  nextBefore: number;
+}
+
 export const consoleApi = {
   login: (email: string, password: string, code?: string) =>
     api<LoginResponse>('/v1/console/login',
@@ -367,6 +384,13 @@ export const consoleApi = {
     api<ServerAlert>(`/v1/console/alerts/${id}`, { method: 'PATCH', body }),
   assignAlert: (id: string, assignee?: string) =>
     api<ServerAlert>(`/v1/console/alerts/${id}/assign`, { method: 'POST', body: assignee === undefined ? {} : { assignee } }),
+  auditLog: (params?: { before?: number; actor?: string }) => {
+    const q = new URLSearchParams();
+    if (params?.before) q.set('before', String(params.before));
+    if (params?.actor) q.set('actor', params.actor);
+    const qs = q.toString();
+    return api<AuditPage>(`/v1/console/audit${qs ? '?' + qs : ''}`);
+  },
   snoozeAlert: (id: string, minutes: number) =>
     api<ServerAlert>(`/v1/console/alerts/${id}/snooze`, { method: 'POST', body: { minutes } }),
   postAction: (id: string, kind: string, note?: string) =>
