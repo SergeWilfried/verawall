@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useConsoleTitle } from '../TitleContext';
 import { useAuth } from '../auth';
 import { typeColors } from '../../data/console/alerts';
@@ -393,20 +393,27 @@ export function AlertQueue() {
                       }}
                     >
                       <ScoreBadge score={al.score} />
-                      <div style={{ fontFamily: 'Barlow', fontSize: '12.5px', fontWeight: 700, color: '#1E262E' }}>{al.id}</div>
+                      <div>
+                        <Link
+                          to={`/console/alerts/${al.id}`}
+                          className="link-hover"
+                          style={{ fontFamily: 'Barlow', fontSize: '12.5px', fontWeight: 700, color: '#1E262E' }}
+                        >
+                          {al.id}
+                        </Link>
+                      </div>
                       <div>
                         {al.user_ref ? (
-                          <button
-                            type="button"
-                            onClick={() => navigate(`/console/customers/${al.user_ref}`)}
+                          <Link
+                            to={`/console/customers/${al.user_ref}`}
                             style={{
-                              fontWeight: 700, fontSize: '12.5px', fontFamily: 'monospace', background: 'none', border: 'none',
-                              cursor: 'pointer', padding: 0, color: '#3E4753', borderBottom: '1px dotted #C9CED4', textAlign: 'left',
+                              display: 'inline-block', fontWeight: 700, fontSize: '12.5px', fontFamily: 'monospace',
+                              color: '#3E4753', borderBottom: '1px dotted #C9CED4', textAlign: 'left',
                             }}
                             title={al.user_ref}
                           >
                             {subjectLabel(al.user_ref)}
-                          </button>
+                          </Link>
                         ) : (
                           <span style={{ fontSize: 12, color: '#7A8593', fontFamily: 'monospace' }}>
                             {al.account_ref ? shortRef(al.account_ref) : 'no subject'}
@@ -417,17 +424,17 @@ export function AlertQueue() {
                       <SignalCell signal={al.signal} />
                       <div><OwnerCell assignee={al.assignee} mine={isMine(al)} /></div>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/console/alerts/${al.id}`)}
+                        <Link
+                          to={`/console/alerts/${al.id}`}
+                          className="press-scale"
                           style={{
-                            padding: '8px 14px', background: '#D71A28', color: '#fff', border: 'none', borderRadius: 3,
+                            display: 'inline-block', padding: '8px 14px', background: '#D71A28', color: '#fff', borderRadius: 3,
                             fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            cursor: 'pointer',
+                            transition: 'background-color .15s, transform .15s',
                           }}
                         >
                           Review
-                        </button>
+                        </Link>
                         <RowActions al={al} mine={isMine(al)} onAct={act} team={team} myEmail={session?.email} />
                       </div>
                     </div>
