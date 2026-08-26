@@ -4,6 +4,7 @@ import { useConsoleTitle } from '../TitleContext';
 import { Chip } from '../components/Chip';
 import { EmptyState } from '../components/EmptyState';
 import { SkeletonLines } from '../components/Skeleton';
+import { Pagination } from '../components/Pagination';
 import { roleColors } from '../../data/console/settings';
 
 // Who did what, when — the compliance answer a bank's review asks for first.
@@ -50,31 +51,32 @@ const detailSummary = (e: AuditEntry): string => {
 
 export function AuditLog() {
   useConsoleTitle('Audit Log');
+  const PAGE_SIZE = 20;
   const [entries, setEntries] = useState<AuditEntry[]>([]);
-  const [nextBefore, setNextBefore] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [actor, setActor] = useState('');
   const [applied, setApplied] = useState('');
   const [loading, setLoading] = useState(true);
   const [forbidden, setForbidden] = useState(false);
 
-  async function load(before?: number, actorFilter = applied) {
-    setLoading(true);
-    try {
-      const page = await consoleApi.auditLog({ before, actor: actorFilter || undefined });
-      setEntries((prev) => (before ? [...prev, ...page.entries] : page.entries));
-      setNextBefore(page.nextBefore);
-      setForbidden(false);
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 403) setForbidden(true);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    void load(undefined, applied);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [applied]);
+    let stale = false;
+    setLoading(true);
+    consoleApi
+      .auditLog({ limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE, actor: applied || undefined })
+      .then((res) => {
+        if (stale) return;
+        setEntries(res.entries);
+        setTotal(res.total);
+        setForbidden(false);
+      })
+      .catch((err) => {
+        if (!stale && err instanceof ApiError && err.status === 403) setForbidden(true);
+      })
+      .finally(() => { if (!stale) setLoading(false); });
+    return () => { stale = true; };
+  }, [page, applied]);
 
   if (forbidden) {
     return (
@@ -100,7 +102,7 @@ export function AuditLog() {
           </p>
         </div>
         <form
-          onSubmit={(e) => { e.preventDefault(); setApplied(actor.trim()); }}
+          onSubmit={(e) => { e.preventDefault(); setPage(1); setApplied(actor.trim()); }}
           style={{ display: 'flex', gap: 8 }}
         >
           <input
@@ -162,24 +164,13 @@ export function AuditLog() {
             </div>
           ))
         )}
-        {nextBefore > 0 && (
-          <div style={{ padding: '14px 22px' }}>
-            <button
-              type="button"
-              className="press-scale"
-              disabled={loading}
-              onClick={() => void load(nextBefore)}
-              style={{
-                padding: '9px 16px', borderRadius: 3, border: '1px solid #E0E5EA', background: '#fff',
-                color: '#5A6976', fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700,
-                letterSpacing: '0.04em', textTransform: 'uppercase', cursor: 'pointer',
-                transition: 'color .15s, transform .15s',
-              }}
-            >
-              {loading ? 'Loading…' : 'Load older'}
-            </button>
-          </div>
-        )}
+        <Pagination
+          page={page}
+          totalPages={Math.max(1, Math.ceil(total / PAGE_SIZE))}
+          totalItems={total}
+          pageSize={PAGE_SIZE}
+          onChange={setPage}
+        />
       </div>
     </div>
   );

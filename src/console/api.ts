@@ -366,7 +366,7 @@ export interface AuditEntry {
 
 export interface AuditPage {
   entries: AuditEntry[];
-  nextBefore: number;
+  total: number;
 }
 
 export const consoleApi = {
@@ -384,9 +384,10 @@ export const consoleApi = {
     api<ServerAlert>(`/v1/console/alerts/${id}`, { method: 'PATCH', body }),
   assignAlert: (id: string, assignee?: string) =>
     api<ServerAlert>(`/v1/console/alerts/${id}/assign`, { method: 'POST', body: assignee === undefined ? {} : { assignee } }),
-  auditLog: (params?: { before?: number; actor?: string }) => {
+  auditLog: (params?: { limit?: number; offset?: number; actor?: string }) => {
     const q = new URLSearchParams();
-    if (params?.before) q.set('before', String(params.before));
+    if (params?.limit) q.set('limit', String(params.limit));
+    if (params?.offset) q.set('offset', String(params.offset));
     if (params?.actor) q.set('actor', params.actor);
     const qs = q.toString();
     return api<AuditPage>(`/v1/console/audit${qs ? '?' + qs : ''}`);
