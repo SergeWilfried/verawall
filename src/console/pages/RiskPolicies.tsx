@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { consoleApi, type TenantSettings } from '../api';
+import { consoleApi, type RiskPreview, type TenantSettings } from '../api';
 import { useApi } from '../useApi';
 import { useAuth } from '../auth';
 import { useConsoleTitle } from '../TitleContext';
@@ -53,6 +53,40 @@ function OptionCard({ selected, onSelect, title, desc, extra, art }: {
       <div style={{ fontSize: '12.5px', color: '#5A6976', marginTop: 8, lineHeight: 1.55 }}>{desc}</div>
       {extra && <div style={{ fontSize: 12, color: '#7A8593', marginTop: 8, lineHeight: 1.5, fontStyle: 'italic' }}>{extra}</div>}
     </button>
+  );
+}
+
+// "Against your last 30 days, these bands would have held X instead of Y" —
+// what turns appetite selection from faith into a decision. Debounced so the
+// Advanced number inputs can drive it per keystroke; counts come from
+// re-banding stored decision scores server-side, no re-scoring involved.
+function BandImpact({ stepUp, hold }: { stepUp: number; hold: number }) {
+  const [preview, setPreview] = useState<RiskPreview | null>(null);
+  useEffect(() => {
+    if (!(stepUp > 0 && hold > stepUp && hold <= 100)) { setPreview(null); return; }
+    let stale = false;
+    const t = setTimeout(() => {
+      consoleApi.riskPreview(stepUp, hold)
+        .then((p) => { if (!stale) setPreview(p); })
+        .catch(() => { if (!stale) setPreview(null); });
+    }, 350);
+    return () => { stale = true; clearTimeout(t); };
+  }, [stepUp, hold]);
+
+  if (!preview || preview.total === 0) return null;
+  const delta = preview.proposed.hold - preview.current.hold;
+  return (
+    <div style={{ padding: '12px 16px', background: '#F7F8FA', border: '1px solid #E9EDF1', borderRadius: 6, fontSize: '12.5px', color: '#3E4753', lineHeight: 1.6, fontVariantNumeric: 'tabular-nums' }}>
+      Against your last {preview.days} days ({preview.total.toLocaleString()} scored payments):{' '}
+      <b>{preview.proposed.hold}</b> held and <b>{preview.proposed.stepUp}</b> challenged
+      {' '}— today it was <b>{preview.current.hold}</b> and <b>{preview.current.stepUp}</b>
+      {delta !== 0 && (
+        <span style={{ color: delta > 0 ? '#D71A28' : '#1E7A34', fontWeight: 700 }}>
+          {' '}({delta > 0 ? '+' : ''}{delta} held)
+        </span>
+      )}
+      .
+    </div>
   );
 }
 
@@ -188,12 +222,19 @@ export function RiskPolicies() {
             </div>
           )}
           {step === 2 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginTop: 18 }}>
-              {appetites.map((a) => (
-                <OptionCard key={a.key} selected={appetite?.key === a.key} onSelect={() => setAppetite(a)}
-                  title={a.label} desc={a.consequence} art={appetiteArt[a.key]} />
-              ))}
-            </div>
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginTop: 18 }}>
+                {appetites.map((a) => (
+                  <OptionCard key={a.key} selected={appetite?.key === a.key} onSelect={() => setAppetite(a)}
+                    title={a.label} desc={a.consequence} art={appetiteArt[a.key]} />
+                ))}
+              </div>
+              {appetite && (
+                <div style={{ marginTop: 14 }}>
+                  <BandImpact stepUp={appetite.bands.stepUp} hold={appetite.bands.hold} />
+                </div>
+              )}
+            </>
           )}
           {step === 3 && vertical && appetite && (
             <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -201,6 +242,7 @@ export function RiskPolicies() {
                 <b>{vertical.label}</b> · <b>{appetite.label}</b> — a starting point, not a lock-in:
                 every value stays editable under Advanced afterwards.
               </div>
+              <BandImpact stepUp={appetite.bands.stepUp} hold={appetite.bands.hold} />
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
                 <div style={{ border: '1px solid #E9EDF1', borderRadius: 6, padding: '14px 16px' }}>
                   <div style={label}>Policy bands</div>
@@ -335,6 +377,7 @@ export function RiskPolicies() {
                       onChange={(e) => set((d) => { d.risk = { ...d.risk!, bands: { ...bands, hold: Number(e.target.value) } }; })} />
                   </label>
                 </div>
+                <BandImpact stepUp={bands.stepUp} hold={bands.hold} />
                 {bands.hold <= bands.stepUp && (
                   <div style={{ fontSize: 12, color: '#D71A28', fontWeight: 600 }}>
                     Hold must be above step-up — the server rejects this ordering and keeps its defaults.

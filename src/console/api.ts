@@ -357,6 +357,13 @@ export interface LocationFix {
 
 // ---------- endpoint helpers ----------
 
+export interface RiskPreview {
+  days: number;
+  total: number;
+  proposed: { hold: number; stepUp: number; allow: number };
+  current: { hold: number; stepUp: number; allow: number };
+}
+
 export interface AuditEntry {
   id: number;
   at: string;
@@ -389,6 +396,8 @@ export const consoleApi = {
     api<ServerAlert>(`/v1/console/alerts/${id}`, { method: 'PATCH', body }),
   assignAlert: (id: string, assignee?: string) =>
     api<ServerAlert>(`/v1/console/alerts/${id}/assign`, { method: 'POST', body: assignee === undefined ? {} : { assignee } }),
+  riskPreview: (stepUp: number, hold: number, days = 30) =>
+    api<RiskPreview>(`/v1/console/risk-preview?stepUp=${stepUp}&hold=${hold}&days=${days}`),
   auditLog: (params?: { limit?: number; offset?: number; actor?: string }) => {
     const q = new URLSearchParams();
     if (params?.limit) q.set('limit', String(params.limit));
