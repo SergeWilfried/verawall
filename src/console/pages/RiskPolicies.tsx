@@ -5,6 +5,15 @@ import { useAuth } from '../auth';
 import { useConsoleTitle } from '../TitleContext';
 import { SkeletonLines } from '../components/Skeleton';
 import { appetites, verticals, scaleHighAmount, type RiskAppetite, type RiskVertical } from '../../data/console/riskPresets';
+import { MicrofinanceArt, WalletArt, RidesharingArt, BankArt, ConservativeArt, BalancedArt, GrowthArt } from '../components/riskArt';
+
+const verticalArt: Record<string, React.ReactNode> = {
+  microfinance: <MicrofinanceArt />, wallet: <WalletArt />,
+  ridesharing: <RidesharingArt />, bank: <BankArt />,
+};
+const appetiteArt: Record<string, React.ReactNode> = {
+  conservative: <ConservativeArt />, balanced: <BalancedArt />, aggressive: <GrowthArt />,
+};
 
 // Risk Policies — the appetite dial, in business language first.
 //
@@ -23,8 +32,8 @@ const numInput: React.CSSProperties = {
   fontVariantNumeric: 'tabular-nums',
 };
 
-function OptionCard({ selected, onSelect, title, desc, extra }: {
-  selected: boolean; onSelect: () => void; title: string; desc: string; extra?: string;
+function OptionCard({ selected, onSelect, title, desc, extra, art }: {
+  selected: boolean; onSelect: () => void; title: string; desc: string; extra?: string; art?: React.ReactNode;
 }) {
   return (
     <button
@@ -37,8 +46,11 @@ function OptionCard({ selected, onSelect, title, desc, extra }: {
         transition: 'border-color .15s, background-color .15s, transform .15s',
       }}
     >
-      <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700, color: selected ? '#D71A28' : '#1E262E' }}>{title}</div>
-      <div style={{ fontSize: '12.5px', color: '#5A6976', marginTop: 6, lineHeight: 1.55 }}>{desc}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        {art && <div style={{ flexShrink: 0 }}>{art}</div>}
+        <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700, color: selected ? '#D71A28' : '#1E262E' }}>{title}</div>
+      </div>
+      <div style={{ fontSize: '12.5px', color: '#5A6976', marginTop: 8, lineHeight: 1.55 }}>{desc}</div>
       {extra && <div style={{ fontSize: 12, color: '#7A8593', marginTop: 8, lineHeight: 1.5, fontStyle: 'italic' }}>{extra}</div>}
     </button>
   );
@@ -171,7 +183,7 @@ export function RiskPolicies() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginTop: 18 }}>
               {verticals.map((v) => (
                 <OptionCard key={v.key} selected={vertical?.key === v.key} onSelect={() => setVertical(v)}
-                  title={v.label} desc={v.desc} extra={v.focus} />
+                  title={v.label} desc={v.desc} extra={v.focus} art={verticalArt[v.key]} />
               ))}
             </div>
           )}
@@ -179,7 +191,7 @@ export function RiskPolicies() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginTop: 18 }}>
               {appetites.map((a) => (
                 <OptionCard key={a.key} selected={appetite?.key === a.key} onSelect={() => setAppetite(a)}
-                  title={a.label} desc={a.consequence} />
+                  title={a.label} desc={a.consequence} art={appetiteArt[a.key]} />
               ))}
             </div>
           )}

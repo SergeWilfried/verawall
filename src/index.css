@@ -62,6 +62,9 @@ button {
 
 /* Console modal dialogs (native <dialog>). */
 .vw-dialog {
+  /* The global * { margin: 0 } reset kills the UA stylesheet's margin: auto
+     that centers a native dialog — restore it. */
+  margin: auto;
   border: none;
   border-radius: 6px;
   padding: 0;
