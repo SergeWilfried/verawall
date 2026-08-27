@@ -396,6 +396,13 @@ export const consoleApi = {
     api<ServerAlert>(`/v1/console/alerts/${id}`, { method: 'PATCH', body }),
   assignAlert: (id: string, assignee?: string) =>
     api<ServerAlert>(`/v1/console/alerts/${id}/assign`, { method: 'POST', body: assignee === undefined ? {} : { assignee } }),
+  tenantKeys: () => api<{ kid: string; state: string; created_at: string }[]>('/v1/console/tenant-keys'),
+  rotateTenantKey: () =>
+    api<{ kid: string; key: string; note: string }>('/v1/console/tenant-keys/rotate', { method: 'POST' }),
+  revokeTenantKey: (kid: string) =>
+    api<{ ok: boolean }>(`/v1/console/tenant-keys/${kid}/revoke`, { method: 'POST' }),
+  rotateAppKey: () =>
+    api<{ appKey: string; note: string }>('/v1/console/app-key/rotate', { method: 'POST' }),
   riskPreview: (stepUp: number, hold: number, days = 30) =>
     api<RiskPreview>(`/v1/console/risk-preview?stepUp=${stepUp}&hold=${hold}&days=${days}`),
   auditLog: (params?: { limit?: number; offset?: number; actor?: string }) => {

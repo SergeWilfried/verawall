@@ -246,7 +246,15 @@ function Topbar() {
   const title = useConsoleTitleValue();
   return (
     <div style={{ height: 64, background: '#fff', borderBottom: '1px solid #E3E7EB', display: 'flex', alignItems: 'center', gap: 16, padding: '0 28px' }}>
-      <h1 style={{ fontFamily: 'Barlow', fontSize: 18, fontWeight: 700 }}>{title}</h1>
+      <h1
+        title={typeof title === 'string' ? title : undefined}
+        style={{
+          fontFamily: 'Barlow', fontSize: 18, fontWeight: 700, minWidth: 0, flexShrink: 1,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}
+      >
+        {title}
+      </h1>
       <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14 }}>
         <GlobalSearch />
         <div

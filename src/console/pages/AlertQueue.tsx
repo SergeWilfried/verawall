@@ -27,7 +27,7 @@ const filterMap: Record<string, string[]> = {
 const threatColor = (t: string | null) =>
   (t && typeColors[t as ThreatType]) || '#7A8593';
 
-const GRID = '56px 78px minmax(0,0.9fr) 118px minmax(0,1.05fr) 88px 120px';
+const GRID = '28px 56px 78px minmax(0,0.9fr) 118px minmax(0,1.05fr) 88px 120px';
 
 const nameFromEmail = (email: string) => (email || '').split('@')[0].replace(/[._-]+/g, ' ').trim();
 const initialsOf = (email: string) => {
@@ -214,6 +214,27 @@ export function AlertQueue() {
     fn().then(() => reload()).catch(() => {}).finally(() => setBusy(null));
   };
 
+  // Bulk triage: selection is a set of alert ids; actions run the existing
+  // per-alert endpoints sequentially, so each one lands in the audit trail
+  // individually — a bulk dismissal of 30 alerts is 30 attributable records,
+  // not one opaque blob.
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const toggle = (id: string) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  const bulk = (fn: (id: string) => Promise<unknown>) => {
+    const ids = [...selected];
+    setBusy('bulk');
+    (async () => {
+      for (const id of ids) {
+        try { await fn(id); } catch { /* keep going — partial success beats none */ }
+      }
+    })().then(() => { setSelected(new Set()); reload(); }).finally(() => setBusy(null));
+  };
+
   let visible = typeFilter ? alerts.filter((a) => a.threat_type === typeFilter) : alerts;
   if (subjectFilter) visible = visible.filter((a) => a.user_ref === subjectFilter);
   if (filter !== 'All') visible = visible.filter((a) => a.threat_type && filterMap[filter].includes(a.threat_type));
@@ -370,6 +391,29 @@ export function AlertQueue() {
             />
           )}
 
+          {selected.size > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 22px', background: '#FBF1F2', borderBottom: '1px solid #F3D6D9', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'Barlow', fontSize: '12.5px', fontWeight: 700, color: '#1E262E', fontVariantNumeric: 'tabular-nums' }}>
+                {selected.size} selected
+              </span>
+              {([
+                ['Assign to me', (id: string) => consoleApi.assignAlert(id)],
+                ['Snooze 1 hour', (id: string) => consoleApi.snoozeAlert(id, 60)],
+                ['Dismiss', (id: string) => consoleApi.patchAlert(id, { state: 'Dismissed', disposition: 'Dismissed from queue (bulk).' })],
+              ] as const).map(([lbl, fn]) => (
+                <button key={lbl} type="button" className="press-scale" disabled={!!busy}
+                  onClick={() => bulk(fn)}
+                  style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid #E0B9BC', background: '#fff', color: '#5A6976', fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', cursor: 'pointer', transition: 'color .15s, transform .15s' }}>
+                  {busy === 'bulk' ? '…' : lbl}
+                </button>
+              ))}
+              <button type="button" onClick={() => setSelected(new Set())}
+                style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11.5px', color: '#7A8593', fontFamily: 'Barlow', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Clear
+              </button>
+            </div>
+          )}
+
           {!loading && !error && visible.length > 0 && (
             <>
               <div style={{ overflowX: 'auto', opacity: busy ? 0.6 : 1, transition: 'opacity 0.1s' }}>
@@ -381,6 +425,17 @@ export function AlertQueue() {
                       textTransform: 'uppercase', color: '#7A8593', borderBottom: '1px solid #E9EDF1',
                     }}
                   >
+                    <input
+                      type="checkbox"
+                      aria-label="Select all alerts on this page"
+                      checked={pageItems.length > 0 && pageItems.every((a) => selected.has(a.id))}
+                      onChange={(e) => {
+                        const next = new Set(selected);
+                        pageItems.forEach((a) => (e.target.checked ? next.add(a.id) : next.delete(a.id)));
+                        setSelected(next);
+                      }}
+                      style={{ width: 15, height: 15, accentColor: '#D71A28', cursor: 'pointer' }}
+                    />
                     <div>Risk</div><div>Alert</div><div>Subject</div><div>Threat type</div><div>Signal</div><div>Owner</div><div style={{ textAlign: 'right' }}>Actions</div>
                   </div>
                   {pageItems.map((al) => (
@@ -392,6 +447,13 @@ export function AlertQueue() {
                         background: isMine(al) ? '#FDF9F9' : undefined,
                       }}
                     >
+                      <input
+                        type="checkbox"
+                        aria-label={`Select ${al.id}`}
+                        checked={selected.has(al.id)}
+                        onChange={() => toggle(al.id)}
+                        style={{ width: 15, height: 15, accentColor: '#D71A28', cursor: 'pointer' }}
+                      />
                       <ScoreBadge score={al.score} />
                       <div>
                         <Link

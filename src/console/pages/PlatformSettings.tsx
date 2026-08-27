@@ -11,7 +11,7 @@ import { Toggle } from '../components/Toggle';
 import { Pagination } from '../components/Pagination';
 import { usePagination } from '../usePagination';
 import { useAuth } from '../auth';
-import { consoleApi, displayRole, expiryLabel, serverRole } from '../api';
+import { ApiError, consoleApi, displayRole, expiryLabel, serverRole } from '../api';
 import type { ApiKey, ServerInvitation, ServerRole, TeamMember, TenantSettings } from '../api';
 import { useApi } from '../useApi';
 
@@ -460,7 +460,12 @@ export function PlatformSettings() {
             </div>
           )}
 
-          {section === 'keys' && <ApiKeysSection isAdmin={isAdmin} cardStyle={cardStyle} />}
+          {section === 'keys' && (
+            <>
+              <TenantCredentialsSection isAdmin={isAdmin} cardStyle={cardStyle} />
+              <ApiKeysSection isAdmin={isAdmin} cardStyle={cardStyle} />
+            </>
+          )}
 
           {section === 'modules' && draft && (
             <div style={cardStyle}>
@@ -522,6 +527,93 @@ export function PlatformSettings() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Tenant signing-key and app-key rotation — the incident-response controls
+// that previously required SSH and the operator CLI. Secrets show ONCE, on
+// the response that minted them; the list view only ever has kid + state.
+// Revoking the last active key is refused server-side (that is an outage,
+// not a rotation), and every action lands in the audit trail.
+function TenantCredentialsSection({ isAdmin, cardStyle }: { isAdmin: boolean; cardStyle: CSSProperties }) {
+  const keysQuery = useApi<{ kid: string; state: string; created_at: string }[]>(
+    () => consoleApi.tenantKeys(), []);
+  const [minted, setMinted] = useState<{ kind: 'signing' | 'app'; label: string; secret: string; note: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  const run = (fn: () => Promise<void>) => {
+    setBusy(true); setErr('');
+    fn().catch((e) => setErr(e instanceof ApiError ? String(e.body?.error ?? 'failed') : 'failed'))
+      .finally(() => setBusy(false));
+  };
+  const stateColor: Record<string, string> = { active: '#1E7A34', retiring: '#E67E22', revoked: '#7A8593' };
+
+  const actionBtn = (label: string, onClick: () => void, danger = false) => (
+    <button type="button" className="press-scale" disabled={!isAdmin || busy} onClick={onClick}
+      style={{ padding: '9px 16px', borderRadius: 3, border: danger ? '1px solid #E0B9BC' : '1px solid #E0E5EA',
+        background: '#fff', color: !isAdmin || busy ? '#C9CED4' : danger ? '#D71A28' : '#5A6976',
+        fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.04em',
+        textTransform: 'uppercase', cursor: isAdmin && !busy ? 'pointer' : 'default',
+        transition: 'color .15s, transform .15s' }}>
+      {label}
+    </button>
+  );
+
+  return (
+    <div style={{ ...cardStyle, marginBottom: 24 }}>
+      <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Tenant credentials</div>
+      <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2 }}>
+        The HMAC signing key your backend uses on /v1/events and /v1/score, and the app key
+        shipped inside your mobile builds. Rotation is immediate; audit-logged.
+      </div>
+      {!isAdmin && (
+        <div style={{ fontSize: '11.5px', color: '#7A8593', marginTop: 2 }}>Read-only — only tenant admins can rotate credentials.</div>
+      )}
+      {err && <div style={{ marginTop: 12, fontSize: 12, color: '#D71A28', fontWeight: 600 }}>{err}</div>}
+      {minted && (
+        <div style={{ marginTop: 14, padding: '14px 16px', background: '#FBF1F2', border: '1px solid #F3D6D9', borderRadius: 6 }}>
+          <div style={{ fontFamily: 'Barlow', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#D71A28' }}>
+            {minted.label} — copy it now, it is not shown again
+          </div>
+          <code style={{ display: 'block', marginTop: 8, fontSize: 13, wordBreak: 'break-all', userSelect: 'all' }}>{minted.secret}</code>
+          <div style={{ fontSize: 12, color: '#5A6976', marginTop: 8, lineHeight: 1.5 }}>{minted.note}</div>
+        </div>
+      )}
+
+      <div style={{ marginTop: 18, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        {actionBtn(busy ? '…' : 'Rotate signing key', () => run(async () => {
+          const r = await consoleApi.rotateTenantKey();
+          setMinted({ kind: 'signing', label: `New signing key ${r.kid}`, secret: r.key, note: r.note });
+          keysQuery.reload();
+        }))}
+        {actionBtn(busy ? '…' : 'Rotate app key', () => run(async () => {
+          const r = await consoleApi.rotateAppKey();
+          setMinted({ kind: 'app', label: 'New app key', secret: r.appKey, note: r.note });
+        }), true)}
+      </div>
+
+      <div style={{ marginTop: 18 }}>
+        <div style={{ fontFamily: 'Barlow', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7A8593', paddingBottom: 8, borderBottom: '1px solid #E9EDF1' }}>
+          Signing key versions
+        </div>
+        {(keysQuery.data ?? []).map((k) => (
+          <div key={k.kid} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0', borderBottom: '1px solid #F0F2F5' }}>
+            <code style={{ fontSize: 13, fontWeight: 700 }}>{k.kid}</code>
+            <span style={{ fontSize: 12, fontWeight: 700, color: stateColor[k.state] ?? '#5A6976', textTransform: 'uppercase', fontFamily: 'Barlow', letterSpacing: '0.04em' }}>{k.state}</span>
+            <span style={{ fontSize: 12, color: '#7A8593', fontVariantNumeric: 'tabular-nums' }}>
+              {new Date(k.created_at).toLocaleDateString()}
+            </span>
+            <div style={{ marginLeft: 'auto' }}>
+              {k.state !== 'revoked' && actionBtn('Revoke', () => run(async () => {
+                await consoleApi.revokeTenantKey(k.kid);
+                keysQuery.reload();
+              }), true)}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
