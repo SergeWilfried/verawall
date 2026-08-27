@@ -21,7 +21,17 @@ function Sidebar() {
     to === '/console/alerts' && stats ? String(stats.openAlerts) : undefined;
 
   return (
-    <aside style={{ width: 248, flexShrink: 0, background: '#1D1D1B', color: '#EAEAEA', display: 'flex', flexDirection: 'column' }}>
+    <aside
+      style={{
+        width: 248, flexShrink: 0, background: '#1D1D1B', color: '#EAEAEA',
+        display: 'flex', flexDirection: 'column',
+        // Pin to the viewport: on long pages (audit log, queue) the nav — and
+        // the action-channel status at its foot — must not scroll away with
+        // the content. The sidebar scrolls internally if it ever outgrows the
+        // screen.
+        position: 'sticky', top: 0, height: '100vh', overflowY: 'auto',
+      }}
+    >
       <div style={{ padding: '22px 20px', borderBottom: '1px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
           <svg width="30" height="30" viewBox="0 0 28 28" style={{ flexShrink: 0 }}>
