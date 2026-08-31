@@ -1,4 +1,4 @@
-export type ThreatType = 'APP Scam' | 'Account Takeover' | 'Money Mule' | 'Phishing' | 'New Account Fraud' | 'Commission Fraud';
+export type ThreatType = 'APP Scam' | 'Account Takeover' | 'Money Mule' | 'Phishing' | 'New Account Fraud' | 'Commission Fraud' | 'KYC Drift';
 
 export interface Alert {
   score: number;

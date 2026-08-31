@@ -39,6 +39,7 @@ const signalHint: Record<string, string> = {
   FLAGGED_COUNTERPARTY: 'Known-bad counterparty',
   KNOWN_MULE_PAYEE: 'Known-bad payee', PAYEE_UNDER_INVESTIGATION: 'Payee under review',
   TXN_VELOCITY: 'Rapid transfers',
+  KYC_DRIFT: 'Profile drift',
   // Agent commission / structuring
   SPLIT_TXNS: 'Structuring', MICRO_BURST: 'Structuring', UNIFORM_AMOUNTS: 'Structuring',
 };
@@ -49,6 +50,7 @@ const threatDesc: Record<string, string> = {
   'Money Mule': 'Rapid in-out transfers from the bank-feed ledger.',
   'New Account Fraud': 'Stolen or synthetic identities at onboarding.',
   'Commission Fraud': 'Deposits split into sub-threshold bursts to farm commissions.',
+  'KYC Drift': 'Observed behavior departed the declared profile — re-KYC recommended, no payment touched.',
   Unclassified: 'Held without a single dominant classification.',
 };
 
