@@ -2,6 +2,98 @@ import { useState } from 'react';
 import { useConsoleTitle } from '../TitleContext';
 import { intelDefs, severityColors, confirmedDestinations, matchesYourTraffic, type Severity } from '../../data/console/intel';
 import { Chip } from '../components/Chip';
+import { consoleApi, type CounterpartyType } from '../api';
+import { useApi } from '../useApi';
+import { useAuth } from '../auth';
+
+// Counterparty typing — the registry behind GAMBLING_PAYEE / GAMBLING_FLOW /
+// CRYPTO_INFLOW_CONCENTRATION. Lives on this page because it answers the
+// same analyst question as payee intel ("who are we dealing with?") — but a
+// type is context, not verdict, so the chips stay neutral, never red.
+const categoryColors: Record<string, string> = {
+  GAMBLING: '#8E44AD', CRYPTO_P2P: '#2C7BB6', INFORMAL_FX: '#E67E22', BENIGN: '#16A085',
+};
+
+function CounterpartyRegistry() {
+  const { session } = useAuth();
+  const canEdit = (session?.rank ?? 0) >= 1;
+  const typesQuery = useApi<CounterpartyType[]>(() => consoleApi.counterpartyTypes(), []);
+  const [ref, setRef] = useState('');
+  const [category, setCategory] = useState('GAMBLING');
+  const [label, setLabel] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!ref.trim()) return;
+    setBusy(true); setErr('');
+    try {
+      await consoleApi.upsertCounterpartyType(ref.trim(), category, label.trim() || undefined);
+      setRef(''); setLabel('');
+      typesQuery.reload();
+    } catch {
+      setErr('Could not save — check the reference and try again.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const rows = typesQuery.data ?? [];
+  const input: React.CSSProperties = {
+    padding: '9px 12px', border: '1px solid #E0E5EA', borderRadius: 3, fontSize: 13,
+    fontFamily: "'Open Sans', sans-serif",
+  };
+
+  return (
+    <div style={{ background: '#fff', border: '1px solid #E3E7EB', borderRadius: 6 }}>
+      <div style={{ padding: '18px 22px', borderBottom: '1px solid #E9EDF1' }}>
+        <div style={{ fontFamily: 'Barlow', fontSize: 15, fontWeight: 700 }}>Counterparty types</div>
+        <div style={{ fontSize: 12, color: '#7A8593', marginTop: 2, maxWidth: '62ch', lineHeight: 1.55 }}>
+          What kind of counterparty is this? Types feed the score-time context signals and the
+          gambling / crypto flow ratios. Context, not verdict — a type alone never challenges a payment.
+        </div>
+      </div>
+      {canEdit && (
+        <form onSubmit={add} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', padding: '14px 22px', borderBottom: '1px solid #F0F2F5' }}>
+          <input value={ref} onChange={(e) => setRef(e.target.value)} placeholder="Counterparty ref…" aria-label="Counterparty reference" style={{ ...input, width: 220, fontFamily: 'monospace' }} />
+          <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Category" style={{ ...input, cursor: 'pointer' }}>
+            {Object.keys(categoryColors).map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Label (optional)…" aria-label="Label" style={{ ...input, width: 200 }} />
+          <button type="submit" className="press-scale" disabled={busy || !ref.trim()}
+            style={{ padding: '9px 18px', borderRadius: 3, border: 'none', background: ref.trim() && !busy ? '#D71A28' : '#E9AEB2', color: '#fff', fontFamily: 'Barlow', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', cursor: 'pointer', transition: 'background-color .15s, transform .15s' }}>
+            {busy ? '…' : 'Type it'}
+          </button>
+          {err && <span style={{ fontSize: 12, color: '#D71A28', fontWeight: 600 }}>{err}</span>}
+        </form>
+      )}
+      {rows.length === 0 ? (
+        <div style={{ padding: '18px 22px', fontSize: 13, color: '#7A8593' }}>
+          No typed counterparties yet. The registry is the product — the betting collection
+          accounts and P2P off-ramps your analysts already know belong here.
+        </div>
+      ) : (
+        rows.map((r) => (
+          <div key={r.counterparty_ref} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px', borderBottom: '1px solid #F0F2F5' }}>
+            <code style={{ fontSize: 12.5, fontWeight: 700, color: '#1E262E' }}>{r.counterparty_ref}</code>
+            <Chip color={categoryColors[r.category] ?? '#5A6976'}>{r.category}</Chip>
+            {r.label && <span style={{ fontSize: 12.5, color: '#5A6976' }}>{r.label}</span>}
+            <span style={{ marginLeft: 'auto', fontSize: 11.5, color: '#9AA4AF' }} title={r.created_by}>
+              {r.source}{r.created_by ? ` · ${r.created_by.split('@')[0]}` : ''}
+            </span>
+            {canEdit && (
+              <button type="button" onClick={() => { void consoleApi.deleteCounterpartyType(r.counterparty_ref).then(() => typesQuery.reload()); }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7A8593', fontSize: 12, fontFamily: 'Barlow', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Remove
+              </button>
+            )}
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
 
 const filters = ['All', 'Critical', 'High', 'Medium'] as const;
 
@@ -70,6 +162,7 @@ export function PayeeIntel() {
           </div>
         ))}
       </div>
+      <CounterpartyRegistry />
     </div>
   );
 }

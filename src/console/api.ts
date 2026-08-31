@@ -364,6 +364,15 @@ export interface RiskPreview {
   current: { hold: number; stepUp: number; allow: number };
 }
 
+export interface CounterpartyType {
+  counterparty_ref: string;
+  category: 'GAMBLING' | 'CRYPTO_P2P' | 'INFORMAL_FX' | 'BENIGN';
+  label: string;
+  source: string;
+  created_by: string;
+  created_at: string;
+}
+
 export interface AuditEntry {
   id: number;
   at: string;
@@ -396,6 +405,14 @@ export const consoleApi = {
     api<ServerAlert>(`/v1/console/alerts/${id}`, { method: 'PATCH', body }),
   assignAlert: (id: string, assignee?: string) =>
     api<ServerAlert>(`/v1/console/alerts/${id}/assign`, { method: 'POST', body: assignee === undefined ? {} : { assignee } }),
+  counterpartyTypes: () =>
+    api<CounterpartyType[]>('/v1/console/counterparty-types'),
+  upsertCounterpartyType: (counterpartyRef: string, category: string, label?: string) =>
+    api<{ ok: boolean }>('/v1/console/counterparty-types', { method: 'PUT', body: { counterpartyRef, category, label } }),
+  importCounterpartyTypes: (entries: { counterpartyRef: string; category: string; label?: string }[]) =>
+    api<{ imported: number }>('/v1/console/counterparty-types/import', { method: 'POST', body: { entries } }),
+  deleteCounterpartyType: (counterpartyRef: string) =>
+    api<{ ok: boolean }>('/v1/console/counterparty-types/delete', { method: 'POST', body: { counterpartyRef } }),
   tenantKeys: () => api<{ kid: string; state: string; created_at: string }[]>('/v1/console/tenant-keys'),
   rotateTenantKey: () =>
     api<{ kid: string; key: string; note: string }>('/v1/console/tenant-keys/rotate', { method: 'POST' }),

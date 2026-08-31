@@ -17,6 +17,7 @@ export const typeColors: Record<ThreatType, string> = {
   'New Account Fraud': '#2C7BB6',
   'Commission Fraud': '#16A085',
   'KYC Drift': '#5A6976',
+  'Counterparty Exposure': '#5A6976',
 };
 
 // Severity by policy band (55 step-up / 85 hold). Within the hold band the
